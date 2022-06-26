@@ -1,10 +1,12 @@
 #pragma once
 #include "hive_setupnetvars.h"
+
 #if PROXY_ENTITY == true
 #define RAW_ENT(ce) ce->InternalEntity()
 #else
 #define RAW_ENT(ce) ce->m_pEntity
 #endif
+#define OFFSETVAR(type, funcName, offset) type& funcName() const noexcept { return *reinterpret_cast<type*>(reinterpret_cast<std::uintptr_t>(this) + offset); }
 class CBaseEntityNew
 {
 public:
@@ -16,6 +18,7 @@ public:
 	int GetMoveType();
 	QAngle GetPunchAnglesVel();
 	int GetGroundEntityHandle();
+	int& GetEffects() const noexcept;
 	void SetPunchAngle(QAngle);
 	void SetPunchAngleVel(QAngle);
 	void* ActiveWeap();
@@ -94,5 +97,8 @@ public:
 	void prtThis() {
 		ConMsg("[0x%.8X]\n", (DWORD)this);
 	}
+
+	OFFSETVAR(char, m_MoveType, 0x1F4);
+	OFFSETVAR(int, m_iEFlags, 0x1F0);
 
 };

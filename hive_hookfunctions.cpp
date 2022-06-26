@@ -113,7 +113,6 @@ namespace HiveHookedFunctions {
 	void __fastcall CreateMove(void* CInput, void *edx, int sequence_number, float input_sample_frametime, bool active) {
 		HiveOriginalFunctions::CreateMove(CInput, edx, sequence_number, input_sample_frametime, active);
 		static Vector Spread = Vector(0, 0, 0);
-		CHiveEnginePrediction EnginePrediction;
 		GMODCUserCmd *pCmd = (GMODCUserCmd*)CHiveInterface.Input->GetUserCmd(sequence_number);
 		CBaseEntityNew * LocalPlayer = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 		C_BasePlayerNew* pLocal = (C_BasePlayerNew*)LocalPlayer;
@@ -137,7 +136,7 @@ namespace HiveHookedFunctions {
 				HiveCheats::Autostrafe(pCmd);
 
 			if(CLuaMenuCallback.EnginePredict)
-				EnginePrediction.Start(pCmd, pLocal);
+				CHiveEnginePredict.Start(pCmd, pLocal);
 
 			if (CLuaMenuCallback.Aimbot && pCmd->buttons & IN_ATTACK && CanShoot)
 			{
@@ -152,7 +151,7 @@ namespace HiveHookedFunctions {
 				HiveCheats::RemoveSpread(pCmd, currentWeapon, Spread);
 			}
 			if (CLuaMenuCallback.EnginePredict)
-				EnginePrediction.Finish(pLocal);
+				CHiveEnginePredict.Finish(pLocal);
 
 			if(CLuaMenuCallback.Aimbot)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
@@ -262,6 +261,37 @@ namespace HiveHookedFunctions {
 		return ret;
 	}
 
+	bool   __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime)
+	{
+		C_BasePlayerNew* ply = reinterpret_cast<C_BasePlayerNew*>((C_BasePlayerNew*)ecx - 8); // Is this even right
+		CBaseEntityNew* ent = (CBaseEntityNew*)ecx;
+		C_BasePlayerNew* localPlayer = reinterpret_cast<C_BasePlayerNew*>(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()));
+
+		if(!CLuaMenuCallback.EnginePredict)
+			return  HiveOriginalFunctions::SetupBones(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, currentTime);
+
+		float simulationTime = ply == localPlayer ? CHiveEnginePredict.GetServerTime() : ent->flSimulationTime();
+
+		float oldCurtime = CHiveInterface.Globals->curtime;
+		float oldFrametime = CHiveInterface.Globals->frametime;
+		CHiveInterface.Globals->curtime = simulationTime;
+		CHiveInterface.Globals->frametime = CHiveInterface.Globals->interval_per_tick;
+
+		ent->m_iEFlags() |= static_cast<int>(EFlags::DIRTY_ABSVELOCITY);
+		ent->GetEffects() |= static_cast<int>(EEffects::NOINTERP);
+
+		bool ret = HiveOriginalFunctions::SetupBones(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, simulationTime);
+
+		ent->GetEffects() &= ~static_cast<int>(EEffects::NOINTERP);
+		ent->m_iEFlags() &= ~static_cast<int>(EFlags::DIRTY_ABSVELOCITY);
+
+		CHiveInterface.Globals->curtime = oldCurtime;
+		CHiveInterface.Globals->frametime = oldFrametime;
+
+		return ret;
+
+	}
+
 }
 
 
@@ -277,6 +307,7 @@ namespace HiveOriginalFunctions {
 	CHook* DrawModelExecuteHook = nullptr;
 	CHook* FireBulletsHook = nullptr;
 	CHook* FrameStageNotifyHook = nullptr;
+	CHook* SetupBonesHook = nullptr;
 	hive_func_CompileString CompileString = 0;
 	hive_func_RunString RunString = 0;
 	hive_func_RunStringEx RunStringEx = 0;
@@ -291,4 +322,5 @@ namespace HiveOriginalFunctions {
 	hive_func_RenderCapture RenderCapture = 0;
 	hive_func_SwepPrimaryAttack SwepPrimaryAttack = 0;
 	hive_func_FireBullets FireBullets = 0;
+	hive_func_SetupBones SetupBones = 0;
 }

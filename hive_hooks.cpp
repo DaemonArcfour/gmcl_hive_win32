@@ -95,6 +95,11 @@ namespace HiveHook {
 		HiveOriginalFunctions::SwepPrimaryAttack = (hive_func_SwepPrimaryAttack)DetourFunction((PBYTE)CHiveSourceNative.offset_SwepPrimaryAttack, (PBYTE)HiveHookedFunctions::SwepPrimaryAttack);
 	}
 
+	void GetSetupBones()
+	{
+		HiveOriginalFunctions::SetupBones = (hive_func_SetupBones)DetourFunction((PBYTE)CHiveSourceNative.offset_SetupBones, (PBYTE)HiveHookedFunctions::SetupBones);
+	}
+
 	void InitHive() {
 		GetCreateLuaInterface(); // index
 		GetCloseLuaInterface();  // index
@@ -106,5 +111,6 @@ namespace HiveHook {
 		GetFrameStageNotify();	 // sig
 		GetRenderCapture();		 // sig
 		GetSwepPrimaryAttack();	 // sig
+		GetSetupBones();		 // sig
 	}
 }

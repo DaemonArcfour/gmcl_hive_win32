@@ -13,6 +13,7 @@ namespace HiveNetVarOffsets {
 	extern DWORD m_lifeState; //DT_BasePlayer
 	extern DWORD m_flMaxSpeed; //DT_BasePlayer
 	extern DWORD m_fFlags; //DT_BasePlayer
+	extern DWORD m_fEffects; //DT_BaseEntity
 	extern DWORD m_vecMins; //DT_CollisionProperty
 	extern DWORD m_vecMaxs;//DT_CollisionProperty
 	extern DWORD m_flSimulationTime; //DT_BaseEntity

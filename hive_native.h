@@ -49,6 +49,7 @@ public:
 	DWORD offset_FireBullets = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x00\x00\x00\x00\x56\x8B\x73\x08\x57\x89\x4D\xF0", "xxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxx"); // C_BaseEntity::FireBullets; "ERROR: Undefined ammo type!\n"
 	DWORD offset_RenderCapture = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x83\xEC\x6C\x8B\x0D\x00\x00\x00\x00\x8B\x81\x00\x00\x00\x00\x89\x45", "xxxxxxxx????xx????xx");
 	DWORD offset_SwepPrimaryAttack = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x56\x8B\xF1\xE8\x00\x00\x00\x00\x85\xC0\x74\x48", "xxxx????xxxx");
+	DWORD offset_SetupBones = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\xB8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x53\x56\x57\x8B\xF9\x8B\x0D\x00\x00\x00\x00", "xxxx????x????xxxxxxx????");
 
 }; extern SourceNative CHiveSourceNative;
 class cPaintTraverseConfig {

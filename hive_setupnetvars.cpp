@@ -5,6 +5,7 @@ namespace HiveNetVarOffsets {
 	DWORD m_lifeState = 0;
 	DWORD m_flMaxSpeed = 0;
 	DWORD m_fFlags = 0;
+	DWORD m_fEffects = 0;
 	DWORD m_vecPunchAngle = 0;
 	DWORD m_vecPunchAngleVel = 0;
 	DWORD m_vecVelocity = 0;
@@ -48,6 +49,7 @@ namespace HiveNetVarOffsets {
 		m_vecMins = g_pNetvars.get_offset("DT_BaseEntity", "m_Collision", "m_vecMins");
 		m_vecMaxs = g_pNetvars.get_offset("DT_BaseEntity", "m_Collision", "m_vecMaxs");
 		m_iHealth = g_pNetvars.get_offset("DT_BaseEntity", "m_iHealth");
+		m_fEffects = g_pNetvars.get_offset("DT_BaseEntity", "m_fEffects");
 		m_angEyeAngles = g_pNetvars.get_offset("DT_HL2MP_Player", "hl2mplocaldata", "m_angEyeAngles[0]");
 		m_hActiveWeapon = g_pNetvars.get_offset("DT_BaseCombatCharacter", "m_hActiveWeapon");
 		//LocalWeaponData 

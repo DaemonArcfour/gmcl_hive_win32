@@ -9,12 +9,12 @@
 #include "include/CVMT.h"
 #include "CMaterialSurface.h"
 #include "CEngineTool.h"
+#include "hive_baseplayer.h"
+#include "hive_enginepredict.h"
 #include "hive_input.h"
 #include "hive_baseentity.h"
 #include "hive_basecombatweapon.h"
-#include "hive_baseplayer.h"
 #include "hive_classpred.h"
-#include "hive_enginepredict.h"
 #include "hive_clientstate.h"
 
 #define OK 1

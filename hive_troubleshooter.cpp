@@ -238,7 +238,6 @@ namespace HiveTroubleshooter {
 	bool hookErrors() {
 		bool bError = false;
 		
-		/*
 		if(!HiveOriginalFunctions::CloseLuaInterface)
 			PrintError("Failed to hook \"CloseLuaInterface\" function.", ERROR, bError);
 		else
@@ -278,7 +277,12 @@ namespace HiveTroubleshooter {
 			PrintError("Failed to hook \"RenderCapture\" function.", ERROR, bError);
 		else
 			PrintError("\"RenderCapture\" hook loaded!", OK, bError);
-		*/
+
+		if (!HiveOriginalFunctions::SetupBones)
+			PrintError("Failed to hook \"SetupBones\" function.", ERROR, bError);
+		else
+			PrintError("\"SetupBones\" hook loaded!", OK, bError);
+
 		return bError;
 	}
 	

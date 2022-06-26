@@ -16,6 +16,7 @@ namespace HiveHookedFunctions {
 	void   __fastcall DrawModelExecute(void*, void*, DrawModelState_t const&, ModelRenderInfo_t const&, matrix3x4_t *);
 	void   __fastcall FireBullets(void*, void*, void*);
 	void   __fastcall FrameStageNotify(void *, void*, ClientFrameStage_t);
+	bool   __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime);
 }
 
 extern void* clientState;
@@ -34,6 +35,7 @@ namespace HiveOriginalFunctions {
 	extern CHook* CInputCreateMoveHook;
 	extern CHook* FireBulletsHooks;
 	extern CHook* FrameStageNotifyHook;
+	extern CHook* SetupBonesHook;
 	extern hive_func_CompileString CompileString;
 	extern hive_func_RunString RunString;
 	extern hive_func_RunStringEx RunStringEx;
@@ -48,4 +50,5 @@ namespace HiveOriginalFunctions {
 	extern hive_func_CalcView CalcView;
 	extern hive_func_CreateMove CreateMove;
 	extern hive_func_FireBullets FireBullets;
+	extern hive_func_SetupBones SetupBones;
 }

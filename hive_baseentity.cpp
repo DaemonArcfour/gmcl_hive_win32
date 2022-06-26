@@ -58,6 +58,10 @@ int& CBaseEntityNew::GetTickBase() const noexcept
 {
 	return *reinterpret_cast<int*>((DWORD)this + HiveNetVarOffsets::m_nTickBase);
 }
+int& CBaseEntityNew::GetEffects() const noexcept
+{
+	return *reinterpret_cast<int*>((DWORD)this + HiveNetVarOffsets::m_fEffects);
+}
 float CBaseEntityNew::flSimulationTime()
 {
 	return *reinterpret_cast<float*>((DWORD)this + HiveNetVarOffsets::m_flSimulationTime);

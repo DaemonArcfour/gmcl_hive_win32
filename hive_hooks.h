@@ -30,6 +30,7 @@ namespace HiveHook {
 	void GetRenderCapture();
 	void GetCreateLuaInterface();
 	void GetCloseLuaInterface();
+	void GetSetupBones();
 	void InitHive();
 }
 

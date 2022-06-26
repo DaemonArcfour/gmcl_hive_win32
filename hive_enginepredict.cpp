@@ -1,5 +1,27 @@
 #include "hive_enginepredict.h"
+CHiveEnginePrediction CHiveEnginePredict;
 
+float CHiveEnginePrediction::GetServerTime(GMODCUserCmd* cmd, int tickOffset) const 
+{
+	C_BasePlayerNew* localPlayer = reinterpret_cast<C_BasePlayerNew*>(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()));
+	CBaseEntityNew* localEntity = (CBaseEntityNew*)localPlayer;
+
+	static GMODCUserCmd* lastCmd = nullptr;
+
+	if (cmd)
+		lastCmd = cmd;
+
+	if (!localPlayer) {
+		return CHiveInterface.Globals->curtime;
+	}
+
+	int tickBase = localEntity->GetTickBase() + tickOffset;
+
+	if (lastCmd && !lastCmd->predicted)
+		tickBase++;
+
+	return tickBase * CHiveInterface.Globals->interval_per_tick;
+}
 
 
 void CHiveEnginePrediction::Start(GMODCUserCmd* cmd, C_BasePlayerNew* localPlayer)

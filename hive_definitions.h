@@ -13,3 +13,4 @@ typedef		bool	 (__fastcall	*hive_func_CreateMove)			(void*, void*, int, float, b
 typedef		void	 (__fastcall	*hive_func_FireBullets)			(void*, void*, void*);
 typedef		void	 (__fastcall	*hive_func_PaintTraverse)		(void*, void*, VPANEL, bool, bool);
 typedef		void	 (__fastcall	*hive_func_FrameStageNotify)	(void*, void*, ClientFrameStage_t);
+typedef		bool	 (__fastcall	*hive_func_SetupBones)			(void*, void*, matrix3x4_t*, int, int, float);
