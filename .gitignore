@@ -10,3 +10,4 @@ tier1.lib
 tier2.lib
 tier3.lib
 vstdlib.lib
+detours.lib
