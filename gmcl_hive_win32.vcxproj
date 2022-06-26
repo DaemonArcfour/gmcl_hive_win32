@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{0C1A759B-A290-4347-9C53-D5E1C3BCAD1E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>gmcl_hive_win32</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>gmsv_hive_win32</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>D:\Steam\steamapps\common\GarrysMod\garrysmod\lua\bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\OpenSSL\include;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\common;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public\tier1;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public\tier0;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game\shared;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game\client;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="hive_aimbot.cpp" />
+    <ClCompile Include="hive_antiaim.cpp" />
+    <ClCompile Include="hive_autostrafe.cpp" />
+    <ClCompile Include="hive_baseentity.cpp" />
+    <ClCompile Include="hive_bunnyhop.cpp" />
+    <ClCompile Include="hive_chams.cpp" />
+    <ClCompile Include="hive_draw.cpp" />
+    <ClCompile Include="hive_enginepredict.cpp" />
+    <ClCompile Include="hive_esp.cpp" />
+    <ClCompile Include="hive_factory.cpp" />
+    <ClCompile Include="hive_hookfunctions.cpp" />
+    <ClCompile Include="hive_hooks.cpp" />
+    <ClCompile Include="hive_interface.cpp" />
+    <ClCompile Include="hive_luamenu.cpp" />
+    <ClCompile Include="hive_lua_api.cpp" />
+    <ClCompile Include="hive_lua_override_check.cpp" />
+    <ClCompile Include="hive_lua_whitelist.cpp" />
+    <ClCompile Include="hive_main.cpp" />
+    <ClCompile Include="hive_math.cpp" />
+    <ClCompile Include="hive_native.cpp" />
+    <ClCompile Include="hive_netvar.cpp" />
+    <ClCompile Include="hive_nospread.cpp" />
+    <ClCompile Include="hive_observers.cpp" />
+    <ClCompile Include="hive_optimize.cpp" />
+    <ClCompile Include="hive_protection.cpp" />
+    <ClCompile Include="hive_setupnetvars.cpp" />
+    <ClCompile Include="hive_signature.cpp" />
+    <ClCompile Include="hive_sigscan.cpp" />
+    <ClCompile Include="hive_triggerbot.cpp" />
+    <ClCompile Include="hive_troubleshooter.cpp" />
+    <ClCompile Include="hive_util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CEngineTool.h" />
+    <ClInclude Include="CMaterialSurface.h" />
+    <ClInclude Include="hive_basecombatweapon.h" />
+    <ClInclude Include="hive_baseentity.h" />
+    <ClInclude Include="hive_baseplayer.h" />
+    <ClInclude Include="hive_cheats.h" />
+    <ClInclude Include="hive_classpred.h" />
+    <ClInclude Include="hive_clientstate.h" />
+    <ClInclude Include="hive_definitions.h" />
+    <ClInclude Include="hive_dependencies.h" />
+    <ClInclude Include="hive_draw.h" />
+    <ClInclude Include="hive_enginepredict.h" />
+    <ClInclude Include="hive_esp.h" />
+    <ClInclude Include="hive_factory.h" />
+    <ClInclude Include="hive_hookfunctions.h" />
+    <ClInclude Include="hive_hooks.h" />
+    <ClInclude Include="hive_input.h" />
+    <ClInclude Include="hive_interface.h" />
+    <ClInclude Include="hive_luamenu.h" />
+    <ClInclude Include="hive_lua_override_check.h" />
+    <ClInclude Include="hive_lua_whitelist.h" />
+    <ClInclude Include="hive_math.h" />
+    <ClInclude Include="hive_native.h" />
+    <ClInclude Include="hive_netvar.h" />
+    <ClInclude Include="hive_optimize.h" />
+    <ClInclude Include="hive_protection.h" />
+    <ClInclude Include="hive_sdk.h" />
+    <ClInclude Include="hive_setupnetvars.h" />
+    <ClInclude Include="hive_signature.h" />
+    <ClInclude Include="hive_sigscan.h" />
+    <ClInclude Include="hive_troubleshooter.h" />
+    <ClInclude Include="hive_util.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
