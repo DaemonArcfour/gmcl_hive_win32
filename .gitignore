@@ -11,3 +11,10 @@ tier2.lib
 tier3.lib
 vstdlib.lib
 detours.lib
+*.log
+*.tlog
+*.idb
+*.pdb
+*.obj
+*.ilk
+*.enc

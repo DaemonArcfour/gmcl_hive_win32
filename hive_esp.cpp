@@ -9,7 +9,7 @@ namespace HiveCheats {
 		for (int i = 0; i <= MaxClients; i++) {
 			CBaseEntityNew* target = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(i);
 			CBaseEntityNew* me = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
-			//CBaseEntityNew* weapon = (CBaseEntityNew*);
+
 			if (!me)
 				continue;
 			if (i == me->Index())

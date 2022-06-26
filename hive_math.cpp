@@ -25,7 +25,7 @@ namespace HiveMath {
 	void AngleVectors(const QAngle &angles, Vector &forward)
 	{
 		Assert(s_bMathlibInitialized);
-		Assert(forward);
+		//Assert(forward);
 
 		float	sp, sy, cp, cy;
 

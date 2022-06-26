@@ -31,7 +31,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -74,6 +74,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>D:\Steam\steamapps\common\GarrysMod\garrysmod\lua\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,10 +92,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GMCL_HIVE_WIN32_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\OpenSSL\include;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\common;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public\tier1;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public\tier0;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\public;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game\shared;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game\client;D:\C++\Visual Studio 2017\Projects\gmcl_hive_win32\gmcl_hive_win32\game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

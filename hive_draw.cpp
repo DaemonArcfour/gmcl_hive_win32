@@ -74,7 +74,9 @@ namespace HiveDraw {
 	void DrawLine(int x, int y, int w, int h, Color c)
 	{
 		CHiveInterface.ISurface->DrawSetColor(c);
-		CHiveInterface.ISurface->DrawLine(x, y, w, h);
+		int px[] = { x, w };
+		int py[] = { y, h };
+		CHiveInterface.ISurface->DrawPolyLine(px, py, 2);
 	}
 
 	void DrawLine(Vector pos1, Vector pos2, Color c)
@@ -83,7 +85,9 @@ namespace HiveDraw {
 		HiveDraw::WorldToScreen(pos1, scr1);
 		HiveDraw::WorldToScreen(pos2, scr2);
 		CHiveInterface.ISurface->DrawSetColor(c);
-		CHiveInterface.ISurface->DrawLine(scr1.x, scr1.y, scr2.x, scr2.y);
+		int px[] = { scr1.x, scr2.x };
+		int py[] = { scr1.y, scr2.y };
+		CHiveInterface.ISurface->DrawPolyLine(px, py, 2);
 	}
 
 	void Clear(int x, int y, int w, int h, Color color)
@@ -115,7 +119,7 @@ namespace HiveDraw {
 	bool WorldToScreen(Vector &origin, Vector &screen)
 	{
 		const VMatrix worldToScreen = CHiveInterface.Engine->WorldToScreenMatrix();
-		float w = worldToScreen[3][0] * origin[0] + worldToScreen[3][1] * origin[1] + worldToScreen[3][2] * origin[2] + worldToScreen[3][3]; //Calculate the angle in compareson to the player's camera.
+		float w = worldToScreen[3][0] * origin[0] + worldToScreen[3][1] * origin[1] + worldToScreen[3][2] * origin[2] + worldToScreen[3][3]; //Calculate the angle in comparison to the player's camera.
 		screen.z = 0; //Screen doesn't have a 3rd dimension.
 		static screensize gScreenSize;
 		CHiveInterface.Engine->GetScreenSize(gScreenSize.iScreenWidth, gScreenSize.iScreenHeight);
@@ -207,8 +211,8 @@ namespace HiveDraw {
 
 		CHiveInterface.ISurface->DrawSetTexture(0);
 
-		Vertex_t  * vert;
-		vert = new Vertex_t[quality];
+		vgui::Vertex_t  * vert;
+		vert = new vgui::Vertex_t[quality];
 
 		for (int i = 1; i <= quality; i++)
 		{
@@ -441,9 +445,7 @@ namespace HiveDraw {
 
 		if (!HiveDraw::WorldToScreen(EndBonePos, EndDrawPos))
 			return;
-
-		CHiveInterface.ISurface->DrawSetColor(drawCol);
-		CHiveInterface.ISurface->DrawLine(StartDrawPos.x, StartDrawPos.y, EndDrawPos.x, EndDrawPos.y);
+		DrawLine(StartDrawPos.x, StartDrawPos.y, EndDrawPos.x, EndDrawPos.y, drawCol);
 
 	}
 

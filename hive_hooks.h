@@ -1,7 +1,7 @@
 #pragma once
 #include "hive_dependencies.h"
 // Global drawing panel
-#define VGUI_PANEL "staticClientDLLToolsPanel"
+#define VGUI_PANEL "staticClientDLLToolsPanel" //"HudGMOD"
 //#define VGUI_PANEL "FocusOverlayPanel"
 // LUA Shared VMT Offsets
 #define VMT_RUNSTRING 92
