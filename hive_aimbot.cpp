@@ -129,9 +129,15 @@ namespace HiveCheats {
 
 		
 		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition, dummy);
-		//PredictedPosition = EnemyPosition - (LocalPlayer->Velocity() * CHiveInterface.Globals->interval_per_tick);
-		//VectorAngles(PredictedPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
-		VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle); // new
+		if (!CLuaMenuCallback.EnginePredict)
+		{
+			PredictedPosition = EnemyPosition - (LocalPlayer->Velocity() * CHiveInterface.Globals->interval_per_tick);
+			VectorAngles(PredictedPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
+		}
+
+		else
+			VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
+
 		pCmd->viewangles = AimbotAngle;
 		SavedBoneIndex = -1;
 

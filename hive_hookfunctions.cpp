@@ -135,8 +135,10 @@ namespace HiveHookedFunctions {
 
 			if (CLuaMenuCallback.Autostrafe)
 				HiveCheats::Autostrafe(pCmd);
-			ConMsg("%f\n", CHiveInterface.ClientState->m_nDeltaTick);
-			EnginePrediction.Start(pCmd, pLocal);
+
+			if(CLuaMenuCallback.EnginePredict)
+				EnginePrediction.Start(pCmd, pLocal);
+
 			if (CLuaMenuCallback.Aimbot && pCmd->buttons & IN_ATTACK && CanShoot)
 			{
 				HiveCheats::Aimbot(pCmd, LocalPlayer);
@@ -149,7 +151,9 @@ namespace HiveHookedFunctions {
 			{
 				HiveCheats::RemoveSpread(pCmd, currentWeapon, Spread);
 			}
-			EnginePrediction.Finish(pLocal);
+			if (CLuaMenuCallback.EnginePredict)
+				EnginePrediction.Finish(pLocal);
+
 			if(CLuaMenuCallback.Aimbot)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
 		}

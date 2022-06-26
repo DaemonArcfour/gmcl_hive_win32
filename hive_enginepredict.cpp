@@ -16,14 +16,14 @@ void CHiveEnginePrediction::Start(GMODCUserCmd* cmd, C_BasePlayerNew* localPlaye
 
 	CHiveInterface.Globals->curtime = CHiveInterface.Globals->interval_per_tick * localEntity->GetTickBase();
 	CHiveInterface.Globals->frametime = CHiveInterface.Globals->interval_per_tick;
-	/*
-	if (interfaces::clientState->m_nDeltaTick > 0) {
-		interfaces::prediction->Update(interfaces::clientState->m_nDeltaTick,
-			interfaces::clientState->m_nDeltaTick > 0,
-			interfaces::clientState->last_command_ack,
-			interfaces::clientState->lastoutgoingcommand + interfaces::clientState->chokedcommands);
+	
+	if (CHiveInterface.ClientState->m_nDeltaTick > 0) {
+		CHiveInterface.Prediction->Update(CHiveInterface.ClientState->m_nDeltaTick,
+			CHiveInterface.ClientState->m_nDeltaTick > 0,
+			CHiveInterface.ClientState->last_command_ack,
+			CHiveInterface.ClientState->lastoutgoingcommand + CHiveInterface.ClientState->chokedcommands);
 	}
-	*/
+	
 
 	CHiveInterface.Prediction->SetLocalViewAngles(cmd->viewangles);
 

@@ -48,6 +48,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbBhop);
 		InitLUAFunction(MENU, SetAimbot);
 		InitLUAFunction(MENU, GetbAimbot);
+		InitLUAFunction(MENU, SetEnginePredict);
+		InitLUAFunction(MENU, GetbEnginePredict);
 		InitLUAFunction(MENU, SetTriggerbot);
 		InitLUAFunction(MENU, GetbTriggerbot);
 		InitLUAFunction(MENU, SetNoRecoil);
@@ -237,6 +239,27 @@ namespace HiveLuaMenuFunctions {
 
 	int GetbBhop(lua_State* state) {
 		MENU->PushBool(CLuaMenuCallback.Bhop);
+		return 1;
+	}
+
+	int SetEnginePredict(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.EnginePredict = MENU->GetBool(1);
+			if (CLuaMenuCallback.EnginePredict)
+				HiveTroubleshooter::Print("Engine prediction enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Engine prediction disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbEnginePredict(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.EnginePredict);
 		return 1;
 	}
 

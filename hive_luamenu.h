@@ -31,6 +31,8 @@ namespace HiveLuaMenuFunctions {
 	int GetbESPConnections(lua_State* state);
 	int GetbESPBarrel(lua_State* state);
 	int GetESPBarrelDist(lua_State* state);
+	int SetEnginePredict(lua_State* state);
+	int GetbEnginePredict(lua_State* state);
 	int SetAimbot(lua_State* state);
 	int GetbAimbot(lua_State* state);
 	int SetAutostrafe(lua_State* state);
@@ -80,6 +82,7 @@ public:
 	bool ESP = false;
 	bool BoneESP = false;
 	bool Bhop = false;
+	bool EnginePredict = true;
 	bool Aimbot = false;
 	bool Triggerbot = false;
 	bool NoRecoil = false;

@@ -33,6 +33,8 @@ HiveInterface::HiveInterface() {
 	
 	DWORD* dwClientVMT = (DWORD*)*(DWORD*)Client;
 	Input = (CInputNew*)*(PDWORD)*(PDWORD)(dwClientVMT[15] + 0x2);
+	//4E3AA0
 	MoveHelper = **reinterpret_cast<IMoveHelper***>(HiveScanner::SigScan((DWORD)GetModuleHandle("client.dll"), HiveScanner::GetModuleSize("client.dll"), (PBYTE)"\x8B\x0D\x00\x00\x00\x00\x52\xF3\x0F\x10\x80\x00\x00\x00\x00", "xx????xxxxx????") + 0x2);
-	ClientState = *reinterpret_cast<CClientState**>(HiveScanner::SigScan((DWORD)GetModuleHandle("engine.dll"), HiveScanner::GetModuleSize("engine.dll"), (PBYTE)"\xB9\x00\x00\x00\x00\xDD\x5C\x24\x18", "x????xxxx") + 0x1);
+	ClientState = *reinterpret_cast<CClientState**>((HiveScanner::SigScan((DWORD)GetModuleHandle("engine.dll"), HiveScanner::GetModuleSize("engine.dll"), (PBYTE)"\xB9\x00\x00\x00\x00\xDD\x5C\x24\x18", "x????xxxx") + 0x1)); //((DWORD)GetModuleHandle("engine.dll") + 0x4E3AA0);
+	ClientState += 104;
 }
