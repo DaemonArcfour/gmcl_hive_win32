@@ -1,0 +1,12 @@
+Release/
+OpenSSL/
+lib/
+.vs/
+libcryptoMD.lib
+libsslMD.lib
+mathlib.lib
+tier0.lib
+tier1.lib
+tier2.lib
+tier3.lib
+vstdlib.lib
