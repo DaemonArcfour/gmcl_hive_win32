@@ -62,6 +62,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbShowSpectators);
 		InitLUAFunction(MENU, SetLockDownloads);
 		InitLUAFunction(MENU, GetbLockDownloads);
+		InitLUAFunction(MENU, SetStopLuaGameModeHooks);
+		InitLUAFunction(MENU, GetbStopLuaGameModeHooks);
 		InitLUAFunction(MENU, LuaRunMenu);
 		InitLUAFunction(MENU, LuaRunGame);
 		InitLUAFunction(MENU, GetServerIP);
@@ -499,6 +501,26 @@ namespace HiveLuaMenuFunctions {
 		return 1;
 	}
 
+	int SetStopLuaGameModeHooks(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.StopLuaGameModeHooks = MENU->GetBool(1);
+			if (CLuaMenuCallback.StopLuaGameModeHooks)
+				HiveTroubleshooter::Print("Stopping all lua gamemode hooks!", 1);
+			else
+				HiveTroubleshooter::Print("Patching lua gamemode hooks back in!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbStopLuaGameModeHooks(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.StopLuaGameModeHooks);
+		return 1;
+	}
 
 	int SetAutostrafe(lua_State* state) {
 		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))

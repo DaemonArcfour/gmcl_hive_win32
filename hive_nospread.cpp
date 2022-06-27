@@ -169,4 +169,5 @@ namespace HiveCheats {
 		ShootDirection.z = -(spread * engineSpread.x);
 		pCmd->viewangles += ShootDirection.toAngle();
 	}
+	bool BreakLuaGameModeHooks = false;
 }

@@ -16,4 +16,5 @@ namespace HiveCheats {
 	void Chams(IVModelRender*,DrawModelState_t const&, ModelRenderInfo_t const&, matrix3x4_t *);
 	void Autostrafe(GMODCUserCmd* cmd);
 	extern int autostrafe_angle;
+	extern bool BreakLuaGameModeHooks;
 }

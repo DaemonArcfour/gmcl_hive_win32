@@ -47,10 +47,11 @@ public:
 	DWORD offset_CreateMove = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x83\xEC\x58\x53\x8B\x5D\x08\xB8", "xxxxxxxxxxx");		// (Updated 16.11.2019)
 	DWORD offset_FrameStageNotify = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x51\x8B\x45\x08\xA3", "xxxxxxxx");
 	DWORD offset_FireBullets = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x00\x00\x00\x00\x56\x8B\x73\x08\x57\x89\x4D\xF0", "xxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxx"); // C_BaseEntity::FireBullets; "ERROR: Undefined ammo type!\n"
-	DWORD offset_RenderCapture = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x83\xEC\x6C\x8B\x0D\x00\x00\x00\x00\x8B\x81\x00\x00\x00\x00\x89\x45", "xxxxxxxx????xx????xx");
+	DWORD offset_RenderCapture = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x83\xEC\x60\x8B\x0D\x00\x00\x00\x00\x8B\x81\x00\x00\x00\x00", "xxxxxxxx????xx????");
 	DWORD offset_SwepPrimaryAttack = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x56\x8B\xF1\xE8\x00\x00\x00\x00\x85\xC0\x74\x48", "xxxx????xxxx");
 	DWORD offset_SetupBones = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\xB8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x53\x56\x57\x8B\xF9\x8B\x0D\x00\x00\x00\x00", "xxxx????x????xxxxxxx????");
-
+	DWORD offset_LuaGameModeCallWithArgs = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x8B\x46\x3C\x8D\x4E\x3C\xFF\x90\x84\x00\x00\x00\x8B\x00\x00\x00\x00\x00\xFF", "xxxxxxxxxxxxx?????x") - 0x7C; // "CLuaGamemode::CallWithArgs" client.dll
+	DWORD offset_LuaGameModeCallFinish = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\xE8\x00\x00\x00\x00\x83\x7D\xCC\x00", "x????xxxx"); //"CLuaGamemode::CallFinish" client.dll -- This sig is wrong, have to calculate negative offset
 }; extern SourceNative CHiveSourceNative;
 class cPaintTraverseConfig {
 public:

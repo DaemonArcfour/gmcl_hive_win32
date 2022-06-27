@@ -27,6 +27,8 @@ namespace HiveLuaMenuFunctions {
 	int GetbESPName(lua_State* state);
 	int GetbESPDist(lua_State* state);
 	int GetbESPHealth(lua_State* state);
+	int SetStopLuaGameModeHooks(lua_State* state);
+	int GetbStopLuaGameModeHooks(lua_State* state);
 	int GetbESPBox(lua_State* state);
 	int GetbESPConnections(lua_State* state);
 	int GetbESPBarrel(lua_State* state);
@@ -79,6 +81,7 @@ public:
 	std::string GmodWorkspace = "\0";
 	bool LuaExecution = true;
 	bool Autostrafe = false;
+	bool StopLuaGameModeHooks = false;
 	bool ESP = false;
 	bool BoneESP = false;
 	bool Bhop = false;

@@ -31,6 +31,8 @@ namespace HiveHook {
 	void GetCreateLuaInterface();
 	void GetCloseLuaInterface();
 	void GetSetupBones();
+	void GetLuaGameModeCallWithArgs();
+	void GetLuaGameModeCallFinish();
 	void InitHive();
 }
 

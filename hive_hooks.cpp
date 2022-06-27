@@ -100,6 +100,16 @@ namespace HiveHook {
 		HiveOriginalFunctions::SetupBones = (hive_func_SetupBones)DetourFunction((PBYTE)CHiveSourceNative.offset_SetupBones, (PBYTE)HiveHookedFunctions::SetupBones);
 	}
 
+	void GetLuaGameModeCallWithArgs()
+	{
+		HiveOriginalFunctions::LuaGameModeCallWithArgs = (hive_func_CLuaGameModeCallWithArgs)DetourFunction((PBYTE)CHiveSourceNative.offset_LuaGameModeCallWithArgs, (PBYTE)HiveHookedFunctions::LuaGameModeCallWithArgs);
+	}
+
+	void GetLuaGameModeCallFinish()
+	{
+		//HiveOriginalFunctions::LuaGameModeCallWithArgs = (hive_func_CLuaGameModeCallFinish)DetourFunction((PBYTE)CHiveSourceNative.offset_LuaGameModeCallFinish, (PBYTE)HiveHookedFunctions::LuaGameModeCallFinish);
+	}
+
 	void InitHive() {
 		GetCreateLuaInterface(); // index
 		GetCloseLuaInterface();  // index
@@ -112,5 +122,6 @@ namespace HiveHook {
 		GetRenderCapture();		 // sig
 		GetSwepPrimaryAttack();	 // sig
 		GetSetupBones();		 // sig
+		GetLuaGameModeCallWithArgs(); // sig
 	}
 }

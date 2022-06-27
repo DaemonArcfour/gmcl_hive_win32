@@ -1,7 +1,8 @@
 #pragma once
 #include "hive_dependencies.h"
 
-namespace HiveHookedFunctions {
+namespace HiveHookedFunctions 
+{
 	void * __fastcall RunString(void *, void *, const char*, const char*, const char*, bool, bool);
 	void * __fastcall RunStringEx(void *, void*, char const*, char const*, char const*, bool, bool, bool, bool);
 	void * __fastcall CompileString(void *, void*, void*, char const&);
@@ -17,6 +18,7 @@ namespace HiveHookedFunctions {
 	void   __fastcall FireBullets(void*, void*, void*);
 	void   __fastcall FrameStageNotify(void *, void*, ClientFrameStage_t);
 	bool   __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime);
+	bool   __fastcall LuaGameModeCallWithArgs(void*, void*, int args);
 }
 
 extern void* clientState;
@@ -51,4 +53,6 @@ namespace HiveOriginalFunctions {
 	extern hive_func_CreateMove CreateMove;
 	extern hive_func_FireBullets FireBullets;
 	extern hive_func_SetupBones SetupBones;
+	extern hive_func_CLuaGameModeCallWithArgs LuaGameModeCallWithArgs;
+	extern hive_func_CLuaGameModeCallFinish LuaGameModeCallFinish;
 }

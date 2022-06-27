@@ -229,27 +229,44 @@ namespace HiveHookedFunctions {
 
 	void  *__fastcall RenderCapture(void* ecx, void* edx) {
 		//PlaySoundW(L"HiveSounds\\screengrab.wav", NULL, SND_ASYNC);
-		if (CLuaMenuCallback.AntiScreengrab) {
+		if (CLuaMenuCallback.AntiScreengrab) 
+		{
 			HiveTroubleshooter::PrintBlock("render.Capture -> ScreenGrab attempt blocked.");
 			CViewSetup PlayerView;
+			C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 			int w = 0, h = 0;
 			HiveOriginalFunctions::DrawModelExecuteHook->UnHook();
 			CHiveInterface.Engine->GetScreenSize(w, h);
 			CHiveInterface.IPanel->SetVisible(PaintTraverseConfig.panel, false);
 			CHiveInterface.MaterialSystem->GetRenderContext()->ClearBuffers(1, 1, 1);
 			CHiveInterface.EngineTool->GetPlayerView(PlayerView, 0, 0, w, h);
-			PlayerView.fovViewmodel = 70;
+			PlayerView.fovViewmodel = 54;
+			PlayerView.fov = LocalPlayer->GetFOV();
+			HiveCheats::BreakLuaGameModeHooks = true;
 			CHiveInterface.EngineTool->RenderView(PlayerView, VIEW_CLEAR_FULL_TARGET, RENDERVIEW_DRAWVIEWMODEL | RENDERVIEW_DRAWHUD);
+			HiveCheats::BreakLuaGameModeHooks = false;
 			CHiveInterface.IPanel->SetVisible(PaintTraverseConfig.panel, true);
 			void* rCap = HiveOriginalFunctions::RenderCapture(ecx, edx);
 			HiveOriginalFunctions::DrawModelExecuteHook->ReHook();
 			return rCap;
 		}
 
-		else {
+		else 
+		{
 			void* rCap = HiveOriginalFunctions::RenderCapture(ecx, edx);
 			return rCap;
 		}
+	}
+
+	bool __fastcall LuaGameModeCallWithArgs(void* ecx, void* edx, int args)
+	{
+		if (CLuaMenuCallback.StopLuaGameModeHooks)
+			return false;
+
+		if (HiveCheats::BreakLuaGameModeHooks)
+			return false;
+
+		return HiveOriginalFunctions::LuaGameModeCallWithArgs(ecx, args);
 	}
 
 	void* __fastcall SwepPrimaryAttack(void* ecx, void *edx) {
@@ -291,7 +308,6 @@ namespace HiveHookedFunctions {
 		return ret;
 
 	}
-
 }
 
 
@@ -323,4 +339,6 @@ namespace HiveOriginalFunctions {
 	hive_func_SwepPrimaryAttack SwepPrimaryAttack = 0;
 	hive_func_FireBullets FireBullets = 0;
 	hive_func_SetupBones SetupBones = 0;
+	hive_func_CLuaGameModeCallWithArgs LuaGameModeCallWithArgs;
+	hive_func_CLuaGameModeCallFinish LuaGameModeCallFinish;
 }
