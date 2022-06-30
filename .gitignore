@@ -3,10 +3,7 @@ OpenSSL/logs
 OpenSSL/bin64
 OpenSSL/include64
 OpenSSL/lib64
-lib/
 .vs/
-libcryptoMD.lib
-libsslMD.lib
 mathlib.lib
 tier0.lib
 tier1.lib
@@ -23,9 +20,3 @@ detours.lib
 *.enc
 *.html
 *.html
-OpenSSL/html/man1/asn1parse.html
-OpenSSL/html/man1/asn1parse.html
-OpenSSL/html/man1/blake2b.html
-OpenSSL/html/man1/blake2s.html
-OpenSSL/html/man1/c_rehash.html
-OpenSSL/html/man1/ca.html
