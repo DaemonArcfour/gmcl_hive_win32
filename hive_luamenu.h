@@ -104,7 +104,7 @@ public:
 	bool AntiScreengrab = true;
 	bool Chams = false;
 	bool ChamsWireframe = false;
-	bool ShowSpectators = false;
+	bool ShowSpectators = true;
 	bool LockDownloads = true;
 	bool CustomLuaRun = false;
 }; LuaMenuCallback extern CLuaMenuCallback;

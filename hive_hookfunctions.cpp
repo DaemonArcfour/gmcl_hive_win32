@@ -125,7 +125,11 @@ namespace HiveHookedFunctions {
 			QAngle vOldAngles = pCmd->viewangles;
 			bool CanShoot = true;
 			C_BaseCombatWeaponNew* currentWeapon = (C_BaseCombatWeaponNew*)pLocal->GetActiveWeapon();
-			CanShoot = HiveCheats::CheckFire();
+			if (pLocal->IsAlive())
+				CanShoot = HiveCheats::CheckFire();
+			else
+				CanShoot = false;
+
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
 
@@ -202,7 +206,7 @@ namespace HiveHookedFunctions {
 
 			CHiveFonts.LoadFonts();
 			HiveCheats::DrawEsp();
-		//	HiveCheats::DrawObservers();
+			HiveCheats::DrawObservers();
 		}
 
 	}
