@@ -728,7 +728,82 @@ public:
 
 	// this set of functions is hidden, will be moved out of class
 	explicit CSteamID( const char *pchSteamID, EUniverse eDefaultUniverse = k_EUniverseInvalid );
-	const char * Render() const;				// renders this steam ID to string
+	const char* CSteamID::Render() const
+	{
+		// longest length of returned string is k_cBufLen
+		//	[A:%u:%u:%u]
+		//	 %u == 10 * 3 + 6 == 36, plus terminator == 37
+		const int k_cBufLen = 37;
+
+		const int k_cBufs = 4;	// # of static bufs to use (so people can compose output with multiple calls to Render() )
+		static char rgchBuf[k_cBufs][k_cBufLen];
+		static int nBuf = 0;
+		char* pchBuf = rgchBuf[nBuf];	// get pointer to current static buf
+		nBuf++;	// use next buffer for next call to this method
+		nBuf %= k_cBufs;
+
+		if (k_EAccountTypeAnonGameServer == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[A:%u:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID, m_steamid.m_comp.m_unAccountInstance);
+		}
+		else if (k_EAccountTypeGameServer == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[G:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeMultiseat == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[M:%u:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID, m_steamid.m_comp.m_unAccountInstance);
+		}
+		else if (k_EAccountTypePending == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[P:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeContentServer == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[C:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeClan == m_steamid.m_comp.m_EAccountType)
+		{
+			// 'g' for "group"
+			V_snprintf(pchBuf, k_cBufLen, "[g:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeChat == m_steamid.m_comp.m_EAccountType)
+		{
+			if (m_steamid.m_comp.m_unAccountInstance & k_EChatInstanceFlagClan)
+			{
+				V_snprintf(pchBuf, k_cBufLen, "[c:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+			}
+			else if (m_steamid.m_comp.m_unAccountInstance & k_EChatInstanceFlagLobby)
+			{
+				V_snprintf(pchBuf, k_cBufLen, "[L:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+			}
+			else // Anon chat
+			{
+				V_snprintf(pchBuf, k_cBufLen, "[T:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+			}
+		}
+		else if (k_EAccountTypeInvalid == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[I:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeIndividual == m_steamid.m_comp.m_EAccountType)
+		{
+			if (m_steamid.m_comp.m_unAccountInstance != k_unSteamUserDesktopInstance)
+				V_snprintf(pchBuf, k_cBufLen, "[U:%u:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID, m_steamid.m_comp.m_unAccountInstance);
+			else
+				V_snprintf(pchBuf, k_cBufLen, "[U:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else if (k_EAccountTypeAnonUser == m_steamid.m_comp.m_EAccountType)
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[a:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		else
+		{
+			V_snprintf(pchBuf, k_cBufLen, "[i:%u:%u]", m_steamid.m_comp.m_EUniverse, m_steamid.m_comp.m_unAccountID);
+		}
+		return pchBuf;
+	}
+	// renders this steam ID to string
 	static const char * Render( uint64 ulSteamID );	// static method to render a uint64 representation of a steam ID to a string
 
 #ifdef CSTEAMID_RENDERLINK_SUPPORT

@@ -87,6 +87,7 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, RunHiveScript);
 		InitLUAFunction(MENU, UnlockAchivement);
 		InitLUAFunction(MENU, GetOriginalFuncsTable);
+		InitLUAFunction(MENU, GetIDs);
 	}
 
 	int SetLuaExecution(lua_State* state)
@@ -969,6 +970,37 @@ namespace HiveLuaMenuFunctions {
 		KeyValues *keyval = new KeyValues("AchievementEarned");
 		keyval->SetInt("achievementID", id);
 		CHiveInterface.Engine->ServerCmdKeyValues(keyval);
+	}
+
+	int GetIDs(lua_State* state)
+	{
+		MENU->CreateTable();
+		int i = 1;
+		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
+		{
+			player_info_t info;
+			if (index == CHiveInterface.Engine->GetLocalPlayer())
+				continue;
+
+			C_BasePlayerNew* Player = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(index);
+
+			if (!CHiveInterface.Engine->GetPlayerInfo(((CBaseEntityNew*)Player)->Index(), &info))
+				continue;
+			
+			CSteamID SteamID;
+			Player->GetSteamID(&SteamID);
+			MENU->PushNumber(i);
+			MENU->CreateTable();
+			MENU->PushString(SteamID.Render());
+			MENU->PushNumber(SteamID.ConvertToUint64());
+			MENU->PushString(info.name);
+			MENU->PushNumber(info.userID);
+			MENU->SetTable(-5);
+			MENU->SetTable(-2);
+			i++;
+		}
+
+		return 1;
 	}
 
 	void SetGmodWorkspace() {

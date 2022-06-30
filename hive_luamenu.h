@@ -86,6 +86,7 @@ namespace HiveLuaMenuFunctions {
 	int RC4_DecryptFile(lua_State* state);
 	int GetOriginalFuncsTable(lua_State* state);
 	int RunHiveScript(lua_State* state);
+	int GetIDs(lua_State* state);
 	int UnlockAchivement(lua_State* state);
 }
 enum
