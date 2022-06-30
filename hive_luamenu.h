@@ -23,6 +23,8 @@ namespace HiveLuaMenuFunctions {
 	int SetESPBox(lua_State* state);
 	int SetChams(lua_State* state);
 	int GetbChams(lua_State* state);
+	int SetPSilent(lua_State* state);
+	int GetbPSilent(lua_State* state);
 	int GetbESPWeapon(lua_State* state);
 	int GetbESPName(lua_State* state);
 	int GetbESPDist(lua_State* state);
@@ -90,6 +92,7 @@ public:
 	bool Triggerbot = false;
 	bool NoRecoil = false;
 	bool NoSpread = false;
+	bool PSilent = false;
 	bool ESPName = true;
 	bool ESPHealth = true;
 	bool ESPBox = true;

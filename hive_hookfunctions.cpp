@@ -150,6 +150,15 @@ namespace HiveHookedFunctions {
 			{
 				HiveCheats::RemoveSpread(pCmd, currentWeapon, Spread);
 			}
+
+			if (CLuaMenuCallback.PSilent && CLuaMenuCallback.Aimbot && CanShoot)
+			{
+				pCmd->world_clicking = true;
+				Vector tmp;
+				AngleVectors(pCmd->viewangles, &tmp);
+				pCmd->world_click_direction = tmp;
+			}
+
 			if (CLuaMenuCallback.EnginePredict)
 				CHiveEnginePredict.Finish(pLocal);
 
@@ -283,7 +292,6 @@ namespace HiveHookedFunctions {
 		C_BasePlayerNew* ply = reinterpret_cast<C_BasePlayerNew*>((C_BasePlayerNew*)ecx - 8); // Is this even right
 		CBaseEntityNew* ent = (CBaseEntityNew*)ecx;
 		C_BasePlayerNew* localPlayer = reinterpret_cast<C_BasePlayerNew*>(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()));
-
 		if(!CLuaMenuCallback.EnginePredict)
 			return  HiveOriginalFunctions::SetupBones(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, currentTime);
 

@@ -50,6 +50,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbAimbot);
 		InitLUAFunction(MENU, SetEnginePredict);
 		InitLUAFunction(MENU, GetbEnginePredict);
+		InitLUAFunction(MENU, SetPSilent);
+		InitLUAFunction(MENU, GetbPSilent);
 		InitLUAFunction(MENU, SetTriggerbot);
 		InitLUAFunction(MENU, GetbTriggerbot);
 		InitLUAFunction(MENU, SetNoRecoil);
@@ -565,6 +567,26 @@ namespace HiveLuaMenuFunctions {
 		return 1;
 	}
 
+	int SetPSilent(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.PSilent = MENU->GetBool(1);
+			if (CLuaMenuCallback.PSilent)
+				HiveTroubleshooter::Print("PSilent enabled!", 1);
+			else
+				HiveTroubleshooter::Print("PSilent disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbPSilent(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.PSilent);
+		return 1;
+	}
 
 	int SetLockDownloads(lua_State* state) {
 		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
