@@ -8,7 +8,7 @@ namespace HiveCheats {
 		if (!CLuaMenuCallback.ShowSpectators)
 			return;
 		HiveDraw::DrawString(100, 100, Color(255, 0, 0, 255), CHiveFonts.MediumFont, "Spectators: ");
-		int pos_x = 100;
+		int pos_y = 100;
 		C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 		for (int i = 0; i < MaxClients; i++)
 		{
@@ -19,8 +19,8 @@ namespace HiveCheats {
 					C_BasePlayerNew* Observer = (C_BasePlayerNew*)CHiveSourceNative.UTIL_GetPlayerByIndex(i);
 					if (Observer) {
 						if ((C_BasePlayerNew*)Observer->GetObserverTarget() == LocalPlayer) {
-							pos_x += 10;
-							HiveDraw::DrawString(pos_x, 0, Color(255, 0, 0, 255), HiveDraw::Fonts::ESP, info.name);
+							pos_y += 10;
+							HiveDraw::DrawString(100, pos_y, Color(255, 0, 0, 255), HiveDraw::Fonts::ESP, info.name);
 						}
 					}
 				}

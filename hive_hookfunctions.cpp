@@ -160,6 +160,7 @@ namespace HiveHookedFunctions {
 				pCmd->world_clicking = true;
 				Vector tmp;
 				AngleVectors(pCmd->viewangles, &tmp);
+				pCmd->viewangles = vOldAngles;
 				pCmd->world_click_direction = tmp;
 			}
 
