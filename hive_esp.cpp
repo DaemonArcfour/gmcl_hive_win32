@@ -3,7 +3,7 @@
 #include "hive_native.h"
 
 namespace HiveCheats {
-	void DrawEsp() {
+	/*void DrawEsp() {
 		if (!CLuaMenuCallback.ESP)
 			return;
 		for (int i = 0; i <= MaxClients; i++) {
@@ -53,5 +53,108 @@ namespace HiveCheats {
 					}
 
 			}
+	}*/
+
+	CBaseEntityNew* target;
+	CBaseEntityNew* me;
+
+	void Start(int i) {
+		me = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
+		target = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(i);
+		//target_class = (ClientClass*)target->GetClientClass();
+	}
+
+	void PlayerESP() {
+		ESPBox Box;
+		player_info_t info;
+
+		if (!target || (NativeClass::IsDormant(target) && !CLuaMenuCallback.ESPDormant) || !target->isAlive() || !CHiveInterface.Engine->GetPlayerInfo(target->Index(), &info))
+			return;
+
+
+		//CSteamID steamid;
+		//((C_BasePlayerNew*)target)->GetSteamID(&steamid);
+		//bool IsFriend = HiveUTIL::IsFriend(steamid.);
+
+		if (CLuaMenuCallback.BoneESP)
+			HiveDraw::DrawSkeleton(Color(255, 255, 255, 255), target);
+		if (HiveDraw::GetESPBox(target, Box)) {
+			if (CLuaMenuCallback.ESPBox)
+				HiveDraw::DrawCornerBox(Box, Color(255, 180, 0, 255));
+			if (CLuaMenuCallback.ESPName)
+				HiveDraw::DrawName(info, Box);
+
+			if (CLuaMenuCallback.ESPDist)
+				HiveDraw::DrawDist(target, me, Box);
+
+			if (CLuaMenuCallback.ESPHealth)
+				HiveDraw::DrawHealth(target, Box);
+
+			if (CLuaMenuCallback.ESPWeapon) {
+				void* ent = CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(target->Index()));
+				if (ent) {
+					HiveDraw::DrawWeapon(CHiveSourceNative.GetClassName(ent), Box);
+				}
+				else {
+					HiveDraw::DrawWeapon("None", Box);
+				}
+			}
+
+			if (CLuaMenuCallback.ESPBarrel)
+				HiveDraw::DrawBarrel(Color(0, 160, 255, 255), target);
+
+			if (CLuaMenuCallback.ESPConnections)
+				HiveDraw::DrawConnection(Box, Color(0, 255, 0), target);
+		}
+	}
+
+	void EntityESP() {
+		ESPBox Box;
+
+		if (HiveDraw::GetESPBox(target, Box)) {
+			if (CLuaMenuCallback.ESPBox)
+				HiveDraw::DrawCornerBox(Box, Color(255, 180, 0, 255));
+
+			if (CLuaMenuCallback.ESPName) {
+				HiveDraw::DrawName(CHiveSourceNative.GetClassName(target), Box);
+			}
+
+			if (CLuaMenuCallback.ESPDist)
+				HiveDraw::DrawDist(target, me, Box);
+
+			if (CLuaMenuCallback.ESPConnections)
+				HiveDraw::DrawConnection(Box, Color(0, 255, 0), target);
+		}
+	}
+
+	bool EntityShouldDrawESP() {
+		if (!target) return false;
+		return CLuaMenuCallback.EntityESPList.find(CHiveSourceNative.GetClassName(target)) != CLuaMenuCallback.EntityESPList.end();
+	}
+
+	void DrawEsp() {
+
+		if (CLuaMenuCallback.ESP) {
+			for (int i = 0; i <= MaxClients; i++) {
+				Start(i);
+
+				if (!me) continue;
+				if (i == me->Index()) continue;
+
+				PlayerESP();
+			}
+		}
+
+		if (CLuaMenuCallback.EntityESP) {
+			int a = CHiveInterface.EntityList->GetHighestEntityIndex();
+
+
+			for (int i = 0; i <= a; i++) {
+				Start(i);
+				//EntityShouldDrawESP();
+				if (EntityShouldDrawESP())
+					EntityESP();
+			}
+		}
 	}
 }

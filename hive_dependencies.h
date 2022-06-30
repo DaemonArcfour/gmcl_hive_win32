@@ -17,6 +17,7 @@
 #include "hive_classpred.h"
 #include "hive_clientstate.h"
 
+
 #define OK 1
 #define ERROR 0
 #include "hive_definitions.h"

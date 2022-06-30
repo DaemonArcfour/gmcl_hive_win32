@@ -35,6 +35,20 @@ namespace HiveLuaMenuFunctions {
 	int GetbESPConnections(lua_State* state);
 	int GetbESPBarrel(lua_State* state);
 	int GetESPBarrelDist(lua_State* state);
+	
+	// Entity ESP
+	int SetEntityESP(lua_State* state);
+	int GetbEntityESP(lua_State* state);
+	int SetEntityESPBox(lua_State* state);
+	int GetbEntityESPBox(lua_State* state);
+	int SetEntityESPConnections(lua_State* state);
+	int GetbEntityESPConnections(lua_State* state);
+	int SetEntityESPName(lua_State* state);
+	int GetbEntityESPName(lua_State* state);
+	int SetEntityESPList(lua_State*);
+	int GetEntityESPList(lua_State*);
+
+	// Misc
 	int SetEnginePredict(lua_State* state);
 	int GetbEnginePredict(lua_State* state);
 	int SetAimbot(lua_State* state);
@@ -57,6 +71,9 @@ namespace HiveLuaMenuFunctions {
 	int GetbShowSpectators(lua_State* state);
 	int LuaRunMenu(lua_State* state);
 	int LuaRunGame(lua_State* state);
+
+	int SetFriendList(lua_State*);
+	int GetFriendList(lua_State*);
 
 	int WriteFile(lua_State* state);
 
@@ -101,10 +118,22 @@ public:
 	bool ESPBarrel = false;
 	int  ESPBarrelDist = 300;
 	bool ESPDist = false;
+	bool ESPDormant = true;
+
+	// Entity ESP
+	bool EntityESP = false;
+	bool EntityESPBox = true;
+	bool EntityESPConnections = false;
+	bool EntityESPName = true;
+	std::unordered_set<std::string> EntityESPList;
+
 	bool AntiScreengrab = true;
 	bool Chams = false;
 	bool ChamsWireframe = false;
 	bool ShowSpectators = true;
 	bool LockDownloads = true;
 	bool CustomLuaRun = false;
+
+	// Friends List
+	std::unordered_set<std::string> FriendList;
 }; LuaMenuCallback extern CLuaMenuCallback;

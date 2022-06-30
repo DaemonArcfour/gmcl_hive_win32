@@ -311,6 +311,13 @@ namespace HiveDraw {
 		Color(255, 255, 255, 255), Fonts::ESP, pinfo.name);
 	}
 
+	void DrawName(const char* name, ESPBox size)
+	{
+		RECT nameSize = GetTextSize((DWORD)Fonts::ESP, name);
+		DrawString(size.x + (size.w / 2) - (nameSize.right / 2), size.y - 16,
+			Color(255, 255, 255, 255), Fonts::ESP, name);
+	}
+
 	void DrawDist(CBaseEntityNew* pEntity, CBaseEntityNew* me, ESPBox size)
 	{
 		Vector vdist = pEntity->GetAbsOrigin() - me->GetEyePosition();

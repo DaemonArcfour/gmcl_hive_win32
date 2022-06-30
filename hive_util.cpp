@@ -21,3 +21,7 @@ IMaterial* HiveUTIL::CreateMaterial(std::string type, std::string texture, bool 
 	CreatedMaterial->IncrementReferenceCount();
 	return CreatedMaterial;
 }
+
+bool HiveUTIL::IsFriend(const char* steamid) {
+	return CLuaMenuCallback.FriendList.find(steamid) != CLuaMenuCallback.FriendList.end();
+}

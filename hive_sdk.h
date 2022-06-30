@@ -33,6 +33,7 @@
 #include <limits>
 #include <filesystem>
 #include <shlwapi.h>
+#include <unordered_set>
 #include "public\\tier0\\wchartypes.h"
 #include "public\\tier0\\dbg.h"
 // Public

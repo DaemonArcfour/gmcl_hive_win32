@@ -44,6 +44,16 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbESPConnections);
 		InitLUAFunction(MENU, SetESPBox);
 		InitLUAFunction(MENU, GetbESPBox);
+		InitLUAFunction(MENU, SetEntityESP);
+		InitLUAFunction(MENU, GetbEntityESP);
+		InitLUAFunction(MENU, SetEntityESPBox);
+		InitLUAFunction(MENU, GetbEntityESPBox);
+		InitLUAFunction(MENU, SetEntityESPConnections);
+		InitLUAFunction(MENU, GetbEntityESPConnections);
+		InitLUAFunction(MENU, SetEntityESPName);
+		InitLUAFunction(MENU, GetbEntityESPName);
+		InitLUAFunction(MENU, SetEntityESPList);
+		InitLUAFunction(MENU, GetEntityESPList);
 		InitLUAFunction(MENU, SetBhop);
 		InitLUAFunction(MENU, GetbBhop);
 		InitLUAFunction(MENU, SetAimbot);
@@ -223,6 +233,175 @@ namespace HiveLuaMenuFunctions {
 	int GetbESP(lua_State* state) {
 		MENU->PushBool(CLuaMenuCallback.ESP);
 		return 1;
+	}
+
+	//	Entity ESP
+	int SetEntityESP(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.EntityESP = MENU->GetBool(1);
+			if (CLuaMenuCallback.EntityESP)
+				HiveTroubleshooter::Print("Entity ESP enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Entity ESP disabled!", 1);
+			return 0;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbEntityESP(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.EntityESP);
+		return 1;
+	}
+
+	int SetEntityESPBox(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.EntityESPBox = MENU->GetBool(1);
+			if (CLuaMenuCallback.EntityESPBox)
+				HiveTroubleshooter::Print("Entity ESP Box enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Entity ESP Box disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbEntityESPBox(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.EntityESPBox);
+		return 1;
+	}
+
+	int SetEntityESPConnections(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.EntityESPConnections = MENU->GetBool(1);
+			if (CLuaMenuCallback.EntityESPConnections)
+				HiveTroubleshooter::Print("Entity ESP Connections enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Entity ESP Connections disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbEntityESPConnections(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.EntityESPConnections);
+		return 1;
+	}
+
+	int SetEntityESPName(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.EntityESPName = MENU->GetBool(1);
+			if (CLuaMenuCallback.EntityESPName)
+				HiveTroubleshooter::Print("Entity ESP Names enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Entity ESP Names disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbEntityESPName(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.EntityESPName);
+		return 1;
+	}
+
+	int GetEntityESPList(lua_State* state) {
+		MENU->CreateTable();
+
+		int i = 1;
+		for (auto itr = CLuaMenuCallback.EntityESPList.begin(); itr != CLuaMenuCallback.EntityESPList.end(); ++itr) {
+			MENU->PushNumber(i);
+			MENU->PushString(itr->c_str());
+			MENU->SetTable(-3);
+			i++;
+		}
+
+		return 1;
+	}
+
+	int SetEntityESPList(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::TABLE)) {
+			MENU->Push(1);
+			MENU->PushNil();
+			CLuaMenuCallback.EntityESPList.clear();
+
+
+			while (MENU->Next(-2)) {
+				//-1 == value
+				//-2 == key
+
+				if (MENU->IsType(-1, GarrysMod::Lua::Type::STRING)) {
+					CLuaMenuCallback.EntityESPList.insert(MENU->GetString(-1));
+				}
+
+				MENU->Pop();
+			}
+
+			MENU->Pop();
+
+			return 0;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts table.", 0);
+
+		return 0;
+	}
+
+	int GetFriendList(lua_State* state) {
+		MENU->CreateTable();
+
+		int i = 1;
+		for (auto itr = CLuaMenuCallback.FriendList.begin(); itr != CLuaMenuCallback.FriendList.end(); ++itr) {
+			MENU->PushNumber(i);
+			MENU->PushString(itr->c_str());
+			MENU->SetTable(-3);
+			i++;
+		}
+
+		return 1;
+	}
+
+	int SetFriendList(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::TABLE)) {
+			MENU->Push(1);
+			MENU->PushNil();
+			CLuaMenuCallback.FriendList.clear();
+
+
+			while (MENU->Next(-2)) {
+				//-1 == value
+				//-2 == key
+
+				if (MENU->IsType(-1, GarrysMod::Lua::Type::STRING)) {
+					CLuaMenuCallback.FriendList.insert(MENU->GetString(-1));
+				}
+
+				MENU->Pop();
+			}
+
+			MENU->Pop();
+
+			return 0;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts table.", 0);
+
+		return 0;
 	}
 
 	int SetBhop(lua_State* state) {
