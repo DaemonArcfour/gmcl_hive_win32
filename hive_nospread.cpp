@@ -14,6 +14,18 @@ const char* GetLuaEntBase(C_BaseCombatWeaponNew* _this)
 	return out;
 }
 
+double LuaCurTime()
+{
+	ILuaInterface* Lua = CHiveInterface.LuaShared->GetLuaInterface(LUA_CLIENT);
+	if (!Lua) return 0.;
+	Lua->PushSpecial(0); // SPECIAL_GLOB
+	Lua->GetField(-1, "CurTime");
+	Lua->Call(0, 1);
+	double curTime = Lua->GetNumber(-1);
+	Lua->Pop(2);
+	return curTime;
+}
+
 double LuaMathRand(double min, double max) {
 	auto Lua = CHiveInterface.LuaShared->GetLuaInterface(LUA_CLIENT);
 	if (!Lua) return 0.;
@@ -42,7 +54,7 @@ void LuaMathSetSeed(double seed) {
 namespace HiveCheats {
 	bool CheckFire() {
 		const char* weapon = CHiveSourceNative.GetClassName(CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer())));
-		if (strstr(weapon, "physgun") || strstr(weapon, "tool") || strstr(weapon, "crowbar"))
+		if ((strcmp(weapon, "weapon_physgun") == 0) || (strcmp(weapon, "weapon_physcannon") == 0) || (strcmp(weapon, "gmod_tool") == 0))
 			return false;
 		return true;
 	}
@@ -67,6 +79,9 @@ namespace HiveCheats {
 		double spread = FLT_MAX;
 		if (!gun->UsesLua())
 		{
+			const char* rev = CHiveSourceNative.GetClassName(CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer())));
+			if (strcmp(rev, "weapon_357") == 0)
+				return;
 			Vector gunSpread = gun->GetBulletSpread();
 			spread = (gunSpread.x + gunSpread.y + gunSpread.z) / 3.0f;
 		}
@@ -129,14 +144,37 @@ namespace HiveCheats {
 					}
 				}
 				return;
-				// 		Dir = (self.Owner:EyeAngles() + self.Owner:GetViewPunchAngles() + Angle(math.Rand(-cone, cone), math.Rand(-cone, cone), 0) * 25):Forward()
 
-				/* This is wip.
-				* This is almost identical to FAS2's spread.
-				*
-				* Source spread isn't being used at all, because before it calls FireBullets, it sets bul.Spread to 0
-				*/
+			}
 
+			else if (!strcmp(GetLuaEntBase(gun), "fas2_base"))
+			{
+				ClientLua->GetField(-1, "MaxSpreadInc");
+				double curCone = 0.09f + ClientLua->GetNumber(-1);
+				ClientLua->Pop(2);
+				// 	self.CurCone = math.Clamp(cone + self.AddSpread * (self.dt.Bipod and 0.5 or 1) + (vel / 10000 * self.VelocitySensitivity) * (self.dt.Status == FAS_STAT_ADS and 0.25 or 1) + self.Owner.ViewAff, 0, 0.09 + self.MaxSpreadInc)
+
+				QAngle spreadAng;
+
+				LuaMathSetSeed(LuaCurTime());
+				spreadAng.x = LuaMathRand(-curCone, curCone);
+				spreadAng.y = LuaMathRand(-curCone, curCone);
+				spreadAng.z = 0;
+
+				pCmd->viewangles -= (spreadAng * 25.f);
+				pCmd->viewangles -= localPlayer->GetViewPunch();
+
+				if (pCmd->command_number)
+				{
+					GMODCUserCmd* prevCmd = (GMODCUserCmd*)CHiveInterface.Input->GetUserCmd(pCmd->command_number - 1);
+					prevCmd->viewangles.x = -pCmd->viewangles.x;
+					prevCmd->viewangles.y = pCmd->viewangles.y - 180.f;
+					prevCmd->viewangles.FixAngles();
+
+					CHiveInterface.Input->m_pVerifiedCommands[prevCmd->command_number % 90].m_cmd = *prevCmd;
+					CHiveInterface.Input->m_pVerifiedCommands[prevCmd->command_number % 90].m_crc = prevCmd->GetChecksum();
+				}
+				return;
 			}
 
 			else

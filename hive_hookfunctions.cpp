@@ -125,7 +125,7 @@ namespace HiveHookedFunctions {
 			QAngle vOldAngles = pCmd->viewangles;
 			bool CanShoot = true;
 			C_BaseCombatWeaponNew* currentWeapon = (C_BaseCombatWeaponNew*)pLocal->GetActiveWeapon();
-			
+			CanShoot = HiveCheats::CheckFire();
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
 
@@ -233,6 +233,15 @@ namespace HiveHookedFunctions {
 
 	void __fastcall FrameStageNotify(void* ecx, void* edx, ClientFrameStage_t stage) {
 
+		if (CLuaMenuCallback.NoRecoil)
+		{
+			C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
+			if (LocalPlayer && LocalPlayer->IsAlive())
+			{
+				LocalPlayer->GetViewPunch() = QAngle(0, 0, 0);
+			}
+		}
+
 		HiveOriginalFunctions::FrameStageNotify(ecx, edx, stage);
 	}
 
@@ -287,7 +296,7 @@ namespace HiveHookedFunctions {
 		return ret;
 	}
 
-	bool   __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime)
+	bool __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime)
 	{
 		C_BasePlayerNew* ply = reinterpret_cast<C_BasePlayerNew*>((C_BasePlayerNew*)ecx - 8); // Is this even right
 		CBaseEntityNew* ent = (CBaseEntityNew*)ecx;
@@ -314,7 +323,22 @@ namespace HiveHookedFunctions {
 		CHiveInterface.Globals->frametime = oldFrametime;
 
 		return ret;
+	}
 
+	void __fastcall RunCommand(void* _this, void*, C_BasePlayerNew* player, GMODCUserCmd* ucmd, void* moveHelper)
+	{
+		if (CLuaMenuCallback.NoRecoil)
+		{
+			QAngle angle;
+			CHiveInterface.Engine->GetViewAngles(angle);
+			HiveOriginalFunctions::RunCommand(_this, player, ucmd, moveHelper);
+			CHiveInterface.Engine->SetViewAngles(angle);
+		}
+
+		else
+		{
+			return HiveOriginalFunctions::RunCommand(_this, player, ucmd, moveHelper);
+		}
 	}
 }
 
@@ -332,6 +356,8 @@ namespace HiveOriginalFunctions {
 	CHook* FireBulletsHook = nullptr;
 	CHook* FrameStageNotifyHook = nullptr;
 	CHook* SetupBonesHook = nullptr;
+	CHook* RunCommandHook = nullptr;
+	hive_func_RunCommand RunCommand = 0;
 	hive_func_CompileString CompileString = 0;
 	hive_func_RunString RunString = 0;
 	hive_func_RunStringEx RunStringEx = 0;

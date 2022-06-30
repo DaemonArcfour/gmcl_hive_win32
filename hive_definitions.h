@@ -16,3 +16,4 @@ typedef		void	 (__fastcall	*hive_func_FrameStageNotify)	(void*, void*, ClientFra
 typedef		bool	 (__fastcall	*hive_func_SetupBones)			(void*, void*, matrix3x4_t*, int, int, float);
 typedef		bool	 (__thiscall	*hive_func_CLuaGameModeCallWithArgs)	(void*, int);
 typedef		bool	 (__stdcall		*hive_func_CLuaGameModeCallFinish)		(void*, void*);
+typedef		void	 (__thiscall	*hive_func_RunCommand)(void*, C_BasePlayerNew*, GMODCUserCmd*, void*);

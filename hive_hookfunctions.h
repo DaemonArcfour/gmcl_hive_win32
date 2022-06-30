@@ -17,8 +17,9 @@ namespace HiveHookedFunctions
 	void   __fastcall DrawModelExecute(void*, void*, DrawModelState_t const&, ModelRenderInfo_t const&, matrix3x4_t *);
 	void   __fastcall FireBullets(void*, void*, void*);
 	void   __fastcall FrameStageNotify(void *, void*, ClientFrameStage_t);
-	bool   __fastcall SetupBones(void* ecx, void* edx, matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime);
-	bool   __fastcall LuaGameModeCallWithArgs(void*, void*, int args);
+	bool   __fastcall SetupBones(void*, void*, matrix3x4_t*, int, int, float);
+	bool   __fastcall LuaGameModeCallWithArgs(void*, void*, int);
+	void   __fastcall RunCommand(void*, void*, C_BasePlayerNew*, GMODCUserCmd*, void*);
 }
 
 extern void* clientState;
@@ -38,6 +39,8 @@ namespace HiveOriginalFunctions {
 	extern CHook* FireBulletsHooks;
 	extern CHook* FrameStageNotifyHook;
 	extern CHook* SetupBonesHook;
+	extern CHook* RunCommandHook;
+	extern hive_func_RunCommand RunCommand;
 	extern hive_func_CompileString CompileString;
 	extern hive_func_RunString RunString;
 	extern hive_func_RunStringEx RunStringEx;

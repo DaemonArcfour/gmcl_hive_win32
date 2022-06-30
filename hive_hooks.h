@@ -19,6 +19,9 @@
 //-=-=-=-=
 //Model Render
 #define VMT_DRAWMODELEXECUTE 20
+//-=-=-=-=
+//Prediction
+#define VMT_RUNCOMMAND 17
 
 
 namespace HiveHook {
@@ -33,6 +36,7 @@ namespace HiveHook {
 	void GetSetupBones();
 	void GetLuaGameModeCallWithArgs();
 	void GetLuaGameModeCallFinish();
+	void GetRunCommand();
 	void InitHive();
 }
 
