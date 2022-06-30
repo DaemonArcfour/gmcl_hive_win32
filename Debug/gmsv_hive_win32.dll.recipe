@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Steam\steamapps\common\GarrysMod\garrysmod\lua\bin\gmsv_hive_win32.dll</FullPath>
+      <FullPath>G:\repos\gmcl_hive_win32\%GMOD1%\garrysmod\lua\bin\gmsv_hive_win32.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
