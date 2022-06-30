@@ -978,6 +978,8 @@ namespace HiveLuaMenuFunctions {
 		int i = 1;
 		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
 		{
+			if (!CHiveInterface.Engine->IsInGame()) break;
+
 			player_info_t info;
 			if (index == CHiveInterface.Engine->GetLocalPlayer())
 				continue;
@@ -991,12 +993,25 @@ namespace HiveLuaMenuFunctions {
 			Player->GetSteamID(&SteamID);
 			MENU->PushNumber(i);
 			MENU->CreateTable();
+
+			MENU->PushString("steamid3");
 			MENU->PushString(SteamID.Render());
+			MENU->SetTable(-3);
+
+			MENU->PushString("steamid64");
 			MENU->PushNumber(SteamID.ConvertToUint64());
+			MENU->SetTable(-3);
+
+			MENU->PushString("name");
 			MENU->PushString(info.name);
+			MENU->SetTable(-3);
+
+			MENU->PushString("userid");
 			MENU->PushNumber(info.userID);
-			MENU->SetTable(-5);
-			MENU->SetTable(-2);
+			MENU->SetTable(-3);
+			
+
+			MENU->SetTable(-3);
 			i++;
 		}
 
