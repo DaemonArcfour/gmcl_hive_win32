@@ -983,15 +983,13 @@ namespace HiveLuaMenuFunctions {
 		int i = 1;
 		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
 		{
-			if (!CHiveInterface.Engine->IsInGame()) break;
-
 			player_info_t info;
 			if (index == CHiveInterface.Engine->GetLocalPlayer())
 				continue;
 
 			C_BasePlayerNew* Player = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(index);
 
-			if (!CHiveInterface.Engine->GetPlayerInfo(((CBaseEntityNew*)Player)->Index(), &info))
+			if (!Player || !CHiveInterface.Engine->GetPlayerInfo(((CBaseEntityNew*)Player)->Index(), &info))
 				continue;
 			
 			CSteamID SteamID;
