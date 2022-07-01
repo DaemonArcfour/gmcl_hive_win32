@@ -371,7 +371,7 @@ namespace HiveLuaMenuFunctions {
 		int i = 1;
 		for (auto itr = CLuaMenuCallback.FriendList.begin(); itr != CLuaMenuCallback.FriendList.end(); ++itr) {
 			MENU->PushNumber(i);
-			MENU->PushNumber(*itr);
+			MENU->PushString(std::to_string(*itr).c_str());
 			MENU->SetTable(-3);
 			i++;
 		}
@@ -390,8 +390,8 @@ namespace HiveLuaMenuFunctions {
 				//-1 == value
 				//-2 == key
 
-				if (MENU->IsType(-1, GarrysMod::Lua::Type::NUMBER)) {
-					CLuaMenuCallback.FriendList.insert(MENU->GetNumber(-1));
+				if (MENU->IsType(-1, GarrysMod::Lua::Type::STRING)) {
+					CLuaMenuCallback.FriendList.insert(atoll( MENU->GetString(-1) ));
 				}
 
 				MENU->Pop();
@@ -1001,7 +1001,7 @@ namespace HiveLuaMenuFunctions {
 			MENU->SetTable(-3);
 
 			MENU->PushString("steamid64");
-			MENU->PushNumber(SteamID.ConvertToUint64());
+			MENU->PushString(std::to_string(SteamID.ConvertToUint64()).c_str());
 			MENU->SetTable(-3);
 
 			MENU->PushString("name");
