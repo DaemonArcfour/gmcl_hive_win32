@@ -1,5 +1,6 @@
 #include "hive_cheats.h"
 #include "hive_math.h"
+#include "hive_util.h"
 float	flBestDist;
 int		m_nTarget;
 
@@ -81,10 +82,10 @@ int VisibleBoneIndex = -1;
 int SavedBoneIndex = -1;
 
 namespace HiveCheats {
+	int aimbot_target = -1;
 	void Aimbot(GMODCUserCmd *pCmd, CBaseEntityNew* LocalPlayer) {
-
-
 		DropTarget();
+		aimbot_target = -1;
 		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
 		{
 
@@ -95,6 +96,9 @@ namespace HiveCheats {
 
 
 			if (!pBaseEntity  || !pBaseEntity->isAlive() || NativeClass::IsDormant(pBaseEntity) )
+				continue;
+
+			if(HiveUTIL::IsFriend((C_BasePlayerNew*)pBaseEntity))
 				continue;
 
 			for (int i = 0; i < 21; i++) {
@@ -127,7 +131,7 @@ namespace HiveCheats {
 			return;
 
 
-		
+		aimbot_target = m_nTarget;
 		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition, dummy);
 		if (!CLuaMenuCallback.EnginePredict)
 		{
@@ -138,7 +142,8 @@ namespace HiveCheats {
 		else
 			VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
 
-		pCmd->viewangles = AimbotAngle;
+		if(pCmd->buttons & IN_ATTACK)
+			pCmd->viewangles = AimbotAngle;
 		SavedBoneIndex = -1;
 
 	}

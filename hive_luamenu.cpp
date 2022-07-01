@@ -88,6 +88,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, UnlockAchivement);
 		InitLUAFunction(MENU, GetOriginalFuncsTable);
 		InitLUAFunction(MENU, GetIDs);
+		InitLUAFunction(MENU, SetFriendList);
+		InitLUAFunction(MENU, GetFriendList);
 	}
 
 	int SetLuaExecution(lua_State* state)
@@ -369,7 +371,7 @@ namespace HiveLuaMenuFunctions {
 		int i = 1;
 		for (auto itr = CLuaMenuCallback.FriendList.begin(); itr != CLuaMenuCallback.FriendList.end(); ++itr) {
 			MENU->PushNumber(i);
-			MENU->PushString(itr->c_str());
+			MENU->PushNumber(*itr);
 			MENU->SetTable(-3);
 			i++;
 		}
@@ -388,8 +390,8 @@ namespace HiveLuaMenuFunctions {
 				//-1 == value
 				//-2 == key
 
-				if (MENU->IsType(-1, GarrysMod::Lua::Type::STRING)) {
-					CLuaMenuCallback.FriendList.insert(MENU->GetString(-1));
+				if (MENU->IsType(-1, GarrysMod::Lua::Type::NUMBER)) {
+					CLuaMenuCallback.FriendList.insert(MENU->GetNumber(-1));
 				}
 
 				MENU->Pop();

@@ -22,6 +22,14 @@ IMaterial* HiveUTIL::CreateMaterial(std::string type, std::string texture, bool 
 	return CreatedMaterial;
 }
 
-bool HiveUTIL::IsFriend(const char* steamid) {
+bool HiveUTIL::IsFriend(unsigned long long steamid) 
+{
 	return CLuaMenuCallback.FriendList.find(steamid) != CLuaMenuCallback.FriendList.end();
+}
+
+bool HiveUTIL::IsFriend(C_BasePlayerNew* Player) 
+{
+	CSteamID id;
+	Player->GetSteamID(&id);
+	return CLuaMenuCallback.FriendList.find(id.ConvertToUint64()) != CLuaMenuCallback.FriendList.end();
 }

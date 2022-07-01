@@ -142,7 +142,7 @@ namespace HiveHookedFunctions {
 			if(CLuaMenuCallback.EnginePredict)
 				CHiveEnginePredict.Start(pCmd, pLocal);
 
-			if (CLuaMenuCallback.Aimbot && pCmd->buttons & IN_ATTACK && CanShoot)
+			if (CLuaMenuCallback.Aimbot && CanShoot)
 			{
 				HiveCheats::Aimbot(pCmd, LocalPlayer);
 			}

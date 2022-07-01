@@ -1,7 +1,7 @@
 #include "hive_cheats.h"
 #include "hive_esp.h"
 #include "hive_native.h"
-
+#include "hive_util.h"
 namespace HiveCheats {
 	/*void DrawEsp() {
 		if (!CLuaMenuCallback.ESP)
@@ -71,16 +71,20 @@ namespace HiveCheats {
 		if (!target || (NativeClass::IsDormant(target) && !CLuaMenuCallback.ESPDormant) || !target->isAlive() || !CHiveInterface.Engine->GetPlayerInfo(target->Index(), &info))
 			return;
 
-
-		//CSteamID steamid;
-		//((C_BasePlayerNew*)target)->GetSteamID(&steamid);
-		//bool IsFriend = HiveUTIL::IsFriend(steamid.);
-
 		if (CLuaMenuCallback.BoneESP)
 			HiveDraw::DrawSkeleton(Color(255, 255, 255, 255), target);
 		if (HiveDraw::GetESPBox(target, Box)) {
 			if (CLuaMenuCallback.ESPBox)
-				HiveDraw::DrawCornerBox(Box, Color(255, 180, 0, 255));
+			{
+				if( target->Index() == aimbot_target )
+					HiveDraw::DrawCornerBox(Box, Color(117, 29, 175, 255));
+
+				else if( HiveUTIL::IsFriend((C_BasePlayerNew*)target) )
+					HiveDraw::DrawCornerBox(Box, Color(128, 255, 0, 255));
+
+				else
+					HiveDraw::DrawCornerBox(Box, Color(255, 180, 0, 255));
+			}
 			if (CLuaMenuCallback.ESPName)
 				HiveDraw::DrawName(info, Box);
 

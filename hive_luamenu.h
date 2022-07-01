@@ -136,5 +136,5 @@ public:
 	bool CustomLuaRun = false;
 
 	// Friends List
-	std::unordered_set<std::string> FriendList;
+	std::unordered_set<unsigned long long> FriendList;
 }; LuaMenuCallback extern CLuaMenuCallback;
