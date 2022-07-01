@@ -976,6 +976,9 @@ namespace HiveLuaMenuFunctions {
 
 	int GetIDs(lua_State* state)
 	{
+		if (!CHiveInterface.Engine->IsConnected() || !CHiveInterface.Engine->IsInGame()) 
+			return 0;
+
 		MENU->CreateTable();
 		int i = 1;
 		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
