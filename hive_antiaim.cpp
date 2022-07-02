@@ -6,6 +6,9 @@ namespace HiveCheats {
 		float f1;
 		float f2;
 
+		if (pCmd->viewangles == vOldAngles)
+			return;
+
 		if (vOldAngles.y < 0.f)
 			f1 = 360.0f + vOldAngles.y;
 		else

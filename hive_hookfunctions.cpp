@@ -125,10 +125,10 @@ namespace HiveHookedFunctions {
 			QAngle vOldAngles = pCmd->viewangles;
 			bool CanShoot = true;
 			C_BaseCombatWeaponNew* currentWeapon = (C_BaseCombatWeaponNew*)pLocal->GetActiveWeapon();
-			if (pLocal->IsAlive())
-				CanShoot = HiveCheats::CheckFire();
-			else
-				CanShoot = false;
+			//if (pLocal->IsAlive())
+			//	CanShoot = HiveCheats::CheckFire();
+			//else
+			//	CanShoot = false;
 
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
@@ -139,7 +139,7 @@ namespace HiveHookedFunctions {
 			if (CLuaMenuCallback.Autostrafe)
 				HiveCheats::Autostrafe(pCmd);
 
-			if(CLuaMenuCallback.EnginePredict)
+			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive())
 				CHiveEnginePredict.Start(pCmd, pLocal);
 
 			if (CLuaMenuCallback.Aimbot && CanShoot)
@@ -164,7 +164,7 @@ namespace HiveHookedFunctions {
 				pCmd->world_click_direction = tmp;
 			}
 
-			if (CLuaMenuCallback.EnginePredict)
+			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive())
 				CHiveEnginePredict.Finish(pLocal);
 
 			if(CLuaMenuCallback.Aimbot)
@@ -237,7 +237,7 @@ namespace HiveHookedFunctions {
 	}
 
 	void __fastcall FrameStageNotify(void* ecx, void* edx, ClientFrameStage_t stage) {
-
+		
 		if (CLuaMenuCallback.NoRecoil)
 		{
 			C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
@@ -246,7 +246,7 @@ namespace HiveHookedFunctions {
 				LocalPlayer->GetViewPunch() = QAngle(0, 0, 0);
 			}
 		}
-
+		
 		HiveOriginalFunctions::FrameStageNotify(ecx, edx, stage);
 	}
 
@@ -305,6 +305,7 @@ namespace HiveHookedFunctions {
 	{
 		C_BasePlayerNew* ply = reinterpret_cast<C_BasePlayerNew*>((C_BasePlayerNew*)ecx - 8); // Is this even right
 		CBaseEntityNew* ent = (CBaseEntityNew*)ecx;
+
 		C_BasePlayerNew* localPlayer = reinterpret_cast<C_BasePlayerNew*>(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()));
 		if(!CLuaMenuCallback.EnginePredict)
 			return  HiveOriginalFunctions::SetupBones(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, currentTime);
