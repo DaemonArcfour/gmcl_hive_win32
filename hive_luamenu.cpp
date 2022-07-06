@@ -1,5 +1,8 @@
 #include "hive_luamenu.h"
 #include "hive_native.h"
+#include "hive_protocol.h"
+#include "inetchannel.h"
+
 DWORD *sig16 = 0;
 LuaMenuCallback CLuaMenuCallback;
 std::string ForcedName = "";
@@ -90,6 +93,7 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetIDs);
 		InitLUAFunction(MENU, SetFriendList);
 		InitLUAFunction(MENU, GetFriendList);
+		InitLUAFunction(MENU, RequestInvalidFile);
 	}
 
 	int SetLuaExecution(lua_State* state)
@@ -1019,6 +1023,42 @@ namespace HiveLuaMenuFunctions {
 
 		return 1;
 	}
+
+	int RequestInvalidFile(lua_State* state) {
+		if (!CHiveInterface.Engine->IsConnected()) 
+		{
+			HiveTroubleshooter::Print("Not connected to any server.", 0);
+			return 0;
+		}
+
+		if (!MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+			return 0;
+
+		int power = MENU->GetNumber(1);
+		INetChannel* ch = (INetChannel*)CHiveInterface.Engine->GetNetChannelInfo();
+		char pckBuf[5024];
+		ZeroMemory(pckBuf, sizeof(pckBuf));
+		bf_write pck(pckBuf, sizeof(pckBuf));
+		ch->SendFile("data/tabbutton_ent.png", 1);
+		for (int i = 1; i < power; i++)
+		{
+			if (pck.GetNumBytesLeft() < 100)
+				break;
+			pck.WriteUBitLong(net_File, NETMSG_TYPE_BITS);
+			pck.WriteUBitLong(i, 32); // transfer id
+			pck.WriteOneBit(1);	// we are requesting the file
+			pck.WriteOneBit(DOWNLOADABLE); // downloadable
+			pck.WriteUBitLong(i, 32);	// file id
+			
+		}
+		for (int i = 0; i < power; i++)
+		{
+			ch->SendData(pck, false);
+		}
+		
+		return 1;
+	}
+
 
 	void SetGmodWorkspace() {
 		TCHAR szExeFileName[MAX_PATH];

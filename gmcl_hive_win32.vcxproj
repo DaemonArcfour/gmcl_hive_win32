@@ -219,6 +219,7 @@
     <ClInclude Include="hive_netvar.h" />
     <ClInclude Include="hive_optimize.h" />
     <ClInclude Include="hive_protection.h" />
+    <ClInclude Include="hive_protocol.h" />
     <ClInclude Include="hive_sdk.h" />
     <ClInclude Include="hive_setupnetvars.h" />
     <ClInclude Include="hive_signature.h" />

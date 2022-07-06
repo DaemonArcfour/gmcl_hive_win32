@@ -88,6 +88,7 @@ namespace HiveLuaMenuFunctions {
 	int RunHiveScript(lua_State* state);
 	int GetIDs(lua_State* state);
 	int UnlockAchivement(lua_State* state);
+	int RequestInvalidFile(lua_State* state);
 }
 enum
 {

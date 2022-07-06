@@ -20,71 +20,59 @@ class	INetChannelHandler;
 class	INetChannelInfo;
 typedef struct netpacket_s netpacket_t;
 typedef struct netadr_s	netadr_t;
-
+enum RequestFile_t
+{
+    DOWNLOADABLE,
+    CUSTOMFILE
+};
 abstract_class INetChannel : public INetChannelInfo
 {
 public:
-	virtual	~INetChannel( void ) {};
-
-	virtual void	SetDataRate(float rate) = 0;
-	virtual bool	RegisterMessage(INetMessage *msg) = 0;
-	virtual bool	StartStreaming( unsigned int challengeNr ) = 0;
-	virtual void	ResetStreaming( void ) = 0;
-	virtual void	SetTimeout(float seconds) = 0;
-	virtual void	SetDemoRecorder(IDemoRecorder *recorder) = 0;
-	virtual void	SetChallengeNr(unsigned int chnr) = 0;
-	
-	virtual void	Reset( void ) = 0;
-	virtual void	Clear( void ) = 0;
-	virtual void	Shutdown(const char *reason) = 0;
-	
-	virtual void	ProcessPlayback( void ) = 0;
-	virtual bool	ProcessStream( void ) = 0;
-	virtual void	ProcessPacket( struct netpacket_s* packet, bool bHasHeader ) = 0;
-			
-	virtual bool	SendNetMsg(INetMessage &msg, bool bForceReliable = false, bool bVoice = false ) = 0;
-#ifdef POSIX
-	FORCEINLINE bool SendNetMsg(INetMessage const &msg, bool bForceReliable = false, bool bVoice = false ) { return SendNetMsg( *( (INetMessage *) &msg ), bForceReliable, bVoice ); }
-#endif
-	virtual bool	SendData(bf_write &msg, bool bReliable = true) = 0;
-	virtual bool	SendFile(const char *filename, unsigned int transferID) = 0;
-	virtual void	DenyFile(const char *filename, unsigned int transferID) = 0;
-	virtual void	RequestFile_OLD(const char *filename, unsigned int transferID) = 0;	// get rid of this function when we version the 
-	virtual void	SetChoked( void ) = 0;
-	virtual int		SendDatagram(bf_write *data) = 0;		
-	virtual bool	Transmit(bool onlyReliable = false) = 0;
-
-	virtual const netadr_t	&GetRemoteAddress( void ) const = 0;
-	virtual INetChannelHandler *GetMsgHandler( void ) const = 0;
-	virtual int				GetDropNumber( void ) const = 0;
-	virtual int				GetSocket( void ) const = 0;
-	virtual unsigned int	GetChallengeNr( void ) const = 0;
-	virtual void			GetSequenceData( int &nOutSequenceNr, int &nInSequenceNr, int &nOutSequenceNrAck ) = 0;
-	virtual void			SetSequenceData( int nOutSequenceNr, int nInSequenceNr, int nOutSequenceNrAck ) = 0;
-		
-	virtual void	UpdateMessageStats( int msggroup, int bits) = 0;
-	virtual bool	CanPacket( void ) const = 0;
-	virtual bool	IsOverflowed( void ) const = 0;
-	virtual bool	IsTimedOut( void ) const  = 0;
-	virtual bool	HasPendingReliableData( void ) = 0;
-
-	virtual void	SetFileTransmissionMode(bool bBackgroundMode) = 0;
-	virtual void	SetCompressionMode( bool bUseCompression ) = 0;
-	virtual unsigned int RequestFile(const char *filename) = 0;
-	virtual float	GetTimeSinceLastReceived( void ) const = 0;	// get time since last received packet in seconds
-
-	virtual void	SetMaxBufferSize(bool bReliable, int nBytes, bool bVoice = false ) = 0;
-
-	virtual bool	IsNull() const = 0;
-	virtual int		GetNumBitsWritten( bool bReliable ) = 0;
-	virtual void	SetInterpolationAmount( float flInterpolationAmount ) = 0;
-	virtual void	SetRemoteFramerate( float flFrameTime, float flFrameTimeStdDeviation ) = 0;
-
-	// Max # of payload bytes before we must split/fragment the packet
-	virtual void	SetMaxRoutablePayloadSize( int nSplitSize ) = 0;
-	virtual int		GetMaxRoutablePayloadSize() = 0;
-
-	virtual int		GetProtocolVersion() = 0;
+    virtual ~INetChannel();
+    virtual void SetDataRate(float);
+    virtual bool RegisterMessage(INetMessage*);
+    virtual bool StartStreaming(unsigned int);
+    virtual void ResetStreaming(void);
+    virtual void SetTimeout(float);
+    virtual void SetDemoRecorder(IDemoRecorder*);
+    virtual void SetChallengeNr(unsigned int);
+    virtual void Reset(void);
+    virtual void Clear(void);
+    virtual void Shutdown(char const*);
+    virtual void ProcessPlayback(void);
+    virtual bool ProcessStream(void);
+    virtual void ProcessPacket(netpacket_t*, bool);
+    virtual bool SendNetMsg(INetMessage&, bool, bool);
+    virtual bool SendData(bf_write&, bool);
+    virtual bool SendFile(char const*, unsigned int);
+    virtual void DenyFile(unsigned int);
+    virtual void RequestFile_OLD(char const*, unsigned int);
+    virtual void SetChoked(void);
+    virtual int SendDatagram(bf_write*);
+    virtual bool Transmit(bool);
+    virtual const netadr_t& GetRemoteAddress(void)const;
+    virtual INetChannelHandler* GetMsgHandler(void)const;
+    virtual int GetDropNumber(void)const;
+    virtual int GetSocket(void)const;
+    virtual unsigned int GetChallengeNr(void)const;
+    virtual void GetSequenceData(int&, int&, int&);
+    virtual void SetSequenceData(int, int, int);
+    virtual void UpdateMessageStats(int, int);
+    virtual bool CanPacket(void)const;
+    virtual bool IsOverflowed(void)const;
+    virtual bool IsTimedOut(void)const;
+    virtual bool HasPendingReliableData(void);
+    virtual void SetFileTransmissionMode(bool);
+    virtual void SetCompressionMode(bool);
+    virtual unsigned int RequestFile(RequestFile_t, unsigned int);
+    virtual void SetMaxBufferSize(bool, int, bool);
+    virtual bool IsNull(void)const;
+    virtual int GetNumBitsWritten(bool);
+    virtual void SetInterpolationAmount(float);
+    virtual void SetRemoteFramerate(float, float);
+    virtual void SetMaxRoutablePayloadSize(int);
+    virtual void GetMaxRoutablePayloadSize(void);
+    virtual int GetProtocolVersion(void);
 };
 
 

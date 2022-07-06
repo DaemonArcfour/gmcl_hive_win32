@@ -206,5 +206,8 @@
     <ClInclude Include="hive_clientstate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hive_protocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
