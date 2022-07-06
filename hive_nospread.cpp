@@ -52,8 +52,8 @@ void LuaMathSetSeed(double seed) {
 }
 
 namespace HiveCheats {
-	bool CheckFire() {
-		const char* weapon = CHiveSourceNative.GetClassName(CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer())));
+	bool CheckFire(C_BaseCombatWeaponNew* currentWeapon) {
+		const char* weapon = currentWeapon->GetName();
 		if ((strcmp(weapon, "weapon_physgun") == 0) || (strcmp(weapon, "weapon_physcannon") == 0) || (strcmp(weapon, "gmod_tool") == 0))
 		{
 			aimbot_target = -1;

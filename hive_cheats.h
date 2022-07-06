@@ -5,7 +5,7 @@
 class CBaseEntityNew;
 namespace HiveCheats {
 	void Bunnyhop(GMODCUserCmd* ucmd, CBaseEntityNew* LocalPlayer);
-	bool CheckFire();
+	bool CheckFire(C_BaseCombatWeaponNew* currentWeapon);
 	void DrawEsp();
 	void DrawObservers();
 	void Triggerbot(QAngle Angle, GMODCUserCmd* pCmd, CBaseEntityNew* LocalPlayer);
