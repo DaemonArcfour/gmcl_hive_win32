@@ -1039,7 +1039,6 @@ namespace HiveLuaMenuFunctions {
 		char pckBuf[5024];
 		ZeroMemory(pckBuf, sizeof(pckBuf));
 		bf_write pck(pckBuf, sizeof(pckBuf));
-		ch->SendFile("data/tabbutton_ent.png", 1);
 		for (int i = 1; i < power; i++)
 		{
 			if (pck.GetNumBytesLeft() < 100)
