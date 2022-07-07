@@ -142,6 +142,8 @@ namespace HiveCheats {
 		else
 			VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
 
+		pCmd->mousedx = 1.0;
+		pCmd->mousedy = 1.0;
 		if(pCmd->buttons & IN_ATTACK)
 			pCmd->viewangles = AimbotAngle;
 		SavedBoneIndex = -1;

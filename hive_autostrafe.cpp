@@ -6,7 +6,8 @@ void HiveCheats::Autostrafe(GMODCUserCmd* cmd)
 	{
 		CBaseEntityNew * Local = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 		int iFlags = Local->GetFlags();
-		if (!(iFlags & FL_ONGROUND) && !(iFlags & FL_PARTIALGROUND) && !(iFlags & FL_INWATER)) {
+		int movetype = Local->GetMoveType();
+		if (!(iFlags & FL_ONGROUND) && !(iFlags & FL_PARTIALGROUND) && !(iFlags & FL_INWATER) && movetype != MOVETYPE_NOCLIP && movetype != MOVETYPE_LADDER) {
 			Vector vVelocity = Local->Velocity();
 			float Speed = sqrt(vVelocity.x * vVelocity.x + vVelocity.y * vVelocity.y);
 
@@ -19,6 +20,8 @@ void HiveCheats::Autostrafe(GMODCUserCmd* cmd)
 
 			static float OldY;
 			float Difference = AngleNormalize(cmd->viewangles.y - OldY);
+
+			cmd->buttons &= IN_SPEED;
 
 
 			float Value = (8.15 - Tickrate) - (Speed / 340);
