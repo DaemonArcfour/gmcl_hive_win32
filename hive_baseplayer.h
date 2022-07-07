@@ -498,5 +498,6 @@ public:
 				return *(int*)((uintptr_t)this + 0x350); // m_fFlags
 		#endif
 	}
+
 	OFFSETVAR(GMODCUserCmd*, GetCurrentCommand, 0x2C50); // CPrediction__RunCommand 2 line
 };

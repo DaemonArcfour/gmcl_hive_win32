@@ -9,6 +9,7 @@ void* clientState = 0;
 VPANEL GlobalPanel = 0;
 int MaxClients = 0;
 FireBullets_info BulletInfo;
+QAngle OldPunchAngles = QAngle(0, 0, 0);
 bool LuaInit = false;
 
 namespace HiveHookedFunctions {
@@ -139,8 +140,11 @@ namespace HiveHookedFunctions {
 			if (CLuaMenuCallback.Autostrafe)
 				HiveCheats::Autostrafe(pCmd);
 
+
 			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive())
 				CHiveEnginePredict.Start(pCmd, pLocal);
+
+			
 
 			if (CLuaMenuCallback.Aimbot && CanShoot)
 			{
@@ -153,6 +157,23 @@ namespace HiveHookedFunctions {
 			if (pCmd->buttons & IN_ATTACK && LocalPlayer->isAlive() && CLuaMenuCallback.NoSpread && CanShoot) 
 			{
 				HiveCheats::RemoveSpread(pCmd, currentWeapon, Spread);
+				
+			}
+
+			if (pCmd->buttons & IN_ATTACK && LocalPlayer->isAlive() && CLuaMenuCallback.NoRecoil && CanShoot && !currentWeapon->UsesLua())
+			{
+				Vector p = Vector(OldPunchAngles.x, OldPunchAngles.y, OldPunchAngles.z);
+
+				float normal = VectorNormalize(p);
+
+				normal = max(normal - (10.f + normal * 0.5f) * CHiveInterface.Globals->interval_per_tick, 0.f);
+
+				p *= normal;
+				//p.z = 0.f;
+				if(!CLuaMenuCallback.PSilent)
+					pCmd->viewangles -= QAngle(p.x, p.y, p.z);
+				//else
+				//	pCmd->viewangles -= QAngle(p.x, 0, 0);
 			}
 
 			if (CLuaMenuCallback.PSilent && CLuaMenuCallback.Aimbot && CanShoot)
@@ -222,10 +243,13 @@ namespace HiveHookedFunctions {
 	}
 
 	void  *__fastcall CalcView(void* ecx, void* edx, Vector& vec, QAngle& ang, float& unk1, float& unk2, float& unk3) {
-		if (CLuaMenuCallback.NoRecoil) {
+		
+		if (CLuaMenuCallback.NoRecoil) 
+		{
 			NET_VECTOR(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()), HiveNetVarOffsets::m_vecPunchAngle) = { 0.0f, 0.0f, 0.0f };
 			NET_VECTOR(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()), HiveNetVarOffsets::m_vecPunchAngleVel) = { 0.0f, 0.0f, 0.0f };
 		}
+		
 		return HiveOriginalFunctions::CalcView(ecx, vec, ang, unk1, unk2, unk3);
 	}
 
@@ -237,16 +261,19 @@ namespace HiveHookedFunctions {
 	}
 
 	void __fastcall FrameStageNotify(void* ecx, void* edx, ClientFrameStage_t stage) {
-		
-		if (CLuaMenuCallback.NoRecoil)
+		if (CHiveOptimize.InGame && CHiveOptimize.IsConnected)
 		{
+			
 			C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 			if (LocalPlayer && LocalPlayer->IsAlive())
 			{
-				LocalPlayer->GetViewPunch() = QAngle(0, 0, 0);
+				if (CLuaMenuCallback.NoRecoil)
+				{
+					//LocalPlayer->GetViewPunch() = QAngle(0, 0, 0); breaks decals and desyncs shots
+				}
 			}
+			
 		}
-		
 		HiveOriginalFunctions::FrameStageNotify(ecx, edx, stage);
 	}
 
@@ -293,11 +320,7 @@ namespace HiveHookedFunctions {
 	}
 
 	void* __fastcall SwepPrimaryAttack(void* ecx, void *edx) {
-		QAngle FixRecoil(0,0,0);
-		CHiveInterface.Engine->GetViewAngles(FixRecoil);
-		void *ret = HiveOriginalFunctions::SwepPrimaryAttack(ecx, edx);
-		if(CLuaMenuCallback.NoRecoil)
-			CHiveInterface.Engine->SetViewAngles(FixRecoil);
+		void* ret = HiveOriginalFunctions::SwepPrimaryAttack(ecx, edx);
 		return ret;
 	}
 
@@ -336,8 +359,10 @@ namespace HiveHookedFunctions {
 		if (CLuaMenuCallback.NoRecoil)
 		{
 			QAngle angle;
+			
 			CHiveInterface.Engine->GetViewAngles(angle);
 			HiveOriginalFunctions::RunCommand(_this, player, ucmd, moveHelper);
+			OldPunchAngles = player->GetViewPunch();
 			CHiveInterface.Engine->SetViewAngles(angle);
 		}
 
