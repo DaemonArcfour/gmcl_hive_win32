@@ -41,7 +41,7 @@ public:
 	
 	Particle*			AddParticle( unsigned int particleSize, PMaterialHandle material, const Vector &origin );
 
-	CParticleEffectBinding&	GetBinding()	{ return m_ParticleEffect; }
+	void*	GetBinding()	{ return m_ParticleEffect; }
 
 	const char *GetEffectName();
 
@@ -91,7 +91,7 @@ protected:
 	// Used to track down bugs.
 	char const					*m_pDebugName;
 
-	CParticleEffectBinding		m_ParticleEffect;
+	void*		m_ParticleEffect;
 	Vector						m_vSortOrigin;
 	
 	int							m_Flags;		// Combination of CParticleEffect::FLAG_

@@ -14,6 +14,22 @@ namespace NativeClass {
 				return AngGrab->EyeAngles;
 	}
 
+	int Studio_BoneIndexByName(studiohdr_t* pStudioHdr, char const* pName)
+	{
+		for (int z = 0; z < pStudioHdr->numbones; z++)
+		{
+			auto bone = pStudioHdr->pBone(z);
+			if (bone && bone->parent >= 0)
+			{
+				if (!(bone->flags & 256))
+					continue;
+
+				if (strcmp(bone->pszName(), pName) == 0)
+					return z;
+			}
+		}
+		return 0;
+	}
 
 	bool IsDormant(CBaseEntityNew *Target) {
 		DWORD PageGuard;
@@ -38,7 +54,19 @@ namespace NativeClass {
 		else return 0;
 	}
 
-	void GetBonePosition(void *_this, const char* attachment, Vector &origin, QAngle &angles) {
+	void GetBonePosition(void *_this, const char* attachment, Vector &origin, QAngle &angles) 
+	{
+		matrix3x4_t bones[128];
+		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
+		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
+		float EngineTime = CHiveInterface.Engine->Time();
+		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
+		if (ClientRenderable < 0x1000 || !Setup)
+			return;
+		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
+		int boneid = Studio_BoneIndexByName(studioHdr, attachment);
+		origin = Vector(bones[boneid][0][3], bones[boneid][1][3], bones[boneid][2][3]);
+		/*
 		if (_this && attachment != NULL) {
 			auto ppp_entAnim = (*(int(__thiscall **)(void*))(*(DWORD *)_this + 156))(_this);					// found conversion in DispatchParticleEffect with
 																												//the following comment "Model '%s' doesn't have attachment '%s' to attach particle system '%s' to.\n"  (v3)
@@ -47,6 +75,7 @@ namespace NativeClass {
 		else {
 			return;
 		}
+		*/
 	}
 	bool* bSendPacket = (bool*)CHiveSourceNative.offset_bSendPacket;
 

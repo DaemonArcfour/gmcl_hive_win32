@@ -305,7 +305,7 @@ inline void CNewParticleEffect::MarkShouldPerformCullCheck( bool bEnable )
 {
 	m_bShouldPerformCullCheck = bEnable;
 }
-
+/*
 inline CSmartPtr<CNewParticleEffect> CNewParticleEffect::Create( CBaseEntity *pOwner, const char *pParticleSystemName, const char *pDebugName )
 {
 	CNewParticleEffect *pRet = new CNewParticleEffect( pOwner, pParticleSystemName );
@@ -321,7 +321,7 @@ inline CSmartPtr<CNewParticleEffect> CNewParticleEffect::Create( CBaseEntity *pO
 	pRet->SetDynamicallyAllocated( true );
 	return pRet;
 }
-
+*/
 //--------------------------------------------------------------------------------
 // If you use an HPARTICLEFFECT instead of a cnewparticleeffect *, you get a pointer
 // which will go to null when the effect is deleted

@@ -275,7 +275,39 @@ namespace HiveDraw {
 		Clear(size.x + size.w, size.y + size.h - HorzLine, 1, HorzLine, color);
 	}
 
-	void DrawSkeleton(Color color, CBaseEntityNew* target) {
+	void DrawSkeleton(Color color, CBaseEntityNew* target) 
+	{
+		matrix3x4_t bones[128];
+		C_BasePlayerNew* Player = (C_BasePlayerNew*)target;
+		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
+		float EngineTime = CHiveInterface.Engine->Time();
+		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
+		if (ClientRenderable < 0x1000 || !Setup)
+			return;
+		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
+		
+		for (int z = 0; z < studioHdr->numbones; z++)
+		{
+			auto bone = studioHdr->pBone(z);
+			if (bone && bone->parent >= 0)
+			{
+				if (!(bone->flags & 256))
+					continue;
+				Vector normalBonePos = Vector(bones[z][0][3], bones[z][1][3], bones[z][2][3]);
+				Vector normalParentBonePos = Vector(bones[bone->parent][0][3], bones[bone->parent][1][3], bones[bone->parent][2][3]);
+				if (normalBonePos == Vector(0, 0, 0) || normalParentBonePos == Vector(0, 0, 0))
+					continue;
+
+				Vector bonePosFrom;
+				Vector parentBonePos;
+				if (!WorldToScreen(normalBonePos, bonePosFrom) || !WorldToScreen(normalParentBonePos, parentBonePos))
+					continue;
+				DrawLine(bonePosFrom.x, bonePosFrom.y, parentBonePos.x, parentBonePos.y, Color(255,255,255,255));
+				//DrawString(bonePosFrom.x, bonePosFrom.y, Color(255, 255, 255, 255), Fonts::ESP, bone->pszName());
+			}
+		}
+
+		/*
 		HiveDraw::DrawBone(NativeClass::BonesTable[0], NativeClass::BonesTable[1], target,   color);
 		HiveDraw::DrawBone(NativeClass::BonesTable[1], NativeClass::BonesTable[2], target,   color);
 		HiveDraw::DrawBone(NativeClass::BonesTable[2], NativeClass::BonesTable[3], target,   color);
@@ -295,6 +327,7 @@ namespace HiveDraw {
 		HiveDraw::DrawBone(NativeClass::BonesTable[16], NativeClass::BonesTable[17], target, color);
 		HiveDraw::DrawBone(NativeClass::BonesTable[17], NativeClass::BonesTable[18], target, color);
 		HiveDraw::DrawBone(NativeClass::BonesTable[18], NativeClass::BonesTable[19], target, color);
+		*/
 	}
 
 	void DrawWeapon(const char* weapon, ESPBox size)

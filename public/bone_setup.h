@@ -374,7 +374,6 @@ float Studio_FindSeqDistance( const CStudioHdr *pStudioHdr, int iSequence, const
 float Studio_FindSeqVelocity( const CStudioHdr *pStudioHdr, int iSequence, const float poseParameter[], float flVelocity );
 int Studio_FindAttachment( const CStudioHdr *pStudioHdr, const char *pAttachmentName );
 int Studio_FindRandomAttachment( const CStudioHdr *pStudioHdr, const char *pAttachmentName );
-int Studio_BoneIndexByName( const CStudioHdr *pStudioHdr, const char *pName );
 const char *Studio_GetDefaultSurfaceProps( CStudioHdr *pstudiohdr );
 float Studio_GetMass( CStudioHdr *pstudiohdr );
 const char *Studio_GetKeyValueText( const CStudioHdr *pStudioHdr, int iSequence );
