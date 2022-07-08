@@ -329,6 +329,11 @@ namespace HiveTroubleshooter {
 		else
 			PrintError("\"m_iHealth\" netvar found!", OK, bError);
 		ConMsg("[0x%.8X]\n", HiveNetVarOffsets::m_iHealth);
+		if (!HiveNetVarOffsets::m_iArmor)
+			PrintError("Failed to find \"m_iArmor\" netvar.", ERROR, bError);
+		else
+			PrintError("\"m_iArmor\" netvar found!", OK, bError);
+		ConMsg("[0x%.8X]\n", HiveNetVarOffsets::m_iArmor);
 		if (!HiveNetVarOffsets::m_iTeamNum)
 			PrintError("Failed to find \"m_iTeamNum\" netvar.", ERROR, bError);
 		else

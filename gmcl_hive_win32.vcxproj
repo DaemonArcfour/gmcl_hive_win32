@@ -184,6 +184,7 @@
     <ClCompile Include="hive_nospread.cpp" />
     <ClCompile Include="hive_observers.cpp" />
     <ClCompile Include="hive_optimize.cpp" />
+    <ClCompile Include="hive_playerresource.cpp" />
     <ClCompile Include="hive_protection.cpp" />
     <ClCompile Include="hive_setupnetvars.cpp" />
     <ClCompile Include="hive_signature.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="hive_native.h" />
     <ClInclude Include="hive_netvar.h" />
     <ClInclude Include="hive_optimize.h" />
+    <ClInclude Include="hive_playerresource.h" />
     <ClInclude Include="hive_protection.h" />
     <ClInclude Include="hive_protocol.h" />
     <ClInclude Include="hive_sdk.h" />

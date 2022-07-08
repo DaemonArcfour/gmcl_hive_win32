@@ -39,6 +39,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbESPWeapon);
 		InitLUAFunction(MENU, SetESPHealth);
 		InitLUAFunction(MENU, GetbESPHealth);
+		InitLUAFunction(MENU, SetESPArmor);
+		InitLUAFunction(MENU, GetbESPArmor);
 		InitLUAFunction(MENU, SetESPBarrel);
 		InitLUAFunction(MENU, GetbESPBarrel);
 		InitLUAFunction(MENU, SetESPBarrelDist);
@@ -686,6 +688,27 @@ namespace HiveLuaMenuFunctions {
 
 	int GetbESPHealth(lua_State* state) {
 		MENU->PushBool(CLuaMenuCallback.ESPHealth);
+		return 1;
+	}
+
+	int SetESPArmor(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.ESPArmor = MENU->GetBool(1);
+			if (CLuaMenuCallback.ESPArmor)
+				HiveTroubleshooter::Print("Armor ESP enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Armor ESP disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbESPArmor(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.ESPArmor);
 		return 1;
 	}
 

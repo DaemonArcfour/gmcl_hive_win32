@@ -21,6 +21,7 @@ namespace HiveLuaMenuFunctions {
 	int SetESPConnections(lua_State* state);
 	int SetESPHealth(lua_State* state);
 	int SetESPBox(lua_State* state);
+	int SetESPArmor(lua_State* state);
 	int SetChams(lua_State* state);
 	int GetbChams(lua_State* state);
 	int SetPSilent(lua_State* state);
@@ -29,6 +30,7 @@ namespace HiveLuaMenuFunctions {
 	int GetbESPName(lua_State* state);
 	int GetbESPDist(lua_State* state);
 	int GetbESPHealth(lua_State* state);
+	int GetbESPArmor(lua_State* state);
 	int SetStopLuaGameModeHooks(lua_State* state);
 	int GetbStopLuaGameModeHooks(lua_State* state);
 	int GetbESPBox(lua_State* state);
@@ -113,6 +115,7 @@ public:
 	bool NoSpread = false;
 	bool PSilent = false;
 	bool ESPName = true;
+	bool ESPArmor = true;
 	bool ESPHealth = true;
 	bool ESPBox = true;
 	bool ESPWeapon = true;

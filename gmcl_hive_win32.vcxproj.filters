@@ -108,6 +108,9 @@
     <ClCompile Include="hive_enginepredict.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hive_playerresource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hive_dependencies.h">
@@ -207,6 +210,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hive_protocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hive_playerresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

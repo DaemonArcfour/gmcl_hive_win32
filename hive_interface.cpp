@@ -37,4 +37,5 @@ HiveInterface::HiveInterface() {
 	MoveHelper = **reinterpret_cast<IMoveHelper***>(HiveScanner::SigScan((DWORD)GetModuleHandle("client.dll"), HiveScanner::GetModuleSize("client.dll"), (PBYTE)"\x8B\x0D\x00\x00\x00\x00\x52\xF3\x0F\x10\x80\x00\x00\x00\x00", "xx????xxxxx????") + 0x2);
 	ClientState = *reinterpret_cast<CClientState**>((HiveScanner::SigScan((DWORD)GetModuleHandle("engine.dll"), HiveScanner::GetModuleSize("engine.dll"), (PBYTE)"\xB9\x00\x00\x00\x00\xDD\x5C\x24\x18", "x????xxxx") + 0x1)); //((DWORD)GetModuleHandle("engine.dll") + 0x4E3AA0);
 	ClientState += 104;
+	PlayerResource = reinterpret_cast<CPlayerResourceNew*>((DWORD)GetModuleHandle("client.dll") + 0x6B6570);//reinterpret_cast<CPlayerResourceNew*>((HiveScanner::SigScan((DWORD)GetModuleHandle("client.dll"), HiveScanner::GetModuleSize("client.dll"), (PBYTE)"\xA1\x00\x00\x00\x00\x85\xC0\x74\x06", "x????xxxx") + 0x2));
 }

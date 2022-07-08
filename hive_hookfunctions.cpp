@@ -127,6 +127,7 @@ namespace HiveHookedFunctions {
 			QAngle vOldAngles = pCmd->viewangles;
 			bool CanShoot = true;
 			C_BaseCombatWeaponNew* currentWeapon = (C_BaseCombatWeaponNew*)pLocal->GetActiveWeapon();
+
 			if (pLocal->IsAlive() && currentWeapon)
 				CanShoot = HiveCheats::CheckFire(currentWeapon);
 			else

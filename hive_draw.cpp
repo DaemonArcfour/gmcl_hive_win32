@@ -333,8 +333,8 @@ namespace HiveDraw {
 	{
 		int HPEnemy = 100;
 		HPEnemy = pEntity->Health();
-		char nameBuffer[512];
-		sprintf_s(nameBuffer, "%d", HPEnemy);
+		char strBuffer[512];
+		sprintf_s(strBuffer, "%d", HPEnemy);
 		
 
 		float h = (size.h);
@@ -343,20 +343,57 @@ namespace HiveDraw {
 		float health = pEntity->Health();
 		if (health > 100)
 			health = 100;
+
+		if (health < 0)
+			health = 0;
 		UINT hp = h - (UINT)((h * health) / 100);
 
 		int Red = 255 - (health*2.55);
 		int Green = health*2.55;
-
+		RECT hpSize = GetTextSize((DWORD)Fonts::ESP, strBuffer);
 		DrawOutlinedRect((size.x - 6) - 1, size.y - 1, 3, h + 2, Color(0, 0, 0, 180));
 
 		DrawLine((size.x - 6), size.y + hp, (size.x - 6), size.y + h, Color(Red, Green, 0, 180));
 
 		if (health) {
 
-			DrawString(size.x - 23, size.y + hp, Color(255, 255, 255, 255), Fonts::ESP, nameBuffer);
+			DrawString(size.x - hpSize.right - 9, size.y + hp, Color(255, 255, 255, 255), Fonts::ESP, strBuffer);
 		}
 	}
+
+	void DrawArmor(CBaseEntityNew* pEntity, ESPBox size)
+	{
+		int ArmorEnemy = CHiveInterface.PlayerResource->GetArmor(pEntity->Index());;
+		if (!ArmorEnemy)
+			return;
+		char strBuffer[512];
+		sprintf_s(strBuffer, "%d", ArmorEnemy);
+
+
+		float h = (size.h);
+		float offset = (h / 4.f) + 5;
+		float w = h / 64.f;
+		float armor = ArmorEnemy;
+		if (armor > 100)
+			armor = 100;
+		if (armor < 0)
+			armor = 0;
+		UINT ap = h - (UINT)((h * armor) / 100);
+
+		int Green = 255 - (armor * 2.55);
+		int Blue = armor * 2.55;
+		RECT armorSize = GetTextSize((DWORD)Fonts::ESP, strBuffer);
+		DrawOutlinedRect((size.x + size.w + 5) - 1, size.y - 1, 3, h + 2, Color(0, 0, 0, 180));
+
+		DrawLine((size.x + size.w + 5), size.y + ap, (size.x + size.w + 5), size.y + h, Color(0, Green, Blue, 180));
+		
+		if (armor) {
+
+			DrawString(size.x + size.w + 8, size.y + ap, Color(255, 255, 255, 255), Fonts::ESP, strBuffer);
+		}
+		
+	}
+
 	void InitializeFonts()
 	{
 		Fonts::Default = 0x1D;

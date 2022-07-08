@@ -85,6 +85,7 @@ namespace HiveCheats {
 				else
 					HiveDraw::DrawCornerBox(Box, Color(255, 180, 0, 255));
 			}
+
 			if (CLuaMenuCallback.ESPName)
 				HiveDraw::DrawName(info, Box);
 
@@ -93,6 +94,9 @@ namespace HiveCheats {
 
 			if (CLuaMenuCallback.ESPHealth)
 				HiveDraw::DrawHealth(target, Box);
+
+			if (CLuaMenuCallback.ESPArmor)
+				HiveDraw::DrawArmor(target, Box);
 
 			if (CLuaMenuCallback.ESPWeapon) {
 				void* ent = CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(target->Index()));

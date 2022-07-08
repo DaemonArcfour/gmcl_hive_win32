@@ -43,6 +43,7 @@ namespace HiveDraw {
 	void Draw2DBox(float x, float y, float w, float h, float px, int r, int g, int b, int a);
 	void DrawBone(char* StartBone, char*  EndBone, CBaseEntityNew* target, Color drawCol);
 	void DrawHealth(CBaseEntityNew* pEntity, ESPBox size);
+	void DrawArmor(CBaseEntityNew* pEntity, ESPBox size);
 	void DrawBarrel(Color color, CBaseEntityNew* pEntity);
 	void DrawConnection(ESPBox size, Color color, CBaseEntityNew* pEntity);
 	void DrawDist(CBaseEntityNew* pEntity, CBaseEntityNew* me, ESPBox size);

@@ -51,4 +51,5 @@ public:
 	IGameMovement* GameMovement;
 	CPredictionNew* Prediction;
 	CClientState* ClientState;
+	CPlayerResourceNew* PlayerResource;
 }; extern HiveInterface CHiveInterface;
