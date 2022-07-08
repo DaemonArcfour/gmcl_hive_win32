@@ -389,6 +389,11 @@ namespace HiveTroubleshooter {
 		else
 			PrintError("\"m_iPrimaryAmmoType\" netvar found!", OK, bError);
 		ConMsg("[0x%.8X]\n", HiveNetVarOffsets::m_iPrimaryAmmoType);
+		if (!HiveNetVarOffsets::m_flNextPrimaryAttack)
+			PrintError("Failed to find \"m_flNextPrimaryAttack\" netvar.", ERROR, bError);
+		else
+			PrintError("\"m_flNextPrimaryAttack\" netvar found!", OK, bError);
+		ConMsg("[0x%.8X]\n", HiveNetVarOffsets::m_flNextPrimaryAttack);
 		/*
 		if (!HiveNetVarOffsets::m_bDormant)
 			PrintError("Failed to find \"m_bDormant\" netvar.", ERROR, bError);

@@ -1,4 +1,5 @@
 #include "hive_baseentity.h"
+#include "hive_baseplayer.h"
 #include "hive_native.h"
 float CBaseEntityNew::Friction()
 {
@@ -81,6 +82,11 @@ float CBaseEntityNew::MaxSpeed()
 
 bool CBaseEntityNew::IsDormant(){
 	return *reinterpret_cast<bool*>((DWORD)this + HiveNetVarOffsets::m_bDormant);
+}
+
+float CBaseEntityNew::GetNextPrimaryAttack()
+{
+	return *reinterpret_cast<float*>((DWORD)(((C_BasePlayerNew*)this)->GetActiveWeapon()) + HiveNetVarOffsets::m_flNextPrimaryAttack);
 }
 
 int& CBaseEntityNew::GetFlags() const noexcept

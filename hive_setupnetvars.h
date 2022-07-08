@@ -30,8 +30,8 @@ namespace HiveNetVarOffsets {
 	extern DWORD m_hActiveWeapon; //DT_BaseCombatCharacter
 	extern DWORD m_bDormant; // DT_BaseEntity
 	extern DWORD m_iPrimaryAmmoType;
-	extern DWORD m_flNextPrimaryAttack;
 	extern DWORD m_iObserverMode;
 	extern DWORD m_hObserverTarget;
+	extern DWORD m_flNextPrimaryAttack;
 }
 

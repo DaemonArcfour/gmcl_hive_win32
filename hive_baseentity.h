@@ -34,6 +34,7 @@ public:
 	Vector OBBMaxs();
 	bool isAlive();
 	bool IsDormant();
+	float GetNextPrimaryAttack();
 
 	int Index()
 	{

@@ -54,6 +54,6 @@ namespace HiveNetVarOffsets {
 		m_hActiveWeapon = g_pNetvars.get_offset("DT_BaseCombatCharacter", "m_hActiveWeapon");
 		//LocalWeaponData 
 		m_iPrimaryAmmoType = g_pNetvars.get_offset("DT_BaseCombatWeapon", "LocalWeaponData", "m_iPrimaryAmmoType");
-		m_flNextPrimaryAttack = g_pNetvars.get_offset("DT_BaseCombatWeapon", "LocalWeaponData", "m_flNextPrimaryAttack");
+		m_flNextPrimaryAttack = g_pNetvars.get_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
 	}
 } 

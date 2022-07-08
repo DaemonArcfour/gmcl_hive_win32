@@ -121,6 +121,7 @@ namespace HiveHookedFunctions {
 		CHiveOptimize.InGame = CHiveInterface.Engine->IsInGame();
 
 		if (CHiveOptimize.InGame && CHiveOptimize.IsConnected) {
+			float fServerTime = LocalPlayer->GetTickBase() * CHiveInterface.Globals->interval_per_tick;
 			float fOldSidemove = pCmd->sidemove;
 			float fOldForward = pCmd->forwardmove;
 			QAngle vOldAngles = pCmd->viewangles;
@@ -130,6 +131,14 @@ namespace HiveHookedFunctions {
 				CanShoot = HiveCheats::CheckFire(currentWeapon);
 			else
 				CanShoot = false;
+
+			if (CanShoot)
+			{
+				CanShoot = LocalPlayer->GetNextPrimaryAttack() <= fServerTime;
+
+				if(!CanShoot)
+					pCmd->buttons &= ~IN_ATTACK;
+			}
 
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
@@ -141,7 +150,7 @@ namespace HiveHookedFunctions {
 				HiveCheats::Autostrafe(pCmd);
 
 
-			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive())
+			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Start(pCmd, pLocal);
 
 			
@@ -162,16 +171,8 @@ namespace HiveHookedFunctions {
 
 			if (pCmd->buttons & IN_ATTACK && LocalPlayer->isAlive() && CLuaMenuCallback.NoRecoil && CanShoot && !currentWeapon->UsesLua())
 			{
-				Vector p = Vector(OldPunchAngles.x, OldPunchAngles.y, OldPunchAngles.z);
-
-				float normal = VectorNormalize(p);
-
-				normal = max(normal - (10.f + normal * 0.5f) * CHiveInterface.Globals->interval_per_tick, 0.f);
-
-				p *= normal;
-				//p.z = 0.f;
 				if(!CLuaMenuCallback.PSilent)
-					pCmd->viewangles -= QAngle(p.x, p.y, p.z);
+					pCmd->viewangles -= OldPunchAngles;
 				//else
 				//	pCmd->viewangles -= QAngle(p.x, 0, 0);
 			}
@@ -185,7 +186,7 @@ namespace HiveHookedFunctions {
 				pCmd->world_click_direction = tmp;
 			}
 
-			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive())
+			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
 
 			if(CLuaMenuCallback.Aimbot)
@@ -246,6 +247,8 @@ namespace HiveHookedFunctions {
 		
 		if (CLuaMenuCallback.NoRecoil) 
 		{
+			Vector vecpunch = NET_VECTOR(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()), HiveNetVarOffsets::m_vecPunchAngle);
+			OldPunchAngles = QAngle(vecpunch.x, vecpunch.y, vecpunch.z);
 			NET_VECTOR(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()), HiveNetVarOffsets::m_vecPunchAngle) = { 0.0f, 0.0f, 0.0f };
 			NET_VECTOR(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()), HiveNetVarOffsets::m_vecPunchAngleVel) = { 0.0f, 0.0f, 0.0f };
 		}
@@ -362,7 +365,6 @@ namespace HiveHookedFunctions {
 			
 			CHiveInterface.Engine->GetViewAngles(angle);
 			HiveOriginalFunctions::RunCommand(_this, player, ucmd, moveHelper);
-			OldPunchAngles = player->GetViewPunch();
 			CHiveInterface.Engine->SetViewAngles(angle);
 		}
 
