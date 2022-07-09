@@ -144,17 +144,29 @@ namespace HiveHookedFunctions {
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
 
+			HiveCheats::FakeLag(pCmd);
+
 			if (CLuaMenuCallback.Bhop)
 				HiveCheats::Bunnyhop(pCmd, LocalPlayer);
 
 			if (CLuaMenuCallback.Autostrafe)
 				HiveCheats::Autostrafe(pCmd);
 
+			
 
 			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Start(pCmd, pLocal);
 
-			
+			if (CLuaMenuCallback.Backtrack)
+			{
+				HiveCheats::cBacktrackInterface.ProcessTick(pCmd);
+			}
+
+			if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && currentWeapon)
+			{
+				if (HiveCheats::CheckFire(currentWeapon))
+					HiveCheats::Antiaim(pCmd);
+			}
 
 			if (CLuaMenuCallback.Aimbot && CanShoot)
 			{
@@ -174,9 +186,8 @@ namespace HiveHookedFunctions {
 			{
 				if(!CLuaMenuCallback.PSilent)
 					pCmd->viewangles -= OldPunchAngles;
-				//else
-				//	pCmd->viewangles -= QAngle(p.x, 0, 0);
 			}
+
 
 			if (CLuaMenuCallback.PSilent && CLuaMenuCallback.Aimbot && CanShoot)
 			{
@@ -190,7 +201,7 @@ namespace HiveHookedFunctions {
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
 
-			if(CLuaMenuCallback.Aimbot)
+			if(CLuaMenuCallback.Aimbot || CLuaMenuCallback.Antiaim)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
 		}
 		/*
@@ -265,19 +276,20 @@ namespace HiveHookedFunctions {
 	}
 
 	void __fastcall FrameStageNotify(void* ecx, void* edx, ClientFrameStage_t stage) {
+		/*
 		if (CHiveOptimize.InGame && CHiveOptimize.IsConnected)
 		{
-			
 			C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 			if (LocalPlayer && LocalPlayer->IsAlive())
 			{
 				if (CLuaMenuCallback.NoRecoil)
 				{
-					//LocalPlayer->GetViewPunch() = QAngle(0, 0, 0); breaks decals and desyncs shots
+					LocalPlayer->GetViewPunch() = QAngle(0, 0, 0); breaks decals and desyncs shots
 				}
 			}
 			
 		}
+		*/
 		HiveOriginalFunctions::FrameStageNotify(ecx, edx, stage);
 	}
 

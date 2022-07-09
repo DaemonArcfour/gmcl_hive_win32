@@ -1,6 +1,5 @@
 #include "hive_dependencies.h"
 
-
 using namespace GarrysMod::Lua;
 ILuaBase *MENU;
 

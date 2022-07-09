@@ -7,7 +7,8 @@ namespace HiveLuaMenuFunctions {
 
 	int SetLuaExecution(lua_State* state);
 	int GetbLuaExecution(lua_State* state);
-
+	int SetChoke(lua_State* state);
+	int GetChoke(lua_State* state);
 	int SetAntiScreengrab(lua_State* state);
 	int SetESP(lua_State* state);
 	int SetBoneESP(lua_State * state);
@@ -77,6 +78,9 @@ namespace HiveLuaMenuFunctions {
 	int SetFriendList(lua_State*);
 	int GetFriendList(lua_State*);
 
+	int SetbSendPacket(lua_State*);
+	int GetbSendPacket(lua_State*);
+
 	int WriteFile(lua_State* state);
 
 	int GetServerIP(lua_State* state);
@@ -91,6 +95,16 @@ namespace HiveLuaMenuFunctions {
 	int GetIDs(lua_State* state);
 	int UnlockAchivement(lua_State* state);
 	int RequestInvalidFile(lua_State* state);
+
+	int SetBacktrack(lua_State* state);
+	int GetbBacktrack(lua_State* state);
+	int SetBacktrackMaxTicks(lua_State* state);
+	int GetBacktrackMaxTicks(lua_State* state);
+
+	int SetAntiaim(lua_State* state);
+	int GetbAntiaim(lua_State* state);
+	int SetAntiaimType(lua_State* state);
+	int GetAntiaimType(lua_State* state);
 }
 enum
 {
@@ -104,7 +118,10 @@ public:
 	std::string GmodWorkspace = "\0";
 	bool LuaExecution = true;
 	bool Autostrafe = false;
+	bool Backtrack = false;
 	bool StopLuaGameModeHooks = false;
+	bool Antiaim = false;
+	int	AntiaimType = 0;
 	bool ESP = false;
 	bool BoneESP = false;
 	bool Bhop = false;
@@ -113,6 +130,8 @@ public:
 	bool Triggerbot = false;
 	bool NoRecoil = false;
 	bool NoSpread = false;
+	int Choke = 0;
+	int Backtrack_max_tick = 8;
 	bool PSilent = false;
 	bool ESPName = true;
 	bool ESPArmor = true;

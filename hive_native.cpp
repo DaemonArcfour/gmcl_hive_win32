@@ -54,7 +54,7 @@ namespace NativeClass {
 		else return 0;
 	}
 
-	void GetBonePosition(void *_this, const char* attachment, Vector &origin, QAngle &angles) 
+	bool GetBonePosition(void *_this, const char* attachment, Vector &origin) 
 	{
 		matrix3x4_t bones[128];
 		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
@@ -62,10 +62,43 @@ namespace NativeClass {
 		float EngineTime = CHiveInterface.Engine->Time();
 		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
 		if (ClientRenderable < 0x1000 || !Setup)
-			return;
+			return false;
 		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
-		int boneid = Studio_BoneIndexByName(studioHdr, attachment);
-		origin = Vector(bones[boneid][0][3], bones[boneid][1][3], bones[boneid][2][3]);
+		if (studioHdr)
+		{
+			int boneid = Studio_BoneIndexByName(studioHdr, attachment);
+			origin = Vector(bones[boneid][0][3], bones[boneid][1][3], bones[boneid][2][3]);
+			return true;
+		}
+		return false;
+		/*
+		if (_this && attachment != NULL) {
+			auto ppp_entAnim = (*(int(__thiscall **)(void*))(*(DWORD *)_this + 156))(_this);					// found conversion in DispatchParticleEffect with
+																												//the following comment "Model '%s' doesn't have attachment '%s' to attach particle system '%s' to.\n"  (v3)
+			CHiveSourceNative.GetBonePosition((void*)ppp_entAnim, CHiveSourceNative.LookUpBone((void*)ppp_entAnim, attachment), origin, angles);
+		}
+		else {
+			return;
+		}
+		*/
+	}
+
+	bool GetBonePosition(void* _this, const char* attachment, Vector& origin, matrix3x4_t* bones)
+	{
+		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
+		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
+		float EngineTime = CHiveInterface.Engine->Time();
+		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
+		if (ClientRenderable < 0x1000 || !Setup)
+			return false;
+		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
+		if (studioHdr)
+		{
+			int boneid = Studio_BoneIndexByName(studioHdr, attachment);
+			origin = Vector(bones[boneid][0][3], bones[boneid][1][3], bones[boneid][2][3]);
+			return true;
+		}
+		return false;
 		/*
 		if (_this && attachment != NULL) {
 			auto ppp_entAnim = (*(int(__thiscall **)(void*))(*(DWORD *)_this + 156))(_this);					// found conversion in DispatchParticleEffect with

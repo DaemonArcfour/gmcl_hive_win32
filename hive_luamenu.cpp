@@ -2,6 +2,7 @@
 #include "hive_native.h"
 #include "hive_protocol.h"
 #include "inetchannel.h"
+#include "hive_cheats.h"
 
 DWORD *sig16 = 0;
 LuaMenuCallback CLuaMenuCallback;
@@ -71,6 +72,16 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbTriggerbot);
 		InitLUAFunction(MENU, SetNoRecoil);
 		InitLUAFunction(MENU, GetbNoRecoil);
+		InitLUAFunction(MENU, SetChoke);
+		InitLUAFunction(MENU, GetChoke);
+		InitLUAFunction(MENU, SetBacktrackMaxTicks);
+		InitLUAFunction(MENU, GetBacktrackMaxTicks);
+		InitLUAFunction(MENU, SetBacktrack);
+		InitLUAFunction(MENU, GetbBacktrack);
+		InitLUAFunction(MENU, SetAntiaim);
+		InitLUAFunction(MENU, GetbAntiaim);
+		InitLUAFunction(MENU, SetAntiaimType);
+		InitLUAFunction(MENU, GetAntiaimType);
 		InitLUAFunction(MENU, SetNoSpread);
 		InitLUAFunction(MENU, GetbNoSpread);
 		InitLUAFunction(MENU, SetChamsWireframe);
@@ -95,6 +106,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetIDs);
 		InitLUAFunction(MENU, SetFriendList);
 		InitLUAFunction(MENU, GetFriendList);
+		InitLUAFunction(MENU, SetbSendPacket);
+		InitLUAFunction(MENU, GetbSendPacket);
 		InitLUAFunction(MENU, RequestInvalidFile);
 	}
 
@@ -773,6 +786,127 @@ namespace HiveLuaMenuFunctions {
 
 	int GetbESPBox(lua_State* state) {
 		MENU->PushBool(CLuaMenuCallback.ESPBox);
+		return 1;
+	}
+
+	int SetbSendPacket(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			*HiveCheats::bSendPacket = MENU->GetBool(1);
+			if (*HiveCheats::bSendPacket)
+				HiveTroubleshooter::Print("bSendPacket enabled!", 1);
+			else
+				HiveTroubleshooter::Print("bSendPacket disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbSendPacket(lua_State* state) {
+		MENU->PushBool(*HiveCheats::bSendPacket);
+		return 1;
+	}
+
+
+	int SetChoke(lua_State* state) 
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.Choke = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("Choke set to " + std::to_string(CLuaMenuCallback.Choke) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
+
+	int GetChoke(lua_State* state) {
+		MENU->PushNumber(CLuaMenuCallback.Choke);
+		return 1;
+	}
+
+	int SetBacktrackMaxTicks(lua_State* state)
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.Backtrack_max_tick = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("Backtrack max ticks set to " + std::to_string(CLuaMenuCallback.Backtrack_max_tick) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
+
+	int GetBacktrackMaxTicks(lua_State* state) {
+		MENU->PushNumber(CLuaMenuCallback.Backtrack_max_tick);
+		return 1;
+	}
+
+	int SetAntiaimType(lua_State* state) 
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.AntiaimType = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("Antiaim type set to " + std::to_string(CLuaMenuCallback.AntiaimType) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
+
+	int GetAntiaimType(lua_State* state) {
+		MENU->PushNumber(CLuaMenuCallback.AntiaimType);
+		return 1;
+	}
+
+	int SetAntiaim(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.Antiaim = MENU->GetBool(1);
+			if (CLuaMenuCallback.Antiaim)
+				HiveTroubleshooter::Print("Antiaim enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Antiaim disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbAntiaim(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.Antiaim);
+		return 1;
+	}
+
+	int SetBacktrack(lua_State* state) {
+		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
+		{
+			CLuaMenuCallback.Backtrack = MENU->GetBool(1);
+			if (CLuaMenuCallback.Backtrack)
+				HiveTroubleshooter::Print("Backtrack enabled!", 1);
+			else
+				HiveTroubleshooter::Print("Backtrack disabled!", 1);
+			return 1;
+		}
+
+		HiveTroubleshooter::Print("This function only accepts bool variables.", 0);
+
+		return 0;
+	}
+
+	int GetbBacktrack(lua_State* state) {
+		MENU->PushBool(CLuaMenuCallback.Backtrack);
 		return 1;
 	}
 

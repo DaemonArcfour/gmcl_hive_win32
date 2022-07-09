@@ -102,7 +102,7 @@ namespace HiveCheats {
 				continue;
 
 			for (int i = 0; i < 21; i++) {
-				NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(index), NativeClass::PriorityPoints[i], BonePosition, dummy);
+				NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(index), NativeClass::PriorityPoints[i], BonePosition);
 				
 				if (!GetVisible(LocalPlayer->GetEyePosition(), BonePosition, pBaseEntity, LocalPlayer))
 					continue;
@@ -132,7 +132,7 @@ namespace HiveCheats {
 
 
 		aimbot_target = m_nTarget;
-		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition, dummy);
+		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition);
 		if (!CLuaMenuCallback.EnginePredict)
 		{
 			PredictedPosition = EnemyPosition - (LocalPlayer->Velocity() * CHiveInterface.Globals->interval_per_tick);

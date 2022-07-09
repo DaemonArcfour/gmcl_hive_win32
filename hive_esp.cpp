@@ -98,6 +98,9 @@ namespace HiveCheats {
 			if (CLuaMenuCallback.ESPArmor)
 				HiveDraw::DrawArmor(target, Box);
 
+			if(CLuaMenuCallback.Backtrack)
+				HiveDraw::DrawBacktrackTicks(target);
+
 			if (CLuaMenuCallback.ESPWeapon) {
 				void* ent = CHiveSourceNative.GetPlayerActiveWeapon(CHiveInterface.EntityList->GetClientEntity(target->Index()));
 				if (ent) {

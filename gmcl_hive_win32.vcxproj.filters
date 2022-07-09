@@ -111,6 +111,12 @@
     <ClCompile Include="hive_playerresource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hive_fakelag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hive_backtrack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hive_dependencies.h">

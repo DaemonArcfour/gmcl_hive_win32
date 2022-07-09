@@ -26,6 +26,8 @@
 #include <psapi.h>
 #include <memory>
 #include <math.h>
+#include <map>
+#include <deque>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

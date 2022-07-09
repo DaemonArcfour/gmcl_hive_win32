@@ -6,7 +6,7 @@ typedef C_BaseCombatWeapon*(*native_GetPlayerCombatWeapon)(void*);
 typedef CRC32_t(__thiscall* native_GetChecksum)(void *_this);
 typedef unsigned int(*native_MD5_Random)(unsigned int);
 typedef int(__thiscall* native_LookUpBone)(void* ppp_entAnim, const char *attachment);
-typedef void(__thiscall* native_GetBonePosition)(void *ppp_entAnim, int  boneNum, Vector &origin, QAngle &angles);
+typedef void(__thiscall* native_GetBonePosition)(void *ppp_entAnim, int  boneNum, Vector &origin/*, QAngle& angles*/);
 typedef char*(__thiscall* native_GetClassName)(void *_this);
 typedef CBaseEntityNew*(*native_GetObserverTarget)(C_BasePlayer *_this);
 typedef void*(__thiscall* native_initkeyvalues)(void *_this, const char*);
@@ -68,7 +68,8 @@ namespace NativeClass {
 	char* GetLuaWeaponName(C_BasePlayer*);
 	QAngle GetEntEyeAng(CBaseEntityNew*);
 	bool IsDormant(CBaseEntityNew *Target);
-	void GetBonePosition(void *, const char*, Vector&, QAngle&);
+	bool GetBonePosition(void* ply, const char* attachment, Vector& origin);
+	bool GetBonePosition(void* _this, const char* attachment, Vector& origin, matrix3x4_t* bones);
 }
 
 class WeaponName;

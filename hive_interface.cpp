@@ -1,4 +1,5 @@
 #include "hive_interface.h"
+#include "hive_cheats.h"
 HiveInterface CHiveInterface;
 
 HiveInterface::HiveInterface() {
@@ -38,4 +39,8 @@ HiveInterface::HiveInterface() {
 	ClientState = *reinterpret_cast<CClientState**>((HiveScanner::SigScan((DWORD)GetModuleHandle("engine.dll"), HiveScanner::GetModuleSize("engine.dll"), (PBYTE)"\xB9\x00\x00\x00\x00\xDD\x5C\x24\x18", "x????xxxx") + 0x1)); //((DWORD)GetModuleHandle("engine.dll") + 0x4E3AA0);
 	ClientState += 104;
 	PlayerResource = reinterpret_cast<CPlayerResourceNew*>((DWORD)GetModuleHandle("client.dll") + 0x6B6570);//reinterpret_cast<CPlayerResourceNew*>((HiveScanner::SigScan((DWORD)GetModuleHandle("client.dll"), HiveScanner::GetModuleSize("client.dll"), (PBYTE)"\xA1\x00\x00\x00\x00\x85\xC0\x74\x06", "x????xxxx") + 0x2));
+	DWORD dwbSendPacket = (HiveScanner::SigScan((DWORD)GetModuleHandle("engine.dll"), HiveScanner::GetModuleSize("engine.dll"), (PBYTE)"\xC6\x45\xFF\x01\x8B\x01\x8B\x40\x18", "xxxxxxxxx") + 0x3);
+	HiveCheats::bSendPacket = reinterpret_cast<bool*>(dwbSendPacket);
+	DWORD dwProtect;
+	VirtualProtect((LPVOID)dwbSendPacket, sizeof(bool), PAGE_EXECUTE_READWRITE, &dwProtect);
 }

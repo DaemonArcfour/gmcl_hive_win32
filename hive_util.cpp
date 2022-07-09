@@ -31,5 +31,9 @@ bool HiveUTIL::IsFriend(C_BasePlayerNew* Player)
 {
 	CSteamID id;
 	Player->GetSteamID(&id);
-	return CLuaMenuCallback.FriendList.find(id.ConvertToUint64()) != CLuaMenuCallback.FriendList.end();
+	uint64 id64 = id.ConvertToUint64();
+	auto search = CLuaMenuCallback.FriendList.find(id64);
+	if (search != CLuaMenuCallback.FriendList.end())
+		return true;
+	return false;
 }

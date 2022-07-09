@@ -415,12 +415,12 @@ namespace HiveTroubleshooter {
 			PrintError("Source Engine -> *\"GetActiveWeapon\" has not been found!", ERROR, bError);
 		else
 			PrintError("Source Engine -> *\"GetActiveWeapon\" has been found!", OK, bError);
-
+		
 		if (!CHiveSourceNative.GetBonePosition)
 			PrintError("Source Engine -> *\"GetBonePosition\" has not been found!", ERROR, bError);
 		else
 			PrintError("Source Engine -> *\"GetBonePosition\" has been found!", OK, bError);
-
+		
 		if (!CHiveSourceNative.GetObserverTarget)
 			PrintError("Source Engine -> *\"GetObserverTarget\" has not been found!", ERROR, bError);
 		else

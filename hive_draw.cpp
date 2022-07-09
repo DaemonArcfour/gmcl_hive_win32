@@ -1,6 +1,7 @@
 #include "hive_draw.h"
 #include "hive_native.h"
 #include "hive_math.h"
+#include "hive_cheats.h"
 
 HiveFonts CHiveFonts;
 
@@ -159,7 +160,7 @@ namespace HiveDraw {
 		QAngle dummy;
 		Vector src3D, src, dst3D, box2D, dst;
 		QAngle inAngle = pEntity->GetEyeAngles();
-		NativeClass::GetBonePosition(pEntity, "ValveBiped.Bip01_Head1", src3D, dummy);
+		NativeClass::GetBonePosition(pEntity, "ValveBiped.Bip01_Head1", src3D);
 
 		trace_t tr;
 		CTraceFilter filter;
@@ -200,33 +201,19 @@ namespace HiveDraw {
 	}
 	void DrawCircle(int x, int y, int diameter, Color Col)
 	{
-
-		int r, g, b, a;
-		Col.GetColor(r, g, b, a);
-
-		CHiveInterface.ISurface->DrawSetColor(r, g, b, a);
-
 		int quality = 50;
 		diameter = diameter * 0.5;
-
-		CHiveInterface.ISurface->DrawSetTexture(0);
-
-		vgui::Vertex_t  * vert;
-		vert = new vgui::Vertex_t[quality];
-
 		for (int i = 1; i <= quality; i++)
 		{
 			float ang = ((i * 360) * M_PI / 180.0) / quality;
-
+			float ang2 = (((i+1) * 360) * M_PI / 180.0) / quality;
 			vec_t lx = x + diameter * cos(ang);
 			vec_t ly = y + diameter * sin(ang);
+			vec_t lx2 = x + diameter * cos(ang2);
+			vec_t ly2 = y + diameter * sin(ang2);
+			DrawLine(lx, ly, lx2, ly2, Col);
 
-			vert[i - 1].Init(Vector2D(lx, ly), Vector2D(lx, ly));
 		}
-
-		CHiveInterface.ISurface->DrawTexturedPolygon(quality, vert);
-
-		delete[] vert;
 
 	}
 
@@ -427,6 +414,26 @@ namespace HiveDraw {
 		
 	}
 
+	void DrawBacktrackTicks(CBaseEntityNew* pEntity)
+	{
+		if (!HiveCheats::cBacktrackInterface.bInit)
+			return;
+
+		CBacktrackEntity BacktrackEnt = HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()];
+		if (BacktrackEnt.m_pPlayerEntity)
+		{
+			for (int i = 0; i < BacktrackEnt.GetFrameCount(); i++)
+			{
+				Vector vHeadPos = BacktrackEnt.GetFrame(i).m_vHeadPosition;
+				Vector vHeadPosScreen;
+				WorldToScreen(vHeadPos, vHeadPosScreen);
+				DrawCircle(vHeadPosScreen.x, vHeadPosScreen.y, 10, Color(255, 255, 255, 255));
+				RECT textSize = GetTextSize((DWORD)Fonts::ESP, std::to_string(i).c_str());
+				//DrawString(vHeadPosScreen.x , vHeadPosScreen.y - textSize.right / 2, Color(255, 255, 255, 255), Fonts::ESP, std::to_string(i).c_str());
+			}
+		}
+	}
+
 	void InitializeFonts()
 	{
 		Fonts::Default = 0x1D;
@@ -511,8 +518,8 @@ namespace HiveDraw {
 		if (!target)
 			return;
 
-		NativeClass::GetBonePosition(target, StartBone, StartBonePos, dummy);
-		NativeClass::GetBonePosition(target, EndBone, EndBonePos, dummy);
+		NativeClass::GetBonePosition(target, StartBone, StartBonePos);
+		NativeClass::GetBonePosition(target, EndBone, EndBonePos);
 
 		if (StartBonePos.IsZero() || EndBonePos.IsZero())
 			return;

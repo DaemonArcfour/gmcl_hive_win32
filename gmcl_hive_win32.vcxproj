@@ -163,6 +163,7 @@
     <ClCompile Include="hive_aimbot.cpp" />
     <ClCompile Include="hive_antiaim.cpp" />
     <ClCompile Include="hive_autostrafe.cpp" />
+    <ClCompile Include="hive_backtrack.cpp" />
     <ClCompile Include="hive_baseentity.cpp" />
     <ClCompile Include="hive_bunnyhop.cpp" />
     <ClCompile Include="hive_chams.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="hive_enginepredict.cpp" />
     <ClCompile Include="hive_esp.cpp" />
     <ClCompile Include="hive_factory.cpp" />
+    <ClCompile Include="hive_fakelag.cpp" />
     <ClCompile Include="hive_hookfunctions.cpp" />
     <ClCompile Include="hive_hooks.cpp" />
     <ClCompile Include="hive_interface.cpp" />

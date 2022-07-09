@@ -36,23 +36,38 @@ void DrawPlayer(IVModelRender* _ModelRender, DrawModelState_t const& state, cons
 	IMaterial* hidden_material;
 	IMaterial* wireframe_material;
 	IMaterial* hidden_wireframe_material;
-		visible_material = materialChamsFlat;
-		hidden_material = materialChamsFlatIgnorez;
-		wireframe_material = materialWireframe;
-		wireframe_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
-		hidden_wireframe_material = materialWireframeIgnorez;
-		wireframe_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
+	visible_material = materialChamsFlat;
+	hidden_material = materialChamsFlatIgnorez;
+	wireframe_material = materialWireframe;
+	wireframe_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
+	hidden_wireframe_material = materialWireframeIgnorez;
+	wireframe_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
 
-		Color hidden = Color(0, 128, 255, 255);
-		Color visible = Color(255, 205, 0, 255);
-		Color wireframe = Color(53, 98, 38, 255);
-	if (CLuaMenuCallback.Chams) {
+	Color hidden = Color(0, 128, 255, 255);
+	Color visible = Color(255, 205, 0, 255);
+	Color wireframe = Color(53, 98, 38, 255);
+	if (CLuaMenuCallback.Backtrack)
+	{
+		CBacktrackEntity BTEntity = HiveCheats::cBacktrackInterface.m_mEntities[entity->Index()];
+		if (BTEntity.m_pPlayerEntity)
+		{
+			for (int i = 0; i < BTEntity.GetFrameCount(); i++)
+			{
+				ForceMaterial(Color(255, 205 + i*2, 0, 190), visible_material);
+				CHiveInterface.ModelRender->DrawModelExecute(state, pInfo, BTEntity.GetFrame(i).m_mtBones);
+			}
+		}
+	}
+
+	if (CLuaMenuCallback.Chams) 
+	{
 		ForceMaterial(hidden, hidden_material);
 		CHiveInterface.ModelRender->DrawModelExecute(state, pInfo, pCustomBoneToWorld);
 		ForceMaterial(visible, visible_material);
 		CHiveInterface.ModelRender->DrawModelExecute(state, pInfo, pCustomBoneToWorld);
 	}
-	if (CLuaMenuCallback.ChamsWireframe) {
+	if (CLuaMenuCallback.ChamsWireframe) 
+	{
 		ForceMaterial(wireframe, wireframe_material);
 		CHiveInterface.ModelRender->DrawModelExecute(state, pInfo, pCustomBoneToWorld);
 		ForceMaterial(wireframe, hidden_wireframe_material);
@@ -106,7 +121,8 @@ namespace HiveCheats {
 			InitMaterials = true;
 		}
 		std::string modelName = CHiveInterface.ModelInfo->GetModelName(ModelRenderInfo.pModel);
-		if (modelName.find("models/player") != std::string::npos) {
+		if (modelName.find("models/player") != std::string::npos) 
+		{
 			DrawPlayer(_ModelRender, DrawModelState, ModelRenderInfo, pCustomBoneToWorld);
 		}
 		//IMatRenderContext
