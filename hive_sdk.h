@@ -92,6 +92,7 @@
 #include "public\\vgui\\IPanel.h"
 #include "public\\vgui\\ISurface.h"
 #include "public\\vgui\\ILocalize.h"
+#include "public\\vgui\\IInput.h"
 #include "public\\collisionutils.h"
 #include "public\\vstdlib\\random.h"
 

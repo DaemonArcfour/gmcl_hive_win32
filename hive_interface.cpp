@@ -20,6 +20,7 @@ HiveInterface::HiveInterface() {
 	GameMovement = (IGameMovement*)CHiveFactory.ClientFactory(V_GAMEMOVEMENT_INTERFACE_VERSION, 0);
 	GameConsole = (IGameConsole *)CHiveFactory.GameUIFactory(V_GAMECONSOLE_INTERFACE_VERSION, 0);
 	PlayerInfoManager = (CPlayerInfoManager*)CHiveFactory.ServerFactory(V_PLAYER_INFO_MANAGER, 0);
+	VInput = (vgui::IInput*)CHiveFactory.VGUI2Factory(V_VGUI_IIPUT, 0);
 	Globals = PlayerInfoManager->GetGlobalVars();
 //	CNetworkedVariableManager netvarManager;
 	if(ISurface)

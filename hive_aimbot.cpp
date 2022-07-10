@@ -83,6 +83,23 @@ int SavedBoneIndex = -1;
 
 namespace HiveCheats {
 	int aimbot_target = -1;
+
+	bool IsAimKeyDown()
+	{
+		if (CLuaMenuCallback.AimbotKey == 0)
+			return true;
+
+		if (CHiveInterface.ISurface->IsCursorVisible())
+			return false;
+
+		auto aimKey = (vgui::KeyCode)CLuaMenuCallback.AimbotKey;
+
+		if (aimKey >= MOUSE_FIRST && aimKey <= MOUSE_LAST)
+			return CHiveInterface.VInput->IsMouseDown(aimKey);
+
+		return CHiveInterface.VInput->IsKeyDown(aimKey);
+	}
+
 	void Aimbot(GMODCUserCmd *pCmd, CBaseEntityNew* LocalPlayer) {
 		DropTarget();
 		aimbot_target = -1;
@@ -130,7 +147,6 @@ namespace HiveCheats {
 		if (m_nTarget == -1 || SavedBoneIndex == -1)
 			return;
 
-
 		aimbot_target = m_nTarget;
 		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition);
 		if (!CLuaMenuCallback.EnginePredict)
@@ -142,9 +158,9 @@ namespace HiveCheats {
 		else
 			VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
 
-		pCmd->mousedx = 1.0;
-		pCmd->mousedy = 1.0;
-		if(pCmd->buttons & IN_ATTACK)
+		pCmd->mousedx = 10;
+		pCmd->mousedy = 10;
+		if(IsAimKeyDown() && pCmd->buttons & IN_ATTACK)
 			pCmd->viewangles = AimbotAngle;
 		SavedBoneIndex = -1;
 

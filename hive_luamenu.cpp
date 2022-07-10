@@ -64,6 +64,8 @@ namespace HiveLuaMenuFunctions {
 		InitLUAFunction(MENU, GetbBhop);
 		InitLUAFunction(MENU, SetAimbot);
 		InitLUAFunction(MENU, GetbAimbot);
+		InitLUAFunction(MENU, SetAimKey);
+		InitLUAFunction(MENU, GetAimKey);
 		InitLUAFunction(MENU, SetEnginePredict);
 		InitLUAFunction(MENU, GetbEnginePredict);
 		InitLUAFunction(MENU, SetPSilent);
@@ -683,6 +685,7 @@ namespace HiveLuaMenuFunctions {
 		return 1;
 	}
 
+
 	int SetESPHealth(lua_State* state) {
 		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))
 		{
@@ -827,6 +830,25 @@ namespace HiveLuaMenuFunctions {
 
 	int GetChoke(lua_State* state) {
 		MENU->PushNumber(CLuaMenuCallback.Choke);
+		return 1;
+	}
+
+	int SetAimKey(lua_State* state)
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.AimbotKey = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("AimKey set to " + std::to_string(CLuaMenuCallback.Choke) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
+
+	int GetAimKey(lua_State* state) {
+		MENU->PushNumber(CLuaMenuCallback.AimbotKey);
 		return 1;
 	}
 

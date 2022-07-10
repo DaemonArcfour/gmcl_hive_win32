@@ -60,7 +60,7 @@ public:
 	virtual void IsCursorVisible(void);
 	virtual void ApplyChanges(void);
 	virtual void IsWithin(int, int);
-	virtual void HasFocus(void);
+	virtual bool HasFocus(void);
 	virtual void SupportsFeature(vgui::ISurface::SurfaceFeature_e);
 	virtual void RestrictPaintToSinglePanel(unsigned int);
 	virtual void SetModalPanel(unsigned int);

@@ -74,6 +74,8 @@ namespace HiveLuaMenuFunctions {
 	int GetbShowSpectators(lua_State* state);
 	int LuaRunMenu(lua_State* state);
 	int LuaRunGame(lua_State* state);
+	int SetAimKey(lua_State* state);
+	int GetAimKey(lua_State* state);
 
 	int SetFriendList(lua_State*);
 	int GetFriendList(lua_State*);
@@ -122,6 +124,7 @@ public:
 	bool StopLuaGameModeHooks = false;
 	bool Antiaim = false;
 	int	AntiaimType = 0;
+	int AimbotKey = 0;
 	bool ESP = false;
 	bool BoneESP = false;
 	bool Bhop = false;

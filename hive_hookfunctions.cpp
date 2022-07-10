@@ -242,6 +242,14 @@ namespace HiveHookedFunctions {
 			CHiveFonts.LoadFonts();
 			HiveCheats::DrawEsp();
 			HiveCheats::DrawObservers();
+
+			MENU->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
+			MENU->GetField(-1, "hook");
+			MENU->GetField(-1, "Call");
+			MENU->PushString("HivePaint");
+			MENU->PushNil();
+			MENU->Call(2, 0);
+			MENU->Pop(2);
 		}
 
 	}

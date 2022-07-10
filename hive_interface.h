@@ -24,6 +24,7 @@
 #define V_PHYSICS_SURFACEPROPS_INTERFACE_VERSION		VPHYSICS_SURFACEPROPS_INTERFACE_VERSION
 #define V_VGUI_SURFACE_INTERFACE_VERSION				VGUI_SURFACE_INTERFACE_VERSION
 #define V_MAT_SYSTEM_SURFACE_INTERFACE_VERSION			MAT_SYSTEM_SURFACE_INTERFACE_VERSION
+#define V_VGUI_IIPUT									"VGUI_Input005"
 
 class HiveInterface {
 public:
@@ -52,4 +53,5 @@ public:
 	CPredictionNew* Prediction;
 	CClientState* ClientState;
 	CPlayerResourceNew* PlayerResource;
+	vgui::IInput* VInput;
 }; extern HiveInterface CHiveInterface;
