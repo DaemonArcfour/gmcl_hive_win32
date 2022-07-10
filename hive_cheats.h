@@ -9,16 +9,26 @@ class CBacktrackFrame
 public:
 	int m_iTickCount;
 	float m_fSimulationTime;
-	Vector m_vHeadPosition;
-	Vector m_vOrigin;
+	Vector m_vAbsOrigin;
+	Vector m_vOOBMins;
+	Vector m_vOOBMaxs;
+	QAngle m_vAbsAngles;
 	matrix3x4_t m_mtBones[128];
+	std::map<const char*, Vector> m_mBoneMap;
 	CBacktrackFrame();
 };
 
+class CReconcileFrame : public CBacktrackFrame 
+{
+public:
+	bool bReconciled;
+	CReconcileFrame() { bReconciled = false; }
+};
 class CBacktrackEntity
 {
 public:
 	std::deque<CBacktrackFrame> m_vBacktrackFrames;
+	CReconcileFrame m_cReconciledFrame;
 	C_BasePlayerNew* m_pPlayerEntity;
 	void SaveFrame(GMODCUserCmd* cmd);
 	int GetFrameCount();
@@ -31,6 +41,8 @@ public:
 	std::map<int, CBacktrackEntity> m_mEntities;
 	bool bInit = false;
 	void ProcessTick(GMODCUserCmd* cmd);
+	void Reconcile(GMODCUserCmd* cmd, CBacktrackEntity BTEntity, int iTick);
+	void EndReconciliation(CBacktrackEntity BTEntity);
 }; 
 
 namespace HiveCheats 

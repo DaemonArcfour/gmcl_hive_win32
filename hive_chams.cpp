@@ -46,6 +46,7 @@ void DrawPlayer(IVModelRender* _ModelRender, DrawModelState_t const& state, cons
 	Color hidden = Color(0, 128, 255, 255);
 	Color visible = Color(255, 205, 0, 255);
 	Color wireframe = Color(53, 98, 38, 255);
+	/*
 	if (CLuaMenuCallback.Backtrack)
 	{
 		CBacktrackEntity BTEntity = HiveCheats::cBacktrackInterface.m_mEntities[entity->Index()];
@@ -58,7 +59,7 @@ void DrawPlayer(IVModelRender* _ModelRender, DrawModelState_t const& state, cons
 			}
 		}
 	}
-
+	*/
 	if (CLuaMenuCallback.Chams) 
 	{
 		ForceMaterial(hidden, hidden_material);

@@ -7,8 +7,7 @@ CBacktrackFrame::CBacktrackFrame()
 {
 		m_iTickCount = -1;
 		m_fSimulationTime = -1;
-		m_vHeadPosition = Vector(0, 0, 0);
-		m_vOrigin = Vector(0, 0, 0);
+		m_vAbsOrigin = Vector(0, 0, 0);
 }
 
 void CBacktrackEntity::SaveFrame(GMODCUserCmd* cmd)
@@ -16,17 +15,18 @@ void CBacktrackEntity::SaveFrame(GMODCUserCmd* cmd)
 	if (!m_pPlayerEntity)
 		return;
 
-	Vector vHeadPosition;
 	matrix3x4_t mtBones[128];
-	if (NativeClass::GetBonePosition(m_pPlayerEntity, NativeClass::PriorityPoints[0], vHeadPosition, mtBones))
+	CBacktrackFrame BTCurrentFrame;
+	if (NativeClass::GetBoneMap(m_pPlayerEntity, BTCurrentFrame.m_mBoneMap, BTCurrentFrame.m_mtBones))
 	{
 		int iTickCount = cmd->tick_count;
-		CBacktrackFrame BTCurrentFrame;
 		BTCurrentFrame.m_iTickCount = iTickCount;
-		BTCurrentFrame.m_vHeadPosition = vHeadPosition;
 		BTCurrentFrame.m_fSimulationTime = ((CBaseEntityNew*)m_pPlayerEntity)->flSimulationTime();
-		BTCurrentFrame.m_vOrigin = ((CBaseEntityNew*)m_pPlayerEntity)->GetAbsOrigin();
-		memcpy(BTCurrentFrame.m_mtBones, mtBones, sizeof(BTCurrentFrame.m_mtBones));
+		BTCurrentFrame.m_vAbsOrigin = m_pPlayerEntity->GetAbsOrigin();
+		BTCurrentFrame.m_vAbsAngles = m_pPlayerEntity->GetAbsAngles();
+		BTCurrentFrame.m_vOOBMins = ((CBaseEntityNew*)m_pPlayerEntity)->OBBMins();
+		BTCurrentFrame.m_vOOBMaxs = ((CBaseEntityNew*)m_pPlayerEntity)->OBBMaxs();
+		
 		m_vBacktrackFrames.push_front(BTCurrentFrame);
 		if (m_vBacktrackFrames.size() > CLuaMenuCallback.Backtrack_max_tick)
 			m_vBacktrackFrames.pop_back();
@@ -46,12 +46,38 @@ CBacktrackFrame CBacktrackEntity::GetFrame(int iTick)
 	return m_vBacktrackFrames.at(iTick);
 }
 
+void CBacktrack::Reconcile(GMODCUserCmd* cmd, CBacktrackEntity BTEntity, int iTick)
+{
+	if (/*!BTEntity.m_cReconciledFrame.bReconciled &&*/ BTEntity.m_pPlayerEntity)
+	{
+		BTEntity.m_cReconciledFrame.bReconciled = true;
+		CBacktrackFrame ReconciliationFrame = BTEntity.GetFrame(iTick);
+		BTEntity.m_cReconciledFrame.m_vAbsOrigin = BTEntity.m_pPlayerEntity->GetAbsOrigin();
+		BTEntity.m_cReconciledFrame.m_vAbsAngles = BTEntity.m_pPlayerEntity->GetAbsAngles();
+		BTEntity.m_cReconciledFrame.m_vOOBMins = ((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->OBBMins();
+		BTEntity.m_cReconciledFrame.m_vOOBMaxs = ((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->OBBMaxs();
+		BTEntity.m_pPlayerEntity->GetAbsOrigin() = ReconciliationFrame.m_vAbsOrigin;
+		BTEntity.m_pPlayerEntity->GetAbsAngles() = ReconciliationFrame.m_vAbsAngles;
+		CHiveSourceNative.SetCollisionBounds(BTEntity.m_pPlayerEntity->GetCollideable(), ReconciliationFrame.m_vOOBMins, ReconciliationFrame.m_vOOBMaxs);
+	}
+}
+
+void CBacktrack::EndReconciliation(CBacktrackEntity BTEntity)
+{
+	if (/*BTEntity.m_cReconciledFrame.bReconciled &&*/ BTEntity.m_pPlayerEntity)
+	{
+		BTEntity.m_pPlayerEntity->GetAbsOrigin() = BTEntity.m_cReconciledFrame.m_vAbsOrigin;
+		BTEntity.m_pPlayerEntity->GetAbsAngles() = BTEntity.m_cReconciledFrame.m_vAbsAngles;
+		CHiveSourceNative.SetCollisionBounds(BTEntity.m_pPlayerEntity->GetCollideable(), BTEntity.m_cReconciledFrame.m_vOOBMins, BTEntity.m_cReconciledFrame.m_vOOBMaxs);
+	}
+}
+
 void CBacktrack::ProcessTick(GMODCUserCmd* cmd)
 {
 	CBaseEntityNew* LocalPlayer = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
 	if (!bInit)
 	{
-		for (int index = MAX_PLAYERS; index >= 0; --index)
+		for (int index = 128; index >= 0; --index)
 		{
 			CBacktrackEntity NewPlayer;
 			NewPlayer.m_pPlayerEntity = (C_BasePlayerNew*)nullptr;

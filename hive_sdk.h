@@ -36,6 +36,7 @@
 #include <filesystem>
 #include <shlwapi.h>
 #include <unordered_set>
+#include <omp.h>
 #include "public\\tier0\\wchartypes.h"
 #include "public\\tier0\\dbg.h"
 // Public

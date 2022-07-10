@@ -30,6 +30,25 @@ namespace NativeClass {
 		}
 		return 0;
 	}
+	void Studio_GenerateBoneMap(studiohdr_t* pStudioHdr, matrix3x4_t* bones, std::map<const char*, Vector> &m_mBoneMap)
+	{
+		for (int z = 0; z < pStudioHdr->numbones; z++)
+		{
+			mstudiobone_t* bone = pStudioHdr->pBone(z);
+			if (bone && bone->parent >= 0)
+			{
+				if (!(bone->flags & 256))
+					continue;
+
+				for (int i = 0; i < sizeof(NativeClass::BonesTable) / sizeof(char*); i++)
+				{
+					if (strcmp(bone->pszName(), NativeClass::BonesTable[i]) == 0)
+						m_mBoneMap.insert(std::pair(NativeClass::BonesTable[i], Vector(bones[z][0][3], bones[z][1][3], bones[z][2][3])));
+				}
+			}
+		}
+
+	}
 
 	bool IsDormant(CBaseEntityNew *Target) {
 		DWORD PageGuard;
@@ -99,17 +118,43 @@ namespace NativeClass {
 			return true;
 		}
 		return false;
-		/*
-		if (_this && attachment != NULL) {
-			auto ppp_entAnim = (*(int(__thiscall **)(void*))(*(DWORD *)_this + 156))(_this);					// found conversion in DispatchParticleEffect with
-																												//the following comment "Model '%s' doesn't have attachment '%s' to attach particle system '%s' to.\n"  (v3)
-			CHiveSourceNative.GetBonePosition((void*)ppp_entAnim, CHiveSourceNative.LookUpBone((void*)ppp_entAnim, attachment), origin, angles);
-		}
-		else {
-			return;
-		}
-		*/
 	}
+
+	bool GetBoneMap(void* _this, std::map<const char*, Vector> &m_mBoneMap)
+	{
+		matrix3x4_t bones[128];
+		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
+		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
+		float EngineTime = CHiveInterface.Engine->Time();
+		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
+		if (ClientRenderable < 0x1000 || !Setup)
+			return false;
+		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
+		if (studioHdr)
+		{
+			Studio_GenerateBoneMap(studioHdr, bones, m_mBoneMap);
+			return true;
+		}
+		return false;
+	}
+
+	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones)
+	{
+		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
+		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
+		float EngineTime = CHiveInterface.Engine->Time();
+		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
+		if (ClientRenderable < 0x1000 || !Setup)
+			return false;
+		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
+		if (studioHdr)
+		{
+			Studio_GenerateBoneMap(studioHdr, bones, m_mBoneMap);
+			return true;
+		}
+		return false;
+	}
+
 	bool* bSendPacket = (bool*)CHiveSourceNative.offset_bSendPacket;
 
 	char* BonesTable[20]{

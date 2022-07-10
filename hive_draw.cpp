@@ -424,11 +424,11 @@ namespace HiveDraw {
 		{
 			for (int i = 0; i < BacktrackEnt.GetFrameCount(); i++)
 			{
-				Vector vHeadPos = BacktrackEnt.GetFrame(i).m_vHeadPosition;
+				Vector vHeadPos = BacktrackEnt.GetFrame(i).m_mBoneMap[NativeClass::BonesTable[0]];
 				Vector vHeadPosScreen;
 				WorldToScreen(vHeadPos, vHeadPosScreen);
 				DrawCircle(vHeadPosScreen.x, vHeadPosScreen.y, 10, Color(255, 255, 255, 255));
-				RECT textSize = GetTextSize((DWORD)Fonts::ESP, std::to_string(i).c_str());
+				//RECT textSize = GetTextSize((DWORD)Fonts::ESP, std::to_string(i).c_str());
 				//DrawString(vHeadPosScreen.x , vHeadPosScreen.y - textSize.right / 2, Color(255, 255, 255, 255), Fonts::ESP, std::to_string(i).c_str());
 			}
 		}

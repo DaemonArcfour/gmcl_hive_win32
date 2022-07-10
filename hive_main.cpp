@@ -89,7 +89,7 @@ GMOD_MODULE_OPEN()
 
 	HiveTroubleshooter::PrintInitizalization("Done loading!");
 	HiveTroubleshooter::PrintInitizalization("[C++] Technical support: https://steamcommunity.com/id/unsigned__int32");
-	HiveTroubleshooter::PrintInitizalization("[LUA] Technical support: http://steamcommunity.com/id/el_leet/");
+	HiveTroubleshooter::PrintInitizalization("[LUA] Technical support: https://steamcommunity.com/id/AppleJeb/");
 	HiveTroubleshooter::PrintInitizalization("Protector powered by OpenSSL [https://www.openssl.org/]");
 	//PlaySoundW(L"HiveSounds\\loaded.wav", NULL, SND_ASYNC);
 	

@@ -11,6 +11,7 @@ typedef char*(__thiscall* native_GetClassName)(void *_this);
 typedef CBaseEntityNew*(*native_GetObserverTarget)(C_BasePlayer *_this);
 typedef void*(__thiscall* native_initkeyvalues)(void *_this, const char*);
 typedef void*(__thiscall* native_loadfrombuffer)(void *_this, const char*, const char*, void*, void*);
+typedef int(__thiscall* native_SetCollisionBounds)(void* _this, const Vector& mins, const Vector& maxs);
 
 class SourceNative {
 private:
@@ -30,6 +31,7 @@ private:
 	DWORD offset_GetClassName = HiveScanner::SigScan(		CL,		CLSize,		(PBYTE)"\x53\x8B\xD9\x8B\x83\x00\x00\x00\x00\x85\xC0\x74", "xxxxx????xxx");
 	DWORD offset_LoadFromBuffer = HiveScanner::SigScan(		CL,		CLSize,		(PBYTE)"\x55\x8B\xEC\x83\xEC\x34\x53\x8B\x5D\x0C", "xxxxxxxxxx");
 	DWORD offset_InitKeyvalues = HiveScanner::SigScan(		MaterialSystem, MaterialSystemSize, (PBYTE)"\x55\x8B\xEC\x56\x8B\xF1\x6A\x01", "xxxxxxxx");
+	DWORD offset_SetCollisionBounds = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\xE8\x00\x00\x00\x00\x0F\xB6\x56\x40", "x????xxxx");
 public:
 	native_GetPlayerCombatWeapon	GetPlayerActiveWeapon = (native_GetPlayerCombatWeapon)(offset_GetActiveWeapon);								//near STR: "Player.AmbientUnderWater" IN VTABLE!
 	native_MD5_Random				MD5_PseudoRandom =		(native_MD5_Random)(offset_MD5_Random);												// CInput::CreateMove  0x7FFFFFFF
@@ -41,6 +43,7 @@ public:
 	native_GetClassName				GetClassName =			(native_GetClassName)(offset_GetClassName);											// POTENTIALLY could be found in FireBullets, but the placement differs from macOS dylibs
 	native_loadfrombuffer			KeyValues_LoadFromBuffer = (native_loadfrombuffer)(offset_LoadFromBuffer);									// "tmp_resource" client.dll
 	native_initkeyvalues			KeyValues_Init =		(native_initkeyvalues)(offset_InitKeyvalues);										// "BufferClearObeyStencil" materialsystem.dll
+	native_SetCollisionBounds		SetCollisionBounds =	(native_SetCollisionBounds)(offset_SetCollisionBounds);
 
 	DWORD offset_bSendPacket = HiveScanner::SigScan(Engine, EngineSize, (PBYTE)"\xC6\x45\xFF\x01\x8B\x01\x8B", "xxxxxxx") + 3;				// (Updated 04.02.2019) (CL_MOVE)
 	DWORD offset_CalcView = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x53\x56\x8B\xF1\x57\x8B\x8E", "xxxxxxxxxx");
@@ -69,7 +72,9 @@ namespace NativeClass {
 	QAngle GetEntEyeAng(CBaseEntityNew*);
 	bool IsDormant(CBaseEntityNew *Target);
 	bool GetBonePosition(void* ply, const char* attachment, Vector& origin);
-	bool GetBonePosition(void* _this, const char* attachment, Vector& origin, matrix3x4_t* bones);
+	bool GetBonePosition(void* ply, const char* attachment, Vector& origin, matrix3x4_t* bones);
+	bool GetBoneMap(void* ply, std::map<const char*, Vector> &m_mBoneMap);
+	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones);
 }
 
 class WeaponName;
