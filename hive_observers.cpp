@@ -7,6 +7,8 @@ namespace HiveCheats {
 	void DrawObservers() {
 		if (!CLuaMenuCallback.ShowSpectators)
 			return;
+
+		{ return; }
 		HiveDraw::DrawString(100, 100, Color(255, 0, 0, 255), CHiveFonts.MediumFont, "Spectators: ");
 		int pos_y = 100;
 		C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());

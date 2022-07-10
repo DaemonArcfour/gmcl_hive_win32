@@ -158,6 +158,8 @@ void HiveLuaMenuFunctions::SetupLuaMenuCallbacks() {
 	InitLUAFunction(MENU, SetbSendPacket);
 	InitLUAFunction(MENU, GetbSendPacket);
 	InitLUAFunction(MENU, RequestInvalidFile);
+
+	InitLUAFunction(MENU, GetObserversList);
 }
 
 namespace HiveLuaMenuFunctions {
@@ -616,6 +618,53 @@ namespace HiveLuaMenuFunctions {
 		HiveTroubleshooter::Print("This function only accepts table.", 0);
 
 		return 0;
+	}
+
+	int GetObserversList(lua_State* state) {
+		MENU->CreateTable();
+
+		if (!CHiveInterface.Engine->IsInGame()) return 1;
+		
+		C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
+		
+		int cnt = 0;
+		for (int i = 0; i < MaxClients; i++)
+		{
+			C_BasePlayerNew* target = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(i);
+			player_info_t info;
+			if (target) {
+				if (CHiveInterface.Engine->GetPlayerInfo(i, &info)) {
+					C_BasePlayerNew* Observer = (C_BasePlayerNew*)CHiveSourceNative.UTIL_GetPlayerByIndex(i);
+					if (Observer) {
+						if ((C_BasePlayerNew*)Observer->GetObserverTarget() == LocalPlayer) {
+							cnt++;
+							MENU->PushNumber(cnt);
+							MENU->CreateTable();
+
+							player_info_t info;
+							CSteamID steamid;
+
+							if (!CHiveInterface.Engine->GetPlayerInfo(((CBaseEntityNew*)Observer)->Index(), &info)) continue;
+
+							Observer->GetSteamID(&steamid);
+
+							MENU->PushString("name");
+							MENU->PushString(info.name);
+							MENU->SetTable(-3);
+
+							MENU->PushString("steamid64");
+							MENU->PushString(std::to_string(steamid.ConvertToUint64()).c_str());
+							MENU->SetTable(-3);
+
+							MENU->SetTable(-3);
+						}
+					}
+				}
+			}
+
+		}
+
+		return 1;
 	}
 }
 

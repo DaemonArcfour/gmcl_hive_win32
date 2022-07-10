@@ -76,6 +76,7 @@ namespace HiveLuaMenuFunctions {
 	int LuaRunGame(lua_State* state);
 	int SetAimKey(lua_State* state);
 	int GetAimKey(lua_State* state);
+	int GetObserversList(lua_State* state);
 
 	int SetFriendList(lua_State*);
 	int GetFriendList(lua_State*);
