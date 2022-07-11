@@ -197,7 +197,19 @@ namespace HiveHookedFunctions {
 				pCmd->viewangles = vOldAngles;
 				pCmd->world_click_direction = tmp;
 			}
-
+			if (HiveCheats::cBacktrackInterface.m_mEntities[2].m_pPlayerEntity)
+			{
+				if (HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrameCount() >= 8)
+				{
+					HiveCheats::cBacktrackInterface.Reconcile(pCmd, HiveCheats::cBacktrackInterface.m_mEntities[2], 7);
+					bool bCollision = HiveCheats::TestCollision(HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(7).m_mBoneMap["ValveBiped.Bip01_Spine2"]);
+					if (bCollision)
+						ConMsg("Collided!\n");
+					else
+						ConMsg("No collision!\n");
+					//HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[2]);
+				}
+			}
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
 

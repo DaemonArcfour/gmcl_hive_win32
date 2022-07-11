@@ -12,6 +12,7 @@ class CBaseEntityNew
 public:
 	float Friction();
 	Vector& Velocity() const noexcept;
+	Vector& GetOrigin();
 	QAngle GetPunchAngles();
 	QAngle GetEyeAngles();
 	int GetPrimaryAmmoType();

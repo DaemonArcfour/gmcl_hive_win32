@@ -18,6 +18,7 @@ namespace HiveNetVarOffsets {
 	DWORD m_vecMins = 0;
 	DWORD m_vecMaxs = 0;
 	DWORD m_iHealth = 0;
+	DWORD m_vecOrigin = 0;
 	DWORD m_iArmor = 0;
 	DWORD m_bDormant = 0;
 	DWORD m_angEyeAngles = 0;
@@ -50,6 +51,7 @@ namespace HiveNetVarOffsets {
 		m_vecMins = g_pNetvars.get_offset("DT_BaseEntity", "m_Collision", "m_vecMins");
 		m_vecMaxs = g_pNetvars.get_offset("DT_BaseEntity", "m_Collision", "m_vecMaxs");
 		m_iHealth = g_pNetvars.get_offset("DT_BaseEntity", "m_iHealth");
+		m_vecOrigin = g_pNetvars.get_offset("DT_BaseEntity", "m_vecOrigin");
 		m_iArmor = g_pNetvars.get_offset("DT_PlayerResource", "m_iArmor");
 		m_fEffects = g_pNetvars.get_offset("DT_BaseEntity", "m_fEffects");
 		m_angEyeAngles = g_pNetvars.get_offset("DT_HL2MP_Player", "hl2mplocaldata", "m_angEyeAngles[0]");

@@ -55,6 +55,10 @@ int CBaseEntityNew::Health()
 {
 	return *reinterpret_cast<int*>((DWORD)this + HiveNetVarOffsets::m_iHealth);
 }
+Vector& CBaseEntityNew::GetOrigin()
+{
+	return *reinterpret_cast<Vector*>((DWORD)this + HiveNetVarOffsets::m_vecOrigin);
+}
 int& CBaseEntityNew::GetTickBase() const noexcept
 {
 	return *reinterpret_cast<int*>((DWORD)this + HiveNetVarOffsets::m_nTickBase);

@@ -4,31 +4,38 @@
 
 class CBaseEntityNew;
 
-class CBacktrackFrame
+class CBacktrackBase
 {
 public:
-	int m_iTickCount;
-	float m_fSimulationTime;
 	Vector m_vAbsOrigin;
+	Vector m_vOrigin;
 	Vector m_vOOBMins;
 	Vector m_vOOBMaxs;
 	QAngle m_vAbsAngles;
 	matrix3x4_t m_mtBones[128];
+};
+
+class CBacktrackFrame : public CBacktrackBase
+{
+public:
+	int m_iTickCount;
+	float m_fSimulationTime;
 	std::map<const char*, Vector> m_mBoneMap;
 	CBacktrackFrame();
 };
 
-class CReconcileFrame : public CBacktrackFrame 
+class CReconcileFrame : public CBacktrackBase
 {
 public:
 	bool bReconciled;
 	CReconcileFrame() { bReconciled = false; }
 };
+
 class CBacktrackEntity
 {
 public:
 	std::deque<CBacktrackFrame> m_vBacktrackFrames;
-	CReconcileFrame m_cReconciledFrame;
+	CReconcileFrame* m_cReconciledFrame;
 	C_BasePlayerNew* m_pPlayerEntity;
 	void SaveFrame(GMODCUserCmd* cmd);
 	int GetFrameCount();
@@ -51,6 +58,7 @@ namespace HiveCheats
 	bool CheckFire(C_BaseCombatWeaponNew* currentWeapon);
 	void DrawEsp();
 	void DrawObservers();
+	bool TestCollision(Vector ColPos);
 	void Triggerbot(QAngle Angle, GMODCUserCmd* pCmd, CBaseEntityNew* LocalPlayer);
 	void Aimbot(GMODCUserCmd *pCmd, CBaseEntityNew* LocalPlayer);
 	void RemoveSpread(GMODCUserCmd *pCmd, C_BaseCombatWeaponNew* gun, Vector Spread);

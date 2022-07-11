@@ -10,6 +10,7 @@ namespace HiveNetVarOffsets {
 	void GetOffsets();
 	extern DWORD m_MoveType;
 	extern DWORD m_iHealth; //DT_BasePlayer
+	extern DWORD m_vecOrigin;
 	extern DWORD m_iArmor; //DT_BasePlayer
 	extern DWORD m_lifeState; //DT_BasePlayer
 	extern DWORD m_flMaxSpeed; //DT_BasePlayer
