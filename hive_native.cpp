@@ -187,11 +187,11 @@ namespace NativeClass {
 	bool* bSendPacket = (bool*)CHiveSourceNative.offset_bSendPacket;
 
 	char* BonesTable[20]{
-		"ValveBiped.Bip01_Head1"	 ,
+		"ValveBiped.Bip01_Head1"	 , // 0
 		"ValveBiped.Bip01_Neck1"	 ,
 		"ValveBiped.Bip01_Spine4"	 ,
 		"ValveBiped.Bip01_Spine2"	 ,
-		"ValveBiped.Bip01_Spine1"	 ,
+		"ValveBiped.Bip01_Spine1"	 , // 4
 		"ValveBiped.Bip01_Spine"	 ,
 		"ValveBiped.Bip01_R_UpperArm",
 		"ValveBiped.Bip01_R_Forearm" ,
@@ -209,11 +209,11 @@ namespace NativeClass {
 		"ValveBiped.Bip01_L_Toe0"
 	};
 	char* PriorityPoints[21]{
-		"ValveBiped.Bip01_Head1"	 ,
+		"ValveBiped.Bip01_Head1"	 , // 0
 		"ValveBiped.Bip01_Neck1"	 ,
 		"ValveBiped.Bip01_Spine4"	 ,
 		"ValveBiped.Bip01_Spine2"	 ,
-		"ValveBiped.Bip01_Spine1"	 ,
+		"ValveBiped.Bip01_Spine1"	 , // 4
 		"ValveBiped.Bip01_Spine"	 ,
 		"ValveBiped.Bip01_L_Calf"	 ,
 		"ValveBiped.Bip01_R_Calf"	 ,

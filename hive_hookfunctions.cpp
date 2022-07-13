@@ -11,9 +11,7 @@ int MaxClients = 0;
 FireBullets_info BulletInfo;
 QAngle OldPunchAngles = QAngle(0, 0, 0);
 bool LuaInit = false;
-bool bShooting = false;
-float fCorrectInterp = 0.0f;
-int iHardBtEntity = 1;
+int iHardBtEntity = 2;
 namespace HiveHookedFunctions {
 	void * __fastcall RunString(void *edx, void *ecx, const char* ccName, const char* ccPath, const char* ccString, bool bRun, bool bErrors) {
 		MENU->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
@@ -143,9 +141,6 @@ namespace HiveHookedFunctions {
 					pCmd->buttons &= ~IN_ATTACK;
 			}
 
-			if (pCmd->buttons & IN_ATTACK && CanShoot)
-				bShooting = true;
-
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
 
@@ -200,7 +195,7 @@ namespace HiveHookedFunctions {
 
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
-
+			/*
 			if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].m_pPlayerEntity && CLuaMenuCallback.Backtrack)
 			{
 				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
@@ -214,46 +209,16 @@ namespace HiveHookedFunctions {
 			{
 				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
 				{
-					if (bShooting)
+					if (CanShoot && pCmd->buttons & IN_ATTACK)
 					{
-						int bttic = CLuaMenuCallback.tmpBacktrackTick;
-						float simtime = HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrame(bttic).m_fSimulationTime;
+						float simtime = HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrame(CLuaMenuCallback.tmpBacktrackTick).m_fSimulationTime;
+						HiveCheats::cBacktrackInterface.Interp_UpdateInterpolation(TICKS_TO_TIME((pCmd->tick_count - 2) - TIME_TO_TICKS(simtime)));
 
-						/*
-						bool bCollision = HiveCheats::TestCollision(HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(bttic).m_mBoneMap["ValveBiped.Bip01_Spine2"]);
-						if (bCollision)
-							ConMsg("Collided!\n");
-						else
-							ConMsg("No collision!\n");
-						*/
-						fCorrectInterp = TICKS_TO_TIME((pCmd->tick_count - 1) - TIME_TO_TICKS(simtime));
-						ConMsg("flInterp: %f\n", fCorrectInterp);
-						//HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(true, fCorrectInterp, 1.f);
-						/*
-						bool bAdjustInterp;
-						HiveCheats::cBacktrackInterface.CanRestoreToSimulationTime(simtime, &bAdjustInterp);
-						if (bAdjustInterp)
-						{
-							float flInterp = TICKS_TO_TIME(pCmd->tick_count - TIME_TO_TICKS(simtime));
-							HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(true, flInterp, 1.f);
-						}
-
-						else
-						{
-							pCmd->tick_count = TIME_TO_TICKS(simtime);
-							HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(false);
-						}
-						*/
-						/*
-						float time = HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(bttic).m_fSimulationTime + HiveCheats::cBacktrackInterface.GetLerpTime();
-						pCmd->tick_count = TIME_TO_TICKS(time);
-
-						*/
 					}
 					HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity]);
 				}
 			}
-
+			*/
 
 			if(CLuaMenuCallback.Aimbot || CLuaMenuCallback.Antiaim)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
@@ -470,8 +435,23 @@ namespace HiveHookedFunctions {
 
 	bool __fastcall WriteUsercmdDeltaToBuffer(void* _this, void* ecx, bf_write* buf, int from, int to, int isnewcommand)
 	{
-		
+		/*
+		static int iResetTicks = 0;
 		{
+			if (bReset)
+				iResetTicks++;
+
+			if (bReset == true && iResetTicks == 3)
+			{
+				float m_flInterp = CHiveInterface.Cvar->FindVar("cl_interp")->GetFloat();
+				char buf[32];
+				sprintf_s(buf, "%f", m_flInterp);
+				NativeClass::SendNetMsg("cl_interp", buf);
+				bShooting = false;
+				bReset = false;
+				iResetTicks = 0;
+			}
+
 			if (bShooting && CLuaMenuCallback.Backtrack)
 			{
 				float m_flInterp = fCorrectInterp;
@@ -479,13 +459,16 @@ namespace HiveHookedFunctions {
 				sprintf_s(buf, "%f", m_flInterp);
 				NativeClass::SendNetMsg("cl_interp", buf);
 				bShooting = false;
+				bReset = true;
 			}
-		}
-		
+			
 
-		//if (CLuaMenuCallback.Backtrack)
-		//	HiveCheats::cBacktrackInterface.Interp_WriteUserCmdDeltaToBuffer();
-		bShooting = false;
+		}
+		*/
+
+		if (CLuaMenuCallback.Backtrack)
+			HiveCheats::cBacktrackInterface.Interp_WriteUserCmdDeltaToBuffer();
+
 		return HiveOriginalFunctions::WriteUsercmdDeltaToBuffer(_this, buf, from, to, isnewcommand);
 	}
 }

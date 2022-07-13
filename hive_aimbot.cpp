@@ -80,6 +80,8 @@ CBaseEntityNew* pBaseEntity;
 CBaseEntityNew* Target;
 int VisibleBoneIndex = -1;
 int SavedBoneIndex = -1;
+int SavedBacktrackTick = -1;
+bool bSavedBacktrackState = false;
 
 namespace HiveCheats {
 	int aimbot_target = -1;
@@ -103,6 +105,9 @@ namespace HiveCheats {
 	void Aimbot(GMODCUserCmd *pCmd, CBaseEntityNew* LocalPlayer) {
 		DropTarget();
 		aimbot_target = -1;
+		bool bBacktrackEntity = false;
+		int iBacktrackTick = 0;
+
 		for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
 		{
 
@@ -118,29 +123,68 @@ namespace HiveCheats {
 			if(HiveUTIL::IsFriend((C_BasePlayerNew*)pBaseEntity))
 				continue;
 
-			for (int i = 0; i < 21; i++) {
+			for (int i = 0; i < 21; i++) 
+			{
 				NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(index), NativeClass::PriorityPoints[i], BonePosition);
 				
 				if (!GetVisible(LocalPlayer->GetEyePosition(), BonePosition, pBaseEntity, LocalPlayer))
 					continue;
 				
-				else {
+				else 
+				{
 					VisibleBoneIndex = i;
 					break;
 				}
 				
 			}
 
+			if (VisibleBoneIndex == -1 && CLuaMenuCallback.Backtrack)
+			{
+				// try backtracking
+				if (HiveCheats::cBacktrackInterface.m_mEntities[index].m_pPlayerEntity)
+				{
+					CBacktrackEntity* BTPlayer = &HiveCheats::cBacktrackInterface.m_mEntities[index];
+					for (int i = 0; i < BTPlayer->GetFrameCount(); i++)
+					{
+						std::map<const char*, Vector> BacktrackedBones = BTPlayer->GetFrame(i).m_mBoneMap;
+						HiveCheats::cBacktrackInterface.Reconcile(*BTPlayer, i);
+
+						for (int z = 3; z < 5; z++)
+						{
+							
+							if (!GetVisible(LocalPlayer->GetEyePosition(), BacktrackedBones[NativeClass::PriorityPoints[z]], pBaseEntity, LocalPlayer))
+								continue;
+
+							else
+							{
+								VisibleBoneIndex = z;
+								bBacktrackEntity = true;
+								iBacktrackTick = i;
+								break;
+							}
+						}
+
+						if (bBacktrackEntity)
+							break;
+					}
+
+					HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[index]);
+				}
+			}
+
 			if (VisibleBoneIndex == -1)
 				continue;
 
-			else {
-				
+			else 
+			{
 				SavedBoneIndex = VisibleBoneIndex;
+				SavedBacktrackTick = iBacktrackTick;
+				bSavedBacktrackState = bBacktrackEntity;
 				Target = pBaseEntity;
 				EntBestTarget(LocalPlayer, pBaseEntity, index);
 				VisibleBoneIndex = -1;
-				
+				bBacktrackEntity = false;
+				iBacktrackTick = -1;
 			}
 		}
 
@@ -148,21 +192,38 @@ namespace HiveCheats {
 			return;
 
 		aimbot_target = m_nTarget;
-		NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition);
-		if (!CLuaMenuCallback.EnginePredict)
+		if (!bSavedBacktrackState)
 		{
-			PredictedPosition = EnemyPosition - (LocalPlayer->Velocity() * CHiveInterface.Globals->interval_per_tick);
-			VectorAngles(PredictedPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
-		}
+			NativeClass::GetBonePosition(CHiveInterface.EntityList->GetClientEntity(m_nTarget), NativeClass::PriorityPoints[SavedBoneIndex], EnemyPosition);
+			if (!CLuaMenuCallback.EnginePredict)
+			{
+				PredictedPosition = EnemyPosition - (LocalPlayer->Velocity() * CHiveInterface.Globals->interval_per_tick);
+				VectorAngles(PredictedPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
+			}
 
-		else
-			VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
+			else
+				VectorAngles(EnemyPosition - LocalPlayer->GetEyePosition(), AimbotAngle);
+		}
 
 		pCmd->mousedx = 10;
 		pCmd->mousedy = 10;
-		if(IsAimKeyDown() && pCmd->buttons & IN_ATTACK)
+		if (IsAimKeyDown() && pCmd->buttons & IN_ATTACK)
+		{
+			if (bSavedBacktrackState)
+			{
+				Vector BacktrackedPos = HiveCheats::cBacktrackInterface.m_mEntities[m_nTarget].GetFrame(SavedBacktrackTick).m_mBoneMap[NativeClass::PriorityPoints[SavedBoneIndex]];
+				VectorAngles(BacktrackedPos - LocalPlayer->GetEyePosition(), AimbotAngle);
+				float simtime = HiveCheats::cBacktrackInterface.m_mEntities[m_nTarget].GetFrame(SavedBacktrackTick).m_fSimulationTime;
+				HiveCheats::cBacktrackInterface.Interp_UpdateInterpolation(TICKS_TO_TIME((pCmd->tick_count - 1) - TIME_TO_TICKS(simtime)));
+			}
+
 			pCmd->viewangles = AimbotAngle;
+		
+		}
+
 		SavedBoneIndex = -1;
+		SavedBacktrackTick = -1;
+		bSavedBacktrackState = false;
 
 	}
 }

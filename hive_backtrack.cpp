@@ -45,7 +45,7 @@ CBacktrackFrame CBacktrackEntity::GetFrame(int iTick)
 	return m_vBacktrackFrames.at(iTick);
 }
 
-void CBacktrack::Reconcile(CBacktrackEntity BTEntity, int iTick)
+void CBacktrack::Reconcile(CBacktrackEntity& BTEntity, int iTick)
 {
 	if (!BTEntity.m_cReconciledFrame->bReconciled && BTEntity.m_pPlayerEntity)
 	{
@@ -56,31 +56,33 @@ void CBacktrack::Reconcile(CBacktrackEntity BTEntity, int iTick)
 		int BoneCacheSize = ((CBoneAccessorNew*)BTEntity.m_pPlayerEntity)->BoneMatrixSize;
 		matrix3x4_t* BoneMatrixCache = ((CBoneAccessorNew*)BTEntity.m_pPlayerEntity)->BoneMatrix;
 		
-		CBacktrackFrame ReconciliationFrame = BTEntity.GetFrame(iTick);
+		CBacktrackFrame* ReconciliationFrame = &BTEntity.GetFrame(iTick);
+	
 		BTEntity.m_cReconciledFrame->m_vAbsOrigin = BTEntity.m_pPlayerEntity->GetAbsOrigin();
 		BTEntity.m_cReconciledFrame->m_vAbsAngles = BTEntity.m_pPlayerEntity->GetAbsAngles();
 		BTEntity.m_cReconciledFrame->m_vOOBMins = ((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->OBBMins();
 		BTEntity.m_cReconciledFrame->m_vOOBMaxs = ((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->OBBMaxs();
 		BTEntity.m_cReconciledFrame->m_vOrigin = ((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->GetOrigin();
-		memcpy(BTEntity.m_cReconciledFrame->m_mtBones, BoneMatrixCache, BoneCacheSize * sizeof(matrix3x4_t));
+		
+		//memcpy(BTEntity.m_cReconciledFrame->m_mtBones, BoneMatrixCache, BoneCacheSize * sizeof(matrix3x4_t));
 		//BTEntity.m_pPlayerEntity->GetAbsOrigin() = ReconciliationFrame.m_vAbsOrigin;
 		//BTEntity.m_pPlayerEntity->GetAbsAngles() = ReconciliationFrame.m_vAbsAngles;
 		//((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->GetOrigin() = ReconciliationFrame.m_vOrigin;
-		CHiveSourceNative.SetAbsOrigin(BTEntity.m_pPlayerEntity, ReconciliationFrame.m_vOrigin);
+		CHiveSourceNative.SetAbsOrigin(BTEntity.m_pPlayerEntity, ReconciliationFrame->m_vOrigin);
 		
 		//CHiveSourceNative.SetCollisionBounds(BTEntity.m_pPlayerEntity->GetCollideable(), ReconciliationFrame.m_vOOBMins, ReconciliationFrame.m_vOOBMaxs);
 		//memcpy(BoneMatrixCache, ReconciliationFrame.m_mtBones, BoneCacheSize * sizeof(matrix3x4_t));
 		BTEntity.m_pPlayerEntity->UpdateClientSideAnimation();
 		//BTEntity.m_pPlayerEntity->GetClientNetworkable()->PostDataUpdate(DATA_UPDATE_DATATABLE_CHANGED);
-		BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(NULL, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, ReconciliationFrame.m_fSimulationTime);
+		//BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(NULL, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, ReconciliationFrame.m_fSimulationTime);
 		
 		
-		//BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(ReconciliationFrame.m_mtBones, 128, BONE_USED_BY_HITBOX, ReconciliationFrame.m_fSimulationTime);
+		BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(ReconciliationFrame->m_mtBones, 128, BONE_USED_BY_HITBOX, ReconciliationFrame->m_fSimulationTime);
 		//cmd->tick_count = ReconciliationFrame.m_iTickCount;
 	}
 }
 
-void CBacktrack::EndReconciliation(CBacktrackEntity BTEntity)
+void CBacktrack::EndReconciliation(CBacktrackEntity& BTEntity)
 {
 	if (BTEntity.m_cReconciledFrame->bReconciled && BTEntity.m_pPlayerEntity)
 	{
@@ -95,7 +97,7 @@ void CBacktrack::EndReconciliation(CBacktrackEntity BTEntity)
 		//CHiveSourceNative.SetCollisionBounds(BTEntity.m_pPlayerEntity->GetCollideable(), BTEntity.m_cReconciledFrame->m_vOOBMins, BTEntity.m_cReconciledFrame->m_vOOBMaxs);
 		//((CBaseEntityNew*)BTEntity.m_pPlayerEntity)->GetOrigin() = BTEntity.m_cReconciledFrame->m_vOrigin;
 		
-		memcpy(BoneMatrixCache, BTEntity.m_cReconciledFrame->m_mtBones, BoneCacheSize * sizeof(matrix3x4_t));
+		//memcpy(BoneMatrixCache, BTEntity.m_cReconciledFrame->m_mtBones, BoneCacheSize * sizeof(matrix3x4_t));
 		
 		//BTEntity.m_pPlayerEntity->GetClientNetworkable()->PostDataUpdate(DATA_UPDATE_DATATABLE_CHANGED);
 		
@@ -152,9 +154,9 @@ float CBacktrack::GetLowestPossibleLerpTime(int* nUpdateRate)
 	return 1.f/*cl_interp_ratio*/ / sv_maxupdaterate->GetInt();
 }
 
-int CBacktrack::EstimateServerArriveTick()
+int CBacktrack::EstimateServerArriveTick(GMODCUserCmd* cmd)
 {
-	int nTick = CHiveInterface.Globals->tickcount + 1;
+	int nTick = cmd->tick_count + 1;
 
 	auto pNetChan = CHiveInterface.Engine->GetNetChannelInfo();
 	if (pNetChan)
@@ -165,7 +167,7 @@ int CBacktrack::EstimateServerArriveTick()
 
 	return nTick;
 }
-
+/*
 bool CBacktrack::CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedToAdjustInterp)
 {
 	float correct = 0.f;
@@ -200,7 +202,7 @@ bool CBacktrack::CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedT
 	int targettick = TIME_TO_TICKS(flSimulationTime);
 	float deltaTime = correct - TICKS_TO_TIME(EstimateServerArriveTick() - targettick);
 
-	if (fabsf(deltaTime) >= TICKS_TO_TIME(9))
+	if (fabsf(deltaTime) >= TICKS_TO_TIME(7))
 	{
 		if (flDiff >= 0.f)
 		{
@@ -221,113 +223,13 @@ bool CBacktrack::CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedT
 
 	return true;
 }
-
+*/
 bool CBacktrack::IsDeltaTooBig(Vector& vPos1, Vector& vPos2)
 {
 	return (vPos1 - vPos2).LengthSqr() > 1600000.f; // temp until lagfix
 }
-/*
-void CBacktrack::GetUsableRecordsForIndex(int idx, SmallVector<Snapshot*>* vecRecords, float flMinTime, float flMaxTime, bool* bShouldLagFix)
-{
-	auto& list = m_Snapshots[idx];
-	if (list.GetSize() == 0)
-	{
-		return;
-	}
 
-	auto pNode = list.GetTail();
-	Vector* vPrevOrigin = &pNode->m_pThis->m_vecOrigin;
 
-	bool bFirstRecordValid = false;
-	if (list.GetSize() >= 2)
-	{
-		if (CanRestoreToSimulationTime(pNode->m_pThis->m_flSimulationTime))
-		{
-			bFirstRecordValid = !IsDeltaTooBig(*vPrevOrigin, pNode->m_pPrev->m_pThis->m_vecOrigin);
-		}
-	}
-
-	while (pNode != nullptr)
-	{
-		auto pPrev = pNode->m_pPrev;
-
-		if (flMaxTime != -1.f)
-		{
-			if (flMinTime == -1.f)
-			{
-				flMinTime = 0.f;
-			}
-
-			static auto cl_updaterate = Source::Interfaces::Cvar->FindVar("cl_updaterate");
-			float flSnapshotInterval = 1.f / cl_updaterate->GetFloat();
-			float flDelta = TICKS_TO_TIME(Source::Interfaces::Globals->tickcount()) - pNode->m_pThis->m_flArriveTime;
-
-			if (flDelta < flMinTime)
-			{
-				if (IsDeltaTooBig(*vPrevOrigin, pNode->m_pThis->m_vecOrigin))
-				{
-					if (bFirstRecordValid)
-					{
-						vecRecords->Add(list.GetTail()->m_pThis);
-					}
-
-					if (bShouldLagFix != nullptr) // need to do more elaborate checks here
-					{
-						*bShouldLagFix = !bFirstRecordValid;
-					}
-
-					break;
-				}
-
-				vPrevOrigin = &pNode->m_pThis->m_vecOrigin;
-				pNode = pPrev;
-				continue;
-			}
-
-			if (flDelta > (flMaxTime + flSnapshotInterval))
-			{
-				break;
-			}
-
-			if (!vPrevOrigin)
-			{
-				vPrevOrigin = &pNode->m_pThis->m_vecOrigin;
-			}
-		}
-
-		if (!CanRestoreToSimulationTime(pNode->m_pThis->m_flSimulationTime))
-		{
-			if (bShouldLagFix != nullptr)
-			{
-				*bShouldLagFix = vecRecords->GetSize() == 0;
-			}
-
-			break;
-		}
-#if 0
-		if (IsDeltaTooBig(*vPrevOrigin, pNode->m_pThis->m_vecOrigin))
-		{
-			if (vecRecords->GetSize() == 0 && bFirstRecordValid)
-			{
-				vecRecords->Add(list.GetTail()->m_pThis);
-			}
-
-			if (bShouldLagFix != nullptr) // need to do more elaborate checks here
-			{
-				*bShouldLagFix = !bFirstRecordValid;
-			}
-
-			break;
-		}
-#endif
-
-		vecRecords->Add(pNode->m_pThis);
-
-		vPrevOrigin = &pNode->m_pThis->m_vecOrigin;
-		pNode = pPrev;
-	}
-}
-*/
 void CBacktrack::ProcessTick()
 {
 	CBaseEntityNew* LocalPlayer = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
@@ -378,108 +280,37 @@ void CBacktrack::ProcessTick()
 
 void CBacktrack::Interp_WriteUserCmdDeltaToBuffer()
 {
-	if (m_bHasToReset)
 	{
-		//Interp_ResetValues();
-		return;
+		if (m_bHasToReset)
+		{
+			if (m_iResetTicks == 3)
+			{
+				float m_flInterp = CHiveInterface.Cvar->FindVar("cl_interp")->GetFloat();
+				char buf[32];
+				sprintf_s(buf, "%f", m_flInterp);
+				NativeClass::SendNetMsg("cl_interp", buf);
+				m_bHasToReset = false;
+				m_iResetTicks = 0;
+			}
+			m_iResetTicks++;
+		}
+
+		if (m_bHasToChange)
+		{
+			char buf[32];
+			sprintf_s(buf, "%f", m_flInterp);
+			NativeClass::SendNetMsg("cl_interp", buf);
+			m_bHasToChange = false;
+			m_iResetTicks = 0;
+			m_bHasToReset = true;
+		}
 	}
-
-	if (!m_bHasToChange)
-	{
-		return;
-	}
-
-	auto pNetChan = CHiveInterface.Engine->GetNetChannelInfo();
-	if (pNetChan == nullptr)
-	{
-		return;
-	}
-
-	{
-		//NativeClass::SendNetMsg("cl_interpolate", m_bInterpolate == 0 ? "0" : "1");
-	}
-
-	{
-		//m_flInterp = 0.5f;
-		char buf[32];
-		sprintf_s(buf, "%f", m_flInterp);
-		NativeClass::SendNetMsg("cl_interp", buf);
-	}
-
-	{
-		//m_flRatio = 2.0f;
-		char buf[32];
-		sprintf_s(buf, "%f", m_flRatio);
-
-		NativeClass::SendNetMsg("cl_interp_ratio", buf);
-	}
-
-	m_bHasToChange = false;
-	m_bHasToReset = true;
 }
 
-void CBacktrack::Interp_ResetValues()
+void CBacktrack::Interp_UpdateInterpolation(float flInterp)
 {
-	auto cl_interpolate = CHiveInterface.Cvar->FindVar("cl_interpolate");
-	auto cl_interp = CHiveInterface.Cvar->FindVar("cl_interp");
-	auto cl_interp_ratio = CHiveInterface.Cvar->FindVar("cl_interp_ratio");
-
-	auto pNetChan = CHiveInterface.Engine->GetNetChannelInfo();
-	if (pNetChan == nullptr)
-	{
-		return;
-	}
-
-	{
-		NativeClass::SendNetMsg("cl_interpolate", cl_interpolate->GetInt() == 0 ? "0" : "1"); 
-	}
-
-	{
-		char buf[32];
-		sprintf_s(buf, "%f", cl_interp->GetFloat());
-		NativeClass::SendNetMsg("cl_interp", buf);
-	}
-
-	{
-		char buf[32];
-		sprintf_s(buf, "%f", cl_interp_ratio->GetFloat());
-		NativeClass::SendNetMsg("cl_interp_ratio", buf);
-	}
-
-	m_nResetTicks = 3;
-	m_bHasToReset = false;
-}
-
-void CBacktrack::Interp_UpdateDesiredValues(bool bInterpolate, float flInterp, float flRatio)
-{
-	static auto cl_interp = CHiveInterface.Cvar->FindVar("cl_interp");
-	static auto cl_interp_ratio = CHiveInterface.Cvar->FindVar("cl_interp_ratio");
-
-	m_bInterpolate = bInterpolate;
-
 	m_flInterp = flInterp;
-	if (m_flInterp == -1.f)
-	{
-		m_flInterp = cl_interp->GetFloat();
-	}
-
-	m_flRatio = flRatio;
-	if (m_flRatio == -1.f)
-	{
-		m_flRatio = cl_interp_ratio->GetFloat();
-	}
-
 	m_bHasToChange = true;
-}
-
-void CBacktrack::Interp_CancelUpdates()
-{
-	m_bHasToChange = false;
-}
-
-bool CBacktrack::Interp_GetIsLocked()
-{
-	return m_bHasToReset;
 }
 
 namespace HiveCheats

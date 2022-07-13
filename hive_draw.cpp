@@ -419,17 +419,48 @@ namespace HiveDraw {
 		if (!HiveCheats::cBacktrackInterface.bInit)
 			return;
 
-		CBacktrackEntity BacktrackEnt = HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()];
-		if (BacktrackEnt.m_pPlayerEntity)
+		if (HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].m_pPlayerEntity)
 		{
-			for (int i = 0; i < BacktrackEnt.GetFrameCount(); i++)
+			for (int i = 0; i < CLuaMenuCallback.Backtrack_max_tick; i++)
 			{
-				Vector vHeadPos = BacktrackEnt.GetFrame(i).m_mBoneMap[NativeClass::BonesTable[0]];
-				Vector vHeadPosScreen;
-				WorldToScreen(vHeadPos, vHeadPosScreen);
-				FillRGBA(vHeadPosScreen.x, vHeadPosScreen.y, 5, 5, 255,255,255,150);
-				//RECT textSize = GetTextSize((DWORD)Fonts::ESP, std::to_string(i).c_str());
-				//DrawString(vHeadPosScreen.x , vHeadPosScreen.y - textSize.right / 2, Color(255, 255, 255, 255), Fonts::ESP, std::to_string(i).c_str());
+				std::map<const char*, Vector> BoneMap = HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].GetFrame(i).m_mBoneMap;
+				Vector bonepos = BoneMap["ValveBiped.Bip01_Spine2"];
+				Vector abspos = HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].GetFrame(i).m_vAbsOrigin;
+				Vector originpos = HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].GetFrame(i).m_vOrigin;
+				abspos.z += 32;
+				originpos.z += 64;
+				Vector w2s;
+				Vector w2s2;
+				Vector w2s3;
+				HiveDraw::WorldToScreen(bonepos, w2s);
+				HiveDraw::WorldToScreen(abspos, w2s2);
+				HiveDraw::WorldToScreen(originpos, w2s3);
+				HiveDraw::FillRGBA(w2s.x, w2s.y, 5, 5, 255, 100, 40, 150);
+				HiveDraw::FillRGBA(w2s2.x, w2s2.y, 5, 5, 40, 100, 255, 150);
+				Color col = Color(255, 255, 255, 255);
+				/*
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[0]], BoneMap[NativeClass::BonesTable[1]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[1]], BoneMap[NativeClass::BonesTable[2]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[2]], BoneMap[NativeClass::BonesTable[3]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[3]], BoneMap[NativeClass::BonesTable[4]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[4]], BoneMap[NativeClass::BonesTable[5]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[2]], BoneMap[NativeClass::BonesTable[6]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[6]], BoneMap[NativeClass::BonesTable[7]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[7]], BoneMap[NativeClass::BonesTable[8]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[2]], BoneMap[NativeClass::BonesTable[9]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[9]], BoneMap[NativeClass::BonesTable[10]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[10]],BoneMap[NativeClass::BonesTable[11]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[5]], BoneMap[NativeClass::BonesTable[12]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[12]],BoneMap[NativeClass::BonesTable[13]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[13]],BoneMap[NativeClass::BonesTable[14]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[14]],BoneMap[NativeClass::BonesTable[15]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[5]], BoneMap[NativeClass::BonesTable[16]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[16]],BoneMap[NativeClass::BonesTable[17]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[17]],BoneMap[NativeClass::BonesTable[18]], col);
+				HiveDraw::DrawBone(BoneMap[NativeClass::BonesTable[18]],BoneMap[NativeClass::BonesTable[19]], col);
+				*/
+				//HiveDraw::DrawCircle(w2s2.x, w2s2.y, 10, Color(0, 255, 0, 255));
+				//HiveDraw::DrawCircle(w2s3.x, w2s3.y, 10, Color(0, 0, 255, 255));
 			}
 		}
 	}

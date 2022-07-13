@@ -12,13 +12,16 @@ namespace HiveCheats {
 		AngleVectors(qCurAng, &vEnd);
 		vEnd = vEnd * 8192 + vEyePos;
 		ray.Init(vEyePos, vEnd);
-		CHiveInterface.EngineTrace->TraceRay(ray, 0x46004003, &filter, &tr);
+		CHiveInterface.EngineTrace->TraceRay(ray, MASK_SHOT, &filter, &tr);
 		CBaseEntityNew *pBaseEntity = (CBaseEntityNew*)tr.m_pEnt;
 
 		if (!pBaseEntity || !pBaseEntity->isAlive())
 			return;
 
 		if (tr.allsolid)
+			return;
+
+		if (!tr.hitbox)
 			return;
 
 		pCmd->buttons |= IN_ATTACK;

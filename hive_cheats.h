@@ -53,21 +53,18 @@ public:
 	bool m_bInterpolate;
 	bool m_bHasToChange;
 	bool m_bHasToReset;
-	int m_nResetTicks;
+	int m_iResetTicks;
 
 	void ProcessTick();
-	void Reconcile(CBacktrackEntity BTEntity, int iTick);
+	void Reconcile(CBacktrackEntity& BTEntity, int iTick);
 	float GetLowestPossibleLerpTime(int* nUpdateRate);
 	bool IsDeltaTooBig(Vector& vPos1, Vector& vPos2);
-	int EstimateServerArriveTick();
+	int EstimateServerArriveTick(GMODCUserCmd* cmd);
 	bool CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedToAdjustInterp);
-	void EndReconciliation(CBacktrackEntity BTEntity);
+	void EndReconciliation(CBacktrackEntity& BTEntity);
 	float GetLerpTime();
 	void Interp_WriteUserCmdDeltaToBuffer();
-	void Interp_ResetValues();
-	void Interp_UpdateDesiredValues(bool bInterpolate, float flInterp = -1.f, float flRatio = -1.f);
-	void Interp_CancelUpdates();
-	bool Interp_GetIsLocked();
+	void Interp_UpdateInterpolation(float flInterp);
 }; 
 
 namespace HiveCheats 
