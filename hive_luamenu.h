@@ -9,6 +9,9 @@ namespace HiveLuaMenuFunctions {
 	int GetbLuaExecution(lua_State* state);
 	int SetChoke(lua_State* state);
 	int GetChoke(lua_State* state);
+
+	int SetBacktrackTick(lua_State* state);
+
 	int SetAntiScreengrab(lua_State* state);
 	int SetESP(lua_State* state);
 	int SetBoneESP(lua_State * state);
@@ -162,6 +165,7 @@ public:
 	bool LockDownloads = true;
 	bool CustomLuaRun = false;
 
+	int tmpBacktrackTick = 7;
 	// Friends List
 	std::unordered_set<unsigned long long> FriendList;
 }; LuaMenuCallback extern CLuaMenuCallback;

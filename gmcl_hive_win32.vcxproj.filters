@@ -221,5 +221,8 @@
     <ClInclude Include="hive_playerresource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hive_netchannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

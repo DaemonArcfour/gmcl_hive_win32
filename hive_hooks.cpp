@@ -118,19 +118,24 @@ namespace HiveHook {
 			VMT_RUNCOMMAND);
 	}
 
+	void GetWriteUsercmdDeltaToBuffer()
+	{
+		HiveOriginalFunctions::WriteUsercmdDeltaToBuffer = (hive_func_WriteUsercmdDeltaToBuffer)DetourFunction((PBYTE)CHiveSourceNative.offset_WriteUsercmdDeltaToBuffer, (PBYTE)HiveHookedFunctions::WriteUsercmdDeltaToBuffer);
+	}
+
 	void InitHive() {
 		GetCreateLuaInterface(); // index
 		GetCloseLuaInterface();  // index
 		GetPaintTraverse();		 // index
 		GetDrawModelExecute();	 // index
+		GetRunCommand();		 // index
 		GetCreateMove();		 // sig
 		GetCalcView();			 // sig
 		GetFireBullets();		 // sig
 		GetFrameStageNotify();	 // sig
 		GetRenderCapture();		 // sig
-		//GetSwepPrimaryAttack();	 // sig not needed anymore
 		GetSetupBones();		 // sig
-		GetLuaGameModeCallWithArgs(); // sig
-		GetRunCommand();		 // index
+		GetLuaGameModeCallWithArgs();	// sig
+		GetWriteUsercmdDeltaToBuffer(); // sig
 	}
 }

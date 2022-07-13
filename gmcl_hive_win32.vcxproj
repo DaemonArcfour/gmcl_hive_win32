@@ -220,6 +220,7 @@
     <ClInclude Include="hive_lua_whitelist.h" />
     <ClInclude Include="hive_math.h" />
     <ClInclude Include="hive_native.h" />
+    <ClInclude Include="hive_netchannel.h" />
     <ClInclude Include="hive_netvar.h" />
     <ClInclude Include="hive_optimize.h" />
     <ClInclude Include="hive_playerresource.h" />

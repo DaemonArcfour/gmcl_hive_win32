@@ -11,7 +11,9 @@ int MaxClients = 0;
 FireBullets_info BulletInfo;
 QAngle OldPunchAngles = QAngle(0, 0, 0);
 bool LuaInit = false;
-
+bool bShooting = false;
+float fCorrectInterp = 0.0f;
+int iHardBtEntity = 1;
 namespace HiveHookedFunctions {
 	void * __fastcall RunString(void *edx, void *ecx, const char* ccName, const char* ccPath, const char* ccString, bool bRun, bool bErrors) {
 		MENU->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
@@ -141,26 +143,24 @@ namespace HiveHookedFunctions {
 					pCmd->buttons &= ~IN_ATTACK;
 			}
 
+			if (pCmd->buttons & IN_ATTACK && CanShoot)
+				bShooting = true;
+
 			if (BulletInfo.m_vecSpread != Vector(0, 0, 0))
 				Spread = BulletInfo.m_vecSpread;
 
 			HiveCheats::FakeLag(pCmd);
 
 			if (CLuaMenuCallback.Bhop)
+			{
 				HiveCheats::Bunnyhop(pCmd, LocalPlayer);
+			}
 
 			if (CLuaMenuCallback.Autostrafe)
 				HiveCheats::Autostrafe(pCmd);
 
-			
-
 			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Start(pCmd, pLocal);
-
-			if (CLuaMenuCallback.Backtrack)
-			{
-				HiveCheats::cBacktrackInterface.ProcessTick(pCmd);
-			}
 
 			if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && currentWeapon)
 			{
@@ -197,21 +197,63 @@ namespace HiveHookedFunctions {
 				pCmd->viewangles = vOldAngles;
 				pCmd->world_click_direction = tmp;
 			}
-			if (HiveCheats::cBacktrackInterface.m_mEntities[2].m_pPlayerEntity)
-			{
-				if (HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrameCount() >= 8)
-				{
-					HiveCheats::cBacktrackInterface.Reconcile(pCmd, HiveCheats::cBacktrackInterface.m_mEntities[2], 7);
-					bool bCollision = HiveCheats::TestCollision(HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(7).m_mBoneMap["ValveBiped.Bip01_Spine2"]);
-					if (bCollision)
-						ConMsg("Collided!\n");
-					else
-						ConMsg("No collision!\n");
-					//HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[2]);
-				}
-			}
+
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
+
+			if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].m_pPlayerEntity && CLuaMenuCallback.Backtrack)
+			{
+				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
+				{
+					int bttic = CLuaMenuCallback.tmpBacktrackTick;
+					HiveCheats::cBacktrackInterface.Reconcile(HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity], bttic);
+				}
+			}
+
+			if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].m_pPlayerEntity && CLuaMenuCallback.Backtrack)
+			{
+				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
+				{
+					if (bShooting)
+					{
+						int bttic = CLuaMenuCallback.tmpBacktrackTick;
+						float simtime = HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrame(bttic).m_fSimulationTime;
+
+						/*
+						bool bCollision = HiveCheats::TestCollision(HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(bttic).m_mBoneMap["ValveBiped.Bip01_Spine2"]);
+						if (bCollision)
+							ConMsg("Collided!\n");
+						else
+							ConMsg("No collision!\n");
+						*/
+						fCorrectInterp = TICKS_TO_TIME((pCmd->tick_count - 1) - TIME_TO_TICKS(simtime));
+						ConMsg("flInterp: %f\n", fCorrectInterp);
+						//HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(true, fCorrectInterp, 1.f);
+						/*
+						bool bAdjustInterp;
+						HiveCheats::cBacktrackInterface.CanRestoreToSimulationTime(simtime, &bAdjustInterp);
+						if (bAdjustInterp)
+						{
+							float flInterp = TICKS_TO_TIME(pCmd->tick_count - TIME_TO_TICKS(simtime));
+							HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(true, flInterp, 1.f);
+						}
+
+						else
+						{
+							pCmd->tick_count = TIME_TO_TICKS(simtime);
+							HiveCheats::cBacktrackInterface.Interp_UpdateDesiredValues(false);
+						}
+						*/
+						/*
+						float time = HiveCheats::cBacktrackInterface.m_mEntities[2].GetFrame(bttic).m_fSimulationTime + HiveCheats::cBacktrackInterface.GetLerpTime();
+						pCmd->tick_count = TIME_TO_TICKS(time);
+
+						*/
+					}
+					HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity]);
+				}
+			}
+
 
 			if(CLuaMenuCallback.Aimbot || CLuaMenuCallback.Antiaim)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
@@ -310,6 +352,25 @@ namespace HiveHookedFunctions {
 			
 		}
 		*/
+		if (stage == FRAME_NET_UPDATE_POSTDATAUPDATE_START)
+		{
+			
+		
+
+		}
+
+		if (stage == FRAME_NET_UPDATE_POSTDATAUPDATE_END)
+		{
+
+		}
+
+		if (stage == FRAME_NET_UPDATE_END)
+		{
+			if (CLuaMenuCallback.Backtrack)
+			{
+				HiveCheats::cBacktrackInterface.ProcessTick();
+			}
+		}
 		HiveOriginalFunctions::FrameStageNotify(ecx, edx, stage);
 	}
 
@@ -366,7 +427,7 @@ namespace HiveHookedFunctions {
 		CBaseEntityNew* ent = (CBaseEntityNew*)ecx;
 
 		C_BasePlayerNew* localPlayer = reinterpret_cast<C_BasePlayerNew*>(CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer()));
-		if(!CLuaMenuCallback.EnginePredict)
+		if(!CLuaMenuCallback.EnginePredict || (CLuaMenuCallback.Backtrack /*&& !HiveCheats::cBacktrackInterface.bDisableBoneInterpolation*/))
 			return  HiveOriginalFunctions::SetupBones(ecx, edx, pBoneToWorldOut, nMaxBones, boneMask, currentTime);
 
 		float simulationTime = ply == localPlayer ? CHiveEnginePredict.GetServerTime() : ent->flSimulationTime();
@@ -406,6 +467,27 @@ namespace HiveHookedFunctions {
 			return HiveOriginalFunctions::RunCommand(_this, player, ucmd, moveHelper);
 		}
 	}
+
+	bool __fastcall WriteUsercmdDeltaToBuffer(void* _this, void* ecx, bf_write* buf, int from, int to, int isnewcommand)
+	{
+		
+		{
+			if (bShooting && CLuaMenuCallback.Backtrack)
+			{
+				float m_flInterp = fCorrectInterp;
+				char buf[32];
+				sprintf_s(buf, "%f", m_flInterp);
+				NativeClass::SendNetMsg("cl_interp", buf);
+				bShooting = false;
+			}
+		}
+		
+
+		//if (CLuaMenuCallback.Backtrack)
+		//	HiveCheats::cBacktrackInterface.Interp_WriteUserCmdDeltaToBuffer();
+		bShooting = false;
+		return HiveOriginalFunctions::WriteUsercmdDeltaToBuffer(_this, buf, from, to, isnewcommand);
+	}
 }
 
 
@@ -423,6 +505,7 @@ namespace HiveOriginalFunctions {
 	CHook* FrameStageNotifyHook = nullptr;
 	CHook* SetupBonesHook = nullptr;
 	CHook* RunCommandHook = nullptr;
+	hive_func_WriteUsercmdDeltaToBuffer WriteUsercmdDeltaToBuffer = 0;
 	hive_func_RunCommand RunCommand = 0;
 	hive_func_CompileString CompileString = 0;
 	hive_func_RunString RunString = 0;

@@ -158,7 +158,7 @@ void HiveLuaMenuFunctions::SetupLuaMenuCallbacks() {
 	InitLUAFunction(MENU, SetbSendPacket);
 	InitLUAFunction(MENU, GetbSendPacket);
 	InitLUAFunction(MENU, RequestInvalidFile);
-
+	InitLUAFunction(MENU, SetBacktrackTick);
 	InitLUAFunction(MENU, GetObserversList);
 }
 
@@ -277,6 +277,19 @@ namespace HiveLuaMenuFunctions {
 		return 1;
 	}
 
+	int SetBacktrackTick(lua_State* state)
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.tmpBacktrackTick = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("Tick set to " + std::to_string(CLuaMenuCallback.tmpBacktrackTick) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
 
 	int SetChoke(lua_State* state) 
 	{

@@ -37,6 +37,7 @@ namespace HiveHook {
 	void GetLuaGameModeCallWithArgs();
 	void GetLuaGameModeCallFinish();
 	void GetRunCommand();
+	void GetWriteUsercmdDeltaToBuffer();
 	void InitHive();
 }
 

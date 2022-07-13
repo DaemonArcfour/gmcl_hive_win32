@@ -86,7 +86,7 @@ public:
 	/*1*/	virtual void* SetRefEHandle(void*) = 0;
 	/*2*/	virtual void* GetRefEHandle(void)const = 0;
 	/*3*/	virtual CCollisionProperty* GetCollideable(void) = 0;
-	/*4*/	virtual void* GetClientNetworkable(void) = 0;
+	/*4*/	virtual IClientNetworkable* GetClientNetworkable(void) = 0;
 	/*5*/	virtual IClientRenderable* GetClientRenderable(void) = 0;
 	/*6*/	virtual void* GetIClientEntity(void) = 0;
 	/*7*/	virtual void* GetBaseEntity(void) = 0;

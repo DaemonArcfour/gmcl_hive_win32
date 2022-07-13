@@ -456,13 +456,22 @@ namespace HiveTroubleshooter {
 		else
 			PrintError("Source Engine -> *\"bSendPacket\" has been found!", OK, bError);
 
+		if (!CHiveSourceNative.NET_SetConvar_Constructor)
+			PrintError("Source Engine -> *\"NET_SetConvar_Constructor\" has not been found!", ERROR, bError);
+		else
+			PrintError("Source Engine -> *\"NET_SetConvar_Constructor\" has been found!", OK, bError);
+
+		if (!CHiveSourceNative.NET_SetConvar_Deconstructor)
+			PrintError("Source Engine -> *\"NET_SetConvar_Deconstructor\" has not been found!", ERROR, bError);
+		else
+			PrintError("Source Engine -> *\"NET_SetConvar_Deconstructor\" has been found!", OK, bError);
 	//	ConMsg("[0x%.8X]\n", (DWORD)CHiveSourceNative.offset_bSendPacket);
 
 		if (!VirtualProtect((LPVOID)(CHiveSourceNative.offset_bSendPacket - 100), 1024, PAGE_EXECUTE_READWRITE, &dummy))
 			PrintError("Source Engine -> *\"bSendPacket\" Page guard NOT patched!", ERROR, bError);
 		else
 			PrintError("Source Engine -> *\"bSendPacket\" Page guard patched!", OK, bError);
-		
+
 		return bError;
 	}
 

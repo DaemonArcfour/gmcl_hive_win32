@@ -42,6 +42,7 @@ namespace HiveDraw {
 	void DrawWeapon(const char* weapon, ESPBox size);
 	void Draw2DBox(float x, float y, float w, float h, float px, int r, int g, int b, int a);
 	void DrawBone(char* StartBone, char*  EndBone, CBaseEntityNew* target, Color drawCol);
+	void DrawBone(Vector StartBone, Vector EndBone, Color drawCol);
 	void DrawHealth(CBaseEntityNew* pEntity, ESPBox size);
 	void DrawArmor(CBaseEntityNew* pEntity, ESPBox size);
 	void DrawBacktrackTicks(CBaseEntityNew* pEntity);

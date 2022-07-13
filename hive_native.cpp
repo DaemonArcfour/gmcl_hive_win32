@@ -4,6 +4,11 @@ WeaponName *WNGrab;
 GetIsDormant *IDGrab;
 EntEyeAng *AngGrab;
 cPaintTraverseConfig PaintTraverseConfig;
+class CustomMessage
+{
+public:
+	char dump[36];
+};
 namespace NativeClass {
 	DWORD CL = (DWORD)GetModuleHandle("client.dll");
 	DWORD CLSize = HiveScanner::GetModuleSize("client.dll");
@@ -138,21 +143,45 @@ namespace NativeClass {
 		return false;
 	}
 
-	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones)
+	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones, bool bBoneInterpolation = true)
 	{
 		C_BasePlayerNew* Player = (C_BasePlayerNew*)_this;
+		Vector vAbsOrigin = Player->GetAbsOrigin();
+		if (!bBoneInterpolation)
+			CHiveSourceNative.SetAbsOrigin(Player, ((CBaseEntityNew*)Player)->GetOrigin());
+
 		uintptr_t ClientRenderable = (uintptr_t)Player->GetClientRenderable();
 		float EngineTime = CHiveInterface.Engine->Time();
 		bool Setup = Player->GetClientRenderable()->SetupBones(bones, 128, BONE_USED_BY_HITBOX, EngineTime);
 		if (ClientRenderable < 0x1000 || !Setup)
+		{
+			if (!bBoneInterpolation)
+				CHiveSourceNative.SetAbsOrigin(Player, vAbsOrigin);
 			return false;
+		}
+
 		studiohdr_t* studioHdr = CHiveInterface.ModelInfo->GetStudiomodel((const model_t*)Player->GetClientRenderable()->GetModel());
 		if (studioHdr)
 		{
 			Studio_GenerateBoneMap(studioHdr, bones, m_mBoneMap);
+			if (!bBoneInterpolation)
+				CHiveSourceNative.SetAbsOrigin(Player, vAbsOrigin);
 			return true;
 		}
+		if (!bBoneInterpolation)
+			CHiveSourceNative.SetAbsOrigin(Player, vAbsOrigin);
 		return false;
+	}
+
+	void SendNetMsg(const char* name, const char* value)
+	{
+		CNetChan* pNetChan = (CNetChan*)CHiveInterface.Engine->GetNetChannelInfo();
+		char* pContructorBuffer = new char[36];
+		ZeroMemory(pContructorBuffer, 36);
+		CHiveSourceNative.NET_SetConvar_Constructor((void*)pContructorBuffer, name, value);
+		pNetChan->SendNetMsg(pContructorBuffer, false, false);
+		delete[] pContructorBuffer;
+		
 	}
 
 	bool* bSendPacket = (bool*)CHiveSourceNative.offset_bSendPacket;

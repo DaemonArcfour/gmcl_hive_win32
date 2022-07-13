@@ -17,6 +17,7 @@
 #include "hive_basecombatweapon.h"
 #include "hive_classpred.h"
 #include "hive_clientstate.h"
+#include "hive_netchannel.h"
 
 
 

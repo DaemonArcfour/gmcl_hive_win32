@@ -427,7 +427,7 @@ namespace HiveDraw {
 				Vector vHeadPos = BacktrackEnt.GetFrame(i).m_mBoneMap[NativeClass::BonesTable[0]];
 				Vector vHeadPosScreen;
 				WorldToScreen(vHeadPos, vHeadPosScreen);
-				DrawCircle(vHeadPosScreen.x, vHeadPosScreen.y, 10, Color(255, 255, 255, 255));
+				FillRGBA(vHeadPosScreen.x, vHeadPosScreen.y, 5, 5, 255,255,255,150);
 				//RECT textSize = GetTextSize((DWORD)Fonts::ESP, std::to_string(i).c_str());
 				//DrawString(vHeadPosScreen.x , vHeadPosScreen.y - textSize.right / 2, Color(255, 255, 255, 255), Fonts::ESP, std::to_string(i).c_str());
 			}
@@ -528,6 +528,22 @@ namespace HiveDraw {
 			return;
 
 		if (!HiveDraw::WorldToScreen(EndBonePos, EndDrawPos))
+			return;
+		DrawLine(StartDrawPos.x, StartDrawPos.y, EndDrawPos.x, EndDrawPos.y, drawCol);
+
+	}
+
+	void DrawBone(Vector StartBone, Vector EndBone, Color drawCol)
+	{
+		Vector StartDrawPos, EndDrawPos;
+
+		if (StartBone.IsZero() || EndBone.IsZero())
+			return;
+
+		if (!HiveDraw::WorldToScreen(StartBone, StartDrawPos))
+			return;
+
+		if (!HiveDraw::WorldToScreen(EndBone, EndDrawPos))
 			return;
 		DrawLine(StartDrawPos.x, StartDrawPos.y, EndDrawPos.x, EndDrawPos.y, drawCol);
 

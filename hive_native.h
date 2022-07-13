@@ -13,14 +13,16 @@ typedef void*(__thiscall* native_initkeyvalues)(void *_this, const char*);
 typedef void*(__thiscall* native_loadfrombuffer)(void *_this, const char*, const char*, void*, void*);
 typedef int(__thiscall* native_SetCollisionBounds)(void* _this, const Vector& mins, const Vector& maxs);
 typedef int(__thiscall* native_InvalidateBoneCache)(void* _this);
-//int __thiscall InvalidateBoneCache_10131200(_DWORD *this)
+typedef unsigned int(__thiscall* native_SetAbsOrigin)(void* _this, const Vector& vec);
+typedef	int(__thiscall* native_NET_SetConvar_Deconsctructor)(void* _this);
+typedef void* (__thiscall* native_NET_SetConvar_Constructor)(void* _this, const char* name, const char* value);
 class SourceNative {
 private:
-	DWORD CL = (DWORD)GetModuleHandle("client.dll");
-	DWORD CLSize = HiveScanner::GetModuleSize("client.dll");
-	DWORD Engine = (DWORD)GetModuleHandle("engine.dll");
-	DWORD EngineSize = HiveScanner::GetModuleSize("engine.dll");
-	DWORD MaterialSystem = (DWORD)GetModuleHandle("materialsystem.dll");
+	DWORD CL =				(DWORD)GetModuleHandle("client.dll");
+	DWORD CLSize =		HiveScanner::GetModuleSize("client.dll");
+	DWORD Engine =			(DWORD)GetModuleHandle("engine.dll");
+	DWORD EngineSize =	HiveScanner::GetModuleSize("engine.dll");
+	DWORD MaterialSystem =	(DWORD)GetModuleHandle("materialsystem.dll");
 	DWORD MaterialSystemSize = HiveScanner::GetModuleSize("materialsystem.dll");
 	DWORD offset_GetActiveWeapon = HiveScanner::SigScan(	CL,		CLSize,		(PBYTE)"\x56\x8B\xF1\x3B\x35", "xxxxx");
 	DWORD offset_MD5_Random = HiveScanner::SigScan(			CL,		CLSize,		(PBYTE)"\x55\x8B\xEC\x83\xEC\x68\x6A", "xxxxxxx");
@@ -32,8 +34,12 @@ private:
 	DWORD offset_GetClassName = HiveScanner::SigScan(		CL,		CLSize,		(PBYTE)"\x53\x8B\xD9\x8B\x83\x00\x00\x00\x00\x85\xC0\x74", "xxxxx????xxx");
 	DWORD offset_LoadFromBuffer = HiveScanner::SigScan(		CL,		CLSize,		(PBYTE)"\x55\x8B\xEC\x83\xEC\x34\x53\x8B\x5D\x0C", "xxxxxxxxxx");
 	DWORD offset_InitKeyvalues = HiveScanner::SigScan(		MaterialSystem, MaterialSystemSize, (PBYTE)"\x55\x8B\xEC\x56\x8B\xF1\x6A\x01", "xxxxxxxx");
-	DWORD offset_SetCollisionBounds = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\xE8\x00\x00\x00\x00\x0F\xB6\x56\x40", "x????xxxx");
-	DWORD offset_InvalidateBoneCache = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\xA1\x00\x00\x00\x00\x48\xC7\x81\x00\x00\x00\x00\x00\x00\x00\x00\x89\x81\x00\x00\x00\x00\xC3", "x????xxx????????xx????x");
+	DWORD offset_SetCollisionBounds = HiveScanner::SigScanRelative(	CL, CLSize,					(PBYTE)"\xE8\x00\x00\x00\x00\x0F\xB6\x56\x40", "x????xxxx");
+	DWORD offset_InvalidateBoneCache = HiveScanner::SigScanRelative(CL, CLSize,					(PBYTE)"\xE8\x00\x00\x00\x00\xD9\x45\x10\x8B\x47\x04", "x????xxxxxx");
+	DWORD offset_SetAbsOrigin = HiveScanner::SigScanRelative(		CL, CLSize,					(PBYTE)"\xE8\x00\x00\x00\x00\xA1\x00\x00\x00\x00\x4E", "x????x????x");
+	DWORD offset_NET_SetConvar_Constructor = HiveScanner::SigScanRelative(	Engine, EngineSize,	(PBYTE)"\xE8\x00\x00\x00\x00\x6A\x00\x6A\x00\x8D\x45\xDC", "x????xxxxxxx");
+	DWORD offset_NET_SetConvar_Deconstructor = HiveScanner::SigScanRelative(Engine, EngineSize, (PBYTE)"\xE8\x00\x00\x00\x00\x8D\x4B\x58", "x????xxx");
+	
 public:
 	native_GetPlayerCombatWeapon	GetPlayerActiveWeapon = (native_GetPlayerCombatWeapon)(offset_GetActiveWeapon);								//near STR: "Player.AmbientUnderWater" IN VTABLE!
 	native_MD5_Random				MD5_PseudoRandom =		(native_MD5_Random)(offset_MD5_Random);												// CInput::CreateMove  0x7FFFFFFF
@@ -46,7 +52,10 @@ public:
 	native_loadfrombuffer			KeyValues_LoadFromBuffer = (native_loadfrombuffer)(offset_LoadFromBuffer);									// "tmp_resource" client.dll
 	native_initkeyvalues			KeyValues_Init =		(native_initkeyvalues)(offset_InitKeyvalues);										// "BufferClearObeyStencil" materialsystem.dll
 	native_SetCollisionBounds		SetCollisionBounds =	(native_SetCollisionBounds)(offset_SetCollisionBounds);
-	native_InvalidateBoneCache		InvalidateBoneCache = (native_InvalidateBoneCache)(offset_InvalidateBoneCache);
+	native_InvalidateBoneCache		InvalidateBoneCache =	(native_InvalidateBoneCache)(offset_InvalidateBoneCache);
+	native_SetAbsOrigin				SetAbsOrigin =			(native_SetAbsOrigin)(offset_SetAbsOrigin);
+	native_NET_SetConvar_Constructor NET_SetConvar_Constructor = (native_NET_SetConvar_Constructor)(offset_NET_SetConvar_Constructor);
+	native_NET_SetConvar_Deconsctructor NET_SetConvar_Deconstructor = (native_NET_SetConvar_Deconsctructor)(offset_NET_SetConvar_Deconstructor);
 
 	DWORD offset_bSendPacket = HiveScanner::SigScan(Engine, EngineSize, (PBYTE)"\xC6\x45\xFF\x01\x8B\x01\x8B", "xxxxxxx") + 3;				// (Updated 04.02.2019) (CL_MOVE)
 	DWORD offset_CalcView = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x53\x56\x8B\xF1\x57\x8B\x8E", "xxxxxxxxxx");
@@ -58,6 +67,7 @@ public:
 	DWORD offset_SetupBones = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\xB8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x53\x56\x57\x8B\xF9\x8B\x0D\x00\x00\x00\x00", "xxxx????x????xxxxxxx????");
 	DWORD offset_LuaGameModeCallWithArgs = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x8B\x46\x3C\x8D\x4E\x3C\xFF\x90\x84\x00\x00\x00\x8B\x00\x00\x00\x00\x00\xFF", "xxxxxxxxxxxxx?????x") - 0x7C; // "CLuaGamemode::CallWithArgs" client.dll
 	DWORD offset_LuaGameModeCallFinish = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\xE8\x00\x00\x00\x00\x83\x7D\xCC\x00", "x????xxxx"); //"CLuaGamemode::CallFinish" client.dll -- This sig is wrong, have to calculate negative offset
+	DWORD offset_WriteUsercmdDeltaToBuffer = HiveScanner::SigScan(CL, CLSize, (PBYTE)"\x55\x8B\xEC\x81\xEC\x00\x00\x00\x00\x53\x56\x8B\xF1\x8D\x8D\x00\x00\x00\x00\x57", "xxxxx????xxxxxx????x"); //"WARNING! User command buffer overflow"
 }; extern SourceNative CHiveSourceNative;
 class cPaintTraverseConfig {
 public:
@@ -77,7 +87,8 @@ namespace NativeClass {
 	bool GetBonePosition(void* ply, const char* attachment, Vector& origin);
 	bool GetBonePosition(void* ply, const char* attachment, Vector& origin, matrix3x4_t* bones);
 	bool GetBoneMap(void* ply, std::map<const char*, Vector> &m_mBoneMap);
-	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones);
+	bool GetBoneMap(void* _this, std::map<const char*, Vector>& m_mBoneMap, matrix3x4_t* bones, bool bBoneInterpolation);
+	void SendNetMsg(const char* name, const char* value);
 }
 
 class WeaponName;

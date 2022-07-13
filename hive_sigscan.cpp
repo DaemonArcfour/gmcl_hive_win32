@@ -21,4 +21,12 @@ namespace HiveScanner {
 				return (dwAddress + i);
 		return -1;
 	}
+
+	DWORD SigScanRelative(DWORD dwAddress, DWORD dwSize, PBYTE pbMask, char* szMask)
+	{
+		DWORD dwCallAddress = SigScan(dwAddress, dwSize, pbMask, szMask);
+		DWORD dwRelativeAddress = *(DWORD*)(dwCallAddress + 0x1);
+		DWORD dwRealFunctionAddress = dwCallAddress + 0x1 + sizeof(DWORD) + dwRelativeAddress;
+		return dwRealFunctionAddress;
+	}
 }

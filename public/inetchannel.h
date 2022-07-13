@@ -15,8 +15,8 @@
 #include "tier1/bitbuf.h"
 
 class	IDemoRecorder;
-class	INetMessage;
 class	INetChannelHandler;
+class   INetMessage;
 class	INetChannelInfo;
 typedef struct netpacket_s netpacket_t;
 typedef struct netadr_s	netadr_t;
@@ -25,6 +25,9 @@ enum RequestFile_t
     DOWNLOADABLE,
     CUSTOMFILE
 };
+
+
+
 abstract_class INetChannel : public INetChannelInfo
 {
 public:
@@ -74,6 +77,7 @@ public:
     virtual void GetMaxRoutablePayloadSize(void);
     virtual int GetProtocolVersion(void);
 };
+
 
 
 #endif // INETCHANNEL_H

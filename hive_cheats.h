@@ -37,7 +37,7 @@ public:
 	std::deque<CBacktrackFrame> m_vBacktrackFrames;
 	CReconcileFrame* m_cReconciledFrame;
 	C_BasePlayerNew* m_pPlayerEntity;
-	void SaveFrame(GMODCUserCmd* cmd);
+	void SaveFrame();
 	int GetFrameCount();
 	CBacktrackFrame GetFrame(int iTick);
 };
@@ -47,9 +47,27 @@ class CBacktrack
 public:
 	std::map<int, CBacktrackEntity> m_mEntities;
 	bool bInit = false;
-	void ProcessTick(GMODCUserCmd* cmd);
-	void Reconcile(GMODCUserCmd* cmd, CBacktrackEntity BTEntity, int iTick);
+	bool bDisableBoneInterpolation = false;
+	float m_flInterp;
+	float m_flRatio;
+	bool m_bInterpolate;
+	bool m_bHasToChange;
+	bool m_bHasToReset;
+	int m_nResetTicks;
+
+	void ProcessTick();
+	void Reconcile(CBacktrackEntity BTEntity, int iTick);
+	float GetLowestPossibleLerpTime(int* nUpdateRate);
+	bool IsDeltaTooBig(Vector& vPos1, Vector& vPos2);
+	int EstimateServerArriveTick();
+	bool CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedToAdjustInterp);
 	void EndReconciliation(CBacktrackEntity BTEntity);
+	float GetLerpTime();
+	void Interp_WriteUserCmdDeltaToBuffer();
+	void Interp_ResetValues();
+	void Interp_UpdateDesiredValues(bool bInterpolate, float flInterp = -1.f, float flRatio = -1.f);
+	void Interp_CancelUpdates();
+	bool Interp_GetIsLocked();
 }; 
 
 namespace HiveCheats 
