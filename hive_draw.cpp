@@ -419,7 +419,7 @@ namespace HiveDraw {
 		if (!HiveCheats::cBacktrackInterface.bInit)
 			return;
 
-		if (HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].m_pPlayerEntity)
+		if (HiveCheats::cBacktrackInterface.m_mEntities[pEntity->Index()].m_pPlayerEntity && pEntity->Index() == HiveCheats::aimbot_target)
 		{
 			for (int i = 0; i < CLuaMenuCallback.Backtrack_max_tick; i++)
 			{

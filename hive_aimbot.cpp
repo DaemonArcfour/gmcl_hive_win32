@@ -149,7 +149,7 @@ namespace HiveCheats {
 						std::map<const char*, Vector> BacktrackedBones = BTPlayer->GetFrame(i).m_mBoneMap;
 						HiveCheats::cBacktrackInterface.Reconcile(*BTPlayer, i);
 
-						for (int z = 3; z < 5; z++)
+						for (int z = 0; z < 5; z++)
 						{
 							
 							if (!GetVisible(LocalPlayer->GetEyePosition(), BacktrackedBones[NativeClass::PriorityPoints[z]], pBaseEntity, LocalPlayer))
@@ -214,7 +214,10 @@ namespace HiveCheats {
 				Vector BacktrackedPos = HiveCheats::cBacktrackInterface.m_mEntities[m_nTarget].GetFrame(SavedBacktrackTick).m_mBoneMap[NativeClass::PriorityPoints[SavedBoneIndex]];
 				VectorAngles(BacktrackedPos - LocalPlayer->GetEyePosition(), AimbotAngle);
 				float simtime = HiveCheats::cBacktrackInterface.m_mEntities[m_nTarget].GetFrame(SavedBacktrackTick).m_fSimulationTime;
-				HiveCheats::cBacktrackInterface.Interp_UpdateInterpolation(TICKS_TO_TIME((pCmd->tick_count - 1) - TIME_TO_TICKS(simtime)));
+				int EstimatedArriveTicks = HiveCheats::cBacktrackInterface.EstimateServerArriveTick(pCmd) - pCmd->tick_count;
+				//EstimatedArriveTicks -= 1;
+				EstimatedArriveTicks = 0;
+				HiveCheats::cBacktrackInterface.Interp_UpdateInterpolation(TICKS_TO_TIME((pCmd->tick_count - EstimatedArriveTicks) - TIME_TO_TICKS(simtime)));
 			}
 
 			pCmd->viewangles = AimbotAngle;

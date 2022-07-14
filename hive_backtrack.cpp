@@ -87,12 +87,12 @@ void CBacktrack::Reconcile(CBacktrackEntity& BTEntity, int iTick)
 		
 		//CHiveSourceNative.SetCollisionBounds(BTEntity.m_pPlayerEntity->GetCollideable(), ReconciliationFrame.m_vOOBMins, ReconciliationFrame.m_vOOBMaxs);
 		//memcpy(BoneMatrixCache, ReconciliationFrame.m_mtBones, BoneCacheSize * sizeof(matrix3x4_t));
-		BTEntity.m_pPlayerEntity->UpdateClientSideAnimation();
+		//BTEntity.m_pPlayerEntity->UpdateClientSideAnimation();
 		//BTEntity.m_pPlayerEntity->GetClientNetworkable()->PostDataUpdate(DATA_UPDATE_DATATABLE_CHANGED);
 		//BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(NULL, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, ReconciliationFrame.m_fSimulationTime);
 		
 		
-		BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(ReconciliationFrame->m_mtBones, 128, BONE_USED_BY_HITBOX, ReconciliationFrame->m_fSimulationTime);
+		//BTEntity.m_pPlayerEntity->GetClientRenderable()->SetupBones(ReconciliationFrame->m_mtBones, 128, BONE_USED_BY_HITBOX, ReconciliationFrame->m_fSimulationTime);
 		//cmd->tick_count = ReconciliationFrame.m_iTickCount;
 	}
 }
