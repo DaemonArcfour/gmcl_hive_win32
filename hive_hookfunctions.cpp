@@ -161,7 +161,7 @@ namespace HiveHookedFunctions {
 			if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && currentWeapon)
 			{
 				if (HiveCheats::CheckFire(currentWeapon))
-					HiveCheats::Antiaim(pCmd);
+					HiveCheats::Antiaim(pCmd, LocalPlayer);
 			}
 
 			if (CLuaMenuCallback.Aimbot && CanShoot)

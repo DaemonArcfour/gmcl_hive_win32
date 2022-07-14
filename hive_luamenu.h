@@ -137,7 +137,8 @@ public:
 	bool Triggerbot = false;
 	bool NoRecoil = false;
 	bool NoSpread = false;
-	int Choke = 0;
+	int bSendPChoke = 0;
+	int bSendPSend = 0;
 	int Backtrack_max_tick = 8;
 	bool PSilent = false;
 	bool ESPName = true;

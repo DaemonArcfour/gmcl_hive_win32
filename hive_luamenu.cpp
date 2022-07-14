@@ -295,8 +295,8 @@ namespace HiveLuaMenuFunctions {
 	{
 		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
 		{
-			CLuaMenuCallback.Choke = MENU->GetNumber(1);
-			HiveTroubleshooter::Print("Choke set to " + std::to_string(CLuaMenuCallback.Choke) + "!", 1);
+			CLuaMenuCallback.bSendPChoke = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("Choke set to " + std::to_string(CLuaMenuCallback.bSendPChoke) + "!", 1);
 		}
 
 		else
@@ -306,7 +306,7 @@ namespace HiveLuaMenuFunctions {
 	}
 
 	int GetChoke(lua_State* state) {
-		MENU->PushNumber(CLuaMenuCallback.Choke);
+		MENU->PushNumber(CLuaMenuCallback.bSendPChoke);
 		return 1;
 	}
 
@@ -315,7 +315,7 @@ namespace HiveLuaMenuFunctions {
 		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
 		{
 			CLuaMenuCallback.AimbotKey = MENU->GetNumber(1);
-			HiveTroubleshooter::Print("AimKey set to " + std::to_string(CLuaMenuCallback.Choke) + "!", 1);
+			HiveTroubleshooter::Print("AimKey set to " + std::to_string(CLuaMenuCallback.bSendPChoke) + "!", 1);
 		}
 
 		else

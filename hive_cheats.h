@@ -83,7 +83,7 @@ namespace HiveCheats
 	void CorrectMovement(QAngle vOldAngles, GMODCUserCmd* pCmd, float fOldForward, float fOldSidemove);
 	void Chams(IVModelRender*,DrawModelState_t const&, ModelRenderInfo_t const&, matrix3x4_t *);
 	void Autostrafe(GMODCUserCmd* cmd);
-	void Antiaim(GMODCUserCmd* cmd);
+	void Antiaim(GMODCUserCmd* cmd, CBaseEntityNew* LocalPlayer);
 	void FakeLag(GMODCUserCmd* cmd);
 	extern CBacktrack cBacktrackInterface;
 	extern int autostrafe_angle;

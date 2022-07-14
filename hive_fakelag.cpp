@@ -5,10 +5,10 @@ namespace HiveCheats
 	int choked = 0;
 	void FakeLag(GMODCUserCmd* cmd)
 	{
-		*bSendPacket = choked >= CLuaMenuCallback.Choke;
-		if (*bSendPacket)
+		if(choked > (CLuaMenuCallback.bSendPChoke + CLuaMenuCallback.bSendPSend)){
 			choked = 0;
-		else
-			choked++;
+		}
+		*bSendPacket = CLuaMenuCallback.bSendPSend >= choked;
+		choked++;
 	}
 }
