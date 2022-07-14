@@ -10,7 +10,7 @@ CBacktrackFrame::CBacktrackFrame()
 		m_vAbsOrigin = Vector(0, 0, 0);
 }
 
-void CBacktrackEntity::SaveFrame()
+void CBacktrackEntity::SaveFrame(int iSequenceNumber)
 {
 	if (!m_pPlayerEntity)
 		return;
@@ -27,8 +27,23 @@ void CBacktrackEntity::SaveFrame()
 		BTCurrentFrame.m_vOOBMaxs = ((CBaseEntityNew*)m_pPlayerEntity)->OBBMaxs();
 		BTCurrentFrame.m_vOrigin = ((CBaseEntityNew*)m_pPlayerEntity)->GetOrigin();
 		m_vBacktrackFrames.push_front(BTCurrentFrame);
+		GMODCUserCmd* cmd = (GMODCUserCmd*)CHiveInterface.Input->GetUserCmd(iSequenceNumber);
+		if (m_vBacktrackFrames.size() > 0)
+		{
+			while (TICKS_TO_TIME((cmd->tick_count + 1) - TIME_TO_TICKS(m_vBacktrackFrames.back().m_fSimulationTime)) > 0.5f)
+			{
+				m_vBacktrackFrames.pop_back();
+
+				if (m_vBacktrackFrames.size() == 0)
+					break;
+			}
+		}
+
 		if (m_vBacktrackFrames.size() > CLuaMenuCallback.Backtrack_max_tick)
+		{
+			
 			m_vBacktrackFrames.pop_back();
+		}
 	}
 }
 
@@ -229,6 +244,10 @@ bool CBacktrack::IsDeltaTooBig(Vector& vPos1, Vector& vPos2)
 	return (vPos1 - vPos2).LengthSqr() > 1600000.f; // temp until lagfix
 }
 
+void CBacktrack::SetSequenceNumber(int iSequenceNumber)
+{
+	m_iSequenceNumber = iSequenceNumber;
+}
 
 void CBacktrack::ProcessTick()
 {
@@ -267,7 +286,7 @@ void CBacktrack::ProcessTick()
 							it->second.m_vBacktrackFrames.clear();
 						}
 						bDisableBoneInterpolation = true;
-						it->second.SaveFrame();
+						it->second.SaveFrame(m_iSequenceNumber);
 						bDisableBoneInterpolation = false;
 					}
 				}

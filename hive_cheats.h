@@ -37,7 +37,7 @@ public:
 	std::deque<CBacktrackFrame> m_vBacktrackFrames;
 	CReconcileFrame* m_cReconciledFrame;
 	C_BasePlayerNew* m_pPlayerEntity;
-	void SaveFrame();
+	void SaveFrame(int iSequenceNumber);
 	int GetFrameCount();
 	CBacktrackFrame GetFrame(int iTick);
 };
@@ -54,6 +54,7 @@ public:
 	bool m_bHasToChange;
 	bool m_bHasToReset;
 	int m_iResetTicks;
+	int m_iSequenceNumber;
 
 	void ProcessTick();
 	void Reconcile(CBacktrackEntity& BTEntity, int iTick);
@@ -63,6 +64,7 @@ public:
 	bool CanRestoreToSimulationTime(float flSimulationTime, bool* bNeedToAdjustInterp);
 	void EndReconciliation(CBacktrackEntity& BTEntity);
 	float GetLerpTime();
+	void SetSequenceNumber(int iSequenceNumber);
 	void Interp_WriteUserCmdDeltaToBuffer();
 	void Interp_UpdateInterpolation(float flInterp);
 }; 

@@ -113,6 +113,7 @@ namespace HiveHookedFunctions {
 
 	void __fastcall CreateMove(void* CInput, void *edx, int sequence_number, float input_sample_frametime, bool active) {
 		HiveOriginalFunctions::CreateMove(CInput, edx, sequence_number, input_sample_frametime, active);
+		HiveCheats::cBacktrackInterface.SetSequenceNumber(sequence_number);
 		static Vector Spread = Vector(0, 0, 0);
 		GMODCUserCmd *pCmd = (GMODCUserCmd*)CHiveInterface.Input->GetUserCmd(sequence_number);
 		CBaseEntityNew * LocalPlayer = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
@@ -195,30 +196,6 @@ namespace HiveHookedFunctions {
 
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Finish(pLocal);
-			/*
-			if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].m_pPlayerEntity && CLuaMenuCallback.Backtrack)
-			{
-				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
-				{
-					int bttic = CLuaMenuCallback.tmpBacktrackTick;
-					HiveCheats::cBacktrackInterface.Reconcile(HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity], bttic);
-				}
-			}
-
-			if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].m_pPlayerEntity && CLuaMenuCallback.Backtrack)
-			{
-				if (HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrameCount() >= CLuaMenuCallback.Backtrack_max_tick)
-				{
-					if (CanShoot && pCmd->buttons & IN_ATTACK)
-					{
-						float simtime = HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity].GetFrame(CLuaMenuCallback.tmpBacktrackTick).m_fSimulationTime;
-						HiveCheats::cBacktrackInterface.Interp_UpdateInterpolation(TICKS_TO_TIME((pCmd->tick_count - 2) - TIME_TO_TICKS(simtime)));
-
-					}
-					HiveCheats::cBacktrackInterface.EndReconciliation(HiveCheats::cBacktrackInterface.m_mEntities[iHardBtEntity]);
-				}
-			}
-			*/
 
 			if(CLuaMenuCallback.Aimbot || CLuaMenuCallback.Antiaim)
 				HiveCheats::CorrectMovement(vOldAngles, pCmd, fOldForward, fOldSidemove);
