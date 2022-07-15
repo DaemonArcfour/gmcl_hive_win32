@@ -53,6 +53,9 @@ namespace HiveCheats {
 		if (!cmd->command_number)
 			return;
 
+		if (LocalPlayer->GetMoveType() == MOVETYPE_NOCLIP || LocalPlayer->GetMoveType() == MOVETYPE_LADDER)
+			return;
+
 		bool AAchoke = false;
 		bool InvertBool = false;
 		float EnemyYaw = 0.0f;
