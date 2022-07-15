@@ -5,7 +5,6 @@
 
 
 namespace HiveCheats {
-	bool* bSendPacket;
 	CBaseEntityNew* pBaseEntity;
 	CBaseEntityNew* Target;
 
@@ -55,8 +54,12 @@ namespace HiveCheats {
 			return;
 
 		bool AAchoke = false;
+		bool InvertBool = false;
 		float EnemyYaw = 0.0f;
 		int iAntiaim_Type = CLuaMenuCallback.AntiaimType;
+
+		float OldYaw = 0.0f;
+
 
 		switch (iAntiaim_Type)
 		{
@@ -76,11 +79,10 @@ namespace HiveCheats {
 				cmd->viewangles.x = -612.3f + (- 7 + (rand() % 14)); //magic angle -180
 				break;
 			
-			case 4:
+			case 4: //-180 shit with magic angle
 				if (bSendPacket) {
 					cmd->viewangles.x = (AAchoke ? 170 : 190) + (1 + (rand() % 13)) + (0.3 + ((rand() % 8) / 100.0f));
 					cmd->viewangles.y = AAchoke ? -612.3 + (0.2 + ((rand() % 9) / 100.0f)) : -612.2 + (0.2 + ((rand() % 9) / 100.0f));
-					(0.2 + ((rand() % 9) / 100.0f));
 				}
 				else {//RealAngles look away from enemy move vel
 					//cmd->viewangles.x = (DH.InvertBool ? ey + 90 : ey - 90) + (1 + (rand() % 13) + mRand(0.03, 0.08);
@@ -90,13 +92,13 @@ namespace HiveCheats {
 				AAchoke = !AAchoke;
 				break;
 
-			case 5:
+			case 5: //backwards at enemy
 				for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
 				{
 					if (index == CHiveInterface.Engine->GetLocalPlayer())
 						continue;
 
-					pBaseEntity = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(index); //get closest / later search by 2d crosshair
+					pBaseEntity = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(index);
 					if (!pBaseEntity || !pBaseEntity->isAlive() || NativeClass::IsDormant(pBaseEntity))
 						continue;
 
@@ -107,6 +109,38 @@ namespace HiveCheats {
 					EntBestTarget(LocalPlayer, pBaseEntity, index);
 					EnemyYaw = GetEnemyPos(LocalPlayer, Target).y;
 					cmd->viewangles.y = EnemyYaw - 180.0f;
+				}
+				break;
+
+			case 6: //Invert (Best AA)
+				for (int index = CHiveInterface.Engine->GetMaxClients(); index >= 0; --index)
+				{
+					if (index == CHiveInterface.Engine->GetLocalPlayer())
+						continue;
+
+					pBaseEntity = (CBaseEntityNew*)CHiveInterface.EntityList->GetClientEntity(index);
+					if (!pBaseEntity || !pBaseEntity->isAlive() || NativeClass::IsDormant(pBaseEntity))
+						continue;
+
+					if (HiveUTIL::IsFriend((C_BasePlayerNew*)pBaseEntity))
+						continue;
+
+					Target = pBaseEntity;
+					EntBestTarget(LocalPlayer, pBaseEntity, index);
+					EnemyYaw = GetEnemyPos(LocalPlayer, Target).y;
+
+					if (bSendPacket) {
+						cmd->viewangles.x = EnemyYaw - (AAchoke ? 170 : 190) + (1 + (rand() % 13)) + (0.3 + ((rand() % 8) / 100.0f));
+						cmd->viewangles.y = AAchoke ? -612.3 + (0.2 + ((rand() % 9) / 100.0f)) : -612.2 + (0.2 + ((rand() % 9) / 100.0f));
+					}
+					else {//RealAngles look away from enemy move vel
+						cmd->viewangles.x = (InvertBool ? EnemyYaw + 90 : EnemyYaw - 90) + (1 + (rand() % 13)) + (0.3 + ((rand() % 8) / 100.0f));
+						cmd->viewangles.y = AAchoke ? -612.3 + (0.2 + ((rand() % 9) / 100.0f)) : -612.2 + (0.2 + ((rand() % 9) / 100.0f));
+					}
+					AAchoke = !AAchoke;
+
+					InvertBool = OldYaw > EnemyYaw ? true : false;
+					OldYaw = EnemyYaw;
 				}
 				break;
 

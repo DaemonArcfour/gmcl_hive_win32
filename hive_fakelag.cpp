@@ -3,6 +3,8 @@
 namespace HiveCheats 
 {
 	int choked = 0;
+	bool* bSendPacket;
+
 	void FakeLag(GMODCUserCmd* cmd)
 	{
 		if(choked > (CLuaMenuCallback.bSendPChoke + CLuaMenuCallback.bSendPSend)){
