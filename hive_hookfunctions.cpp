@@ -12,6 +12,9 @@ FireBullets_info BulletInfo;
 QAngle OldPunchAngles = QAngle(0, 0, 0);
 bool LuaInit = false;
 int iHardBtEntity = 2;
+
+using namespace GarrysMod::Lua;
+
 namespace HiveHookedFunctions {
 	void * __fastcall RunString(void *edx, void *ecx, const char* ccName, const char* ccPath, const char* ccString, bool bRun, bool bErrors) {
 		MENU->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
@@ -22,10 +25,22 @@ namespace HiveHookedFunctions {
 		MENU->PushString(ccName);
 		MENU->PushString(ccPath);
 		MENU->PushString(ccString);
-		MENU->Call(5, 0);
-		MENU->Pop(2);
+		MENU->PCall(5, 1, 0);
+
+		bool allowed = true;
+		if (MENU->IsType(-1, Type::BOOL)) {
+			if (MENU->GetBool() == false) allowed = false;
+		}
+
+		if (MENU->IsType(-1, Type::STRING)) {
+			ccString = MENU->GetString();
+		}
+
+		MENU->Pop(3);
+
+
 		bool whitelisted = isWhitelisted(ccString);
-		if (!CLuaMenuCallback.LuaExecution && !CLuaMenuCallback.CustomLuaRun && !whitelisted)
+		if ((!CLuaMenuCallback.LuaExecution && !CLuaMenuCallback.CustomLuaRun && !whitelisted) || !allowed)
 			ccString = "print('Script stopped, lua execution disabled.')";
 		CLuaMenuCallback.CustomLuaRun = false;
 		return HiveOriginalFunctions::RunString(edx, ccName, ccPath, ccString, bRun, bErrors);
@@ -41,10 +56,20 @@ namespace HiveHookedFunctions {
 		MENU->PushString(ccName);
 		MENU->PushString(ccPath);
 		MENU->PushString(ccString);
-		MENU->Call(5, 0);
-		MENU->Pop(2);
+		MENU->PCall(5, 0, 0);
+
+		bool allowed = true;
+		if (MENU->IsType(-1, Type::BOOL)) {
+			if (MENU->GetBool() == false) allowed = false;
+		}
+
+		if (MENU->IsType(-1, Type::STRING)) {
+			ccString = MENU->GetString();
+		}
+
+		MENU->Pop(3);
 		bool whitelisted = isWhitelisted(ccString);
-		if (!CLuaMenuCallback.LuaExecution && !CLuaMenuCallback.CustomLuaRun && !whitelisted)
+		if ((!CLuaMenuCallback.LuaExecution && !CLuaMenuCallback.CustomLuaRun && !whitelisted) || !allowed)
 			ccString = "print('Script stopped, lua execution disabled.')";
 		CLuaMenuCallback.CustomLuaRun = false;
 
