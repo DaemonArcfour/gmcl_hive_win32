@@ -183,10 +183,11 @@ namespace HiveHookedFunctions {
 			if(CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
 				CHiveEnginePredict.Start(pCmd, pLocal);
 
-			if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && currentWeapon)
+			//if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && currentWeapon)
+			if (CLuaMenuCallback.Antiaim && pLocal->IsAlive() && !(pCmd->buttons & IN_ATTACK))
 			{
 				if (HiveCheats::CheckFire(currentWeapon))
-					HiveCheats::Antiaim(pCmd);
+					HiveCheats::Antiaim(pCmd, LocalPlayer);
 			}
 
 			if (CLuaMenuCallback.Aimbot && CanShoot)
@@ -200,7 +201,6 @@ namespace HiveHookedFunctions {
 			if (pCmd->buttons & IN_ATTACK && LocalPlayer->isAlive() && CLuaMenuCallback.NoSpread && CanShoot) 
 			{
 				HiveCheats::RemoveSpread(pCmd, currentWeapon, Spread);
-				
 			}
 
 			if (pCmd->buttons & IN_ATTACK && LocalPlayer->isAlive() && CLuaMenuCallback.NoRecoil && CanShoot && !currentWeapon->UsesLua())
@@ -208,7 +208,6 @@ namespace HiveHookedFunctions {
 				if(!CLuaMenuCallback.PSilent)
 					pCmd->viewangles -= OldPunchAngles;
 			}
-
 
 			if (CLuaMenuCallback.PSilent && CLuaMenuCallback.Aimbot && CanShoot)
 			{
