@@ -3,7 +3,7 @@
 namespace HiveCheats 
 {
 	int choked = 0;
-	bool* bSendPacket;
+	bool* bSendPacket = false;
 
 	void FakeLag(GMODCUserCmd* cmd)
 	{

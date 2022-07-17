@@ -1,6 +1,7 @@
 #include "hive_hookfunctions.h"
 #include "hive_cheats.h"
 #include "hive_math.h"
+#include "hive_util.h"
 #include "hive_lua_whitelist.h"
 
 
@@ -111,6 +112,22 @@ namespace HiveHookedFunctions {
 		return HiveOriginalFunctions::ClientModeCreateMove(CClientModeShared, sample_input_frametime, pCmd);
 	}
 
+	/*bool __fastcall hkSvCheatsGetBool(PVOID pConVar, void* edx)
+	{
+		//static DWORD dwCAM_Think = (DWORD)HiveOriginalFunctions::CAM_Think;
+		//void* ptr = reinterpret_cast<DWORD*&>(CHiveInterface.Input->CAM_Think);
+		
+		static DWORD dwCAM_Think = *((DWORD*)CHiveInterface.Input + 0x230);
+
+		if (reinterpret_cast<DWORD>(_ReturnAddress()) == dwCAM_Think)
+			return true;
+
+		return false;
+	}*/
+	static QAngle RealAngle;
+	static QAngle FakeAngle;
+	static bool ThirdPerson = false;
+
 	void __fastcall CreateMove(void* CInput, void *edx, int sequence_number, float input_sample_frametime, bool active) {
 		HiveOriginalFunctions::CreateMove(CInput, edx, sequence_number, input_sample_frametime, active);
 		HiveCheats::cBacktrackInterface.SetSequenceNumber(sequence_number);
@@ -191,6 +208,71 @@ namespace HiveHookedFunctions {
 				AngleVectors(pCmd->viewangles, &tmp);
 				pCmd->viewangles = vOldAngles;
 				pCmd->world_click_direction = tmp;
+			}
+
+			
+			//static CameraThirdData_t* CamData = new CameraThirdData_t;
+			if (ThirdPerson || CHiveInterface.Input->CAM_IsThirdPerson()) {
+				if (*HiveCheats::bSendPacket)
+				{
+					RealAngle = pCmd->viewangles;
+				}
+				else
+				{
+					FakeAngle = pCmd->viewangles;
+				}
+			}
+
+			static CameraThirdData_t* CamData = new CameraThirdData_t;
+			static CViewSetup* CamSetup = new CViewSetup;
+
+			if (HiveUTIL::IsKeyPressed(CLuaMenuCallback.ThirdpersonKey, false)) { //ThirdPerson
+				ThirdPerson = !ThirdPerson;
+			}
+
+			if (ThirdPerson) {
+				Vector eye_pos = LocalPlayer->GetEyePosition();
+				CTraceFilter filter;
+				trace_t tr;
+				Ray_t ray;
+				filter.pSkip = LocalPlayer;
+
+				Vector forward;
+
+				QAngle angles = pCmd->viewangles;
+				angles.z = 0.f;
+
+				AngleVectors(angles, &forward);
+
+				int range = 40;
+				ray.Init(eye_pos, eye_pos - forward * range);
+				//0x46004003
+				CHiveInterface.EngineTrace->TraceRay(ray, MASK_SOLID, &filter, &tr);
+
+				if (tr.fraction < 1.f)
+					range *= tr.fraction;
+
+				angles.z = 450.0f;//range;
+				CHiveInterface.Input->m_fCameraInThirdPerson = true;
+
+				
+				//CamSetup->fovViewmodel = 130.0f;
+				//CHiveInterface.ClientMode->OverrideView(CamSetup);
+
+				CamData->m_flDist = 450.0f;//range;
+				CamData->m_flYaw = angles.x;
+				CamData->m_flPitch = angles.y;
+				CamData->m_flLag = 0;
+
+				//CHiveInterface.Input->m_pCameraThirdData = CamData;
+				CHiveInterface.Input->m_fCameraDistanceMove = true;
+				CHiveInterface.Input->m_angPreviousViewAngles = angles;
+				CHiveInterface.Input->m_CameraIsOrthographic = false;
+				CHiveInterface.Input->CAM_SetCameraThirdData(CamData, angles);
+			}
+			else {
+				CHiveInterface.Input->m_fCameraInThirdPerson = false;
+				//CHiveInterface.Input->m_pCameraThirdData = CamData;
 			}
 
 			if (CLuaMenuCallback.EnginePredict && (pCmd->buttons & IN_ATTACK) && LocalPlayer->isAlive() && CanShoot)
@@ -293,6 +375,23 @@ namespace HiveHookedFunctions {
 			
 		}
 		*/
+
+		if (stage == FRAME_RENDER_START)
+		{
+			if (CHiveOptimize.InGame && CHiveOptimize.IsConnected)
+			{
+				C_BasePlayerNew* LocalPlayer = (C_BasePlayerNew*)CHiveInterface.EntityList->GetClientEntity(CHiveInterface.Engine->GetLocalPlayer());
+				if (LocalPlayer && LocalPlayer->IsAlive() && CHiveInterface.Input->CAM_IsThirdPerson()) {
+					if (*HiveCheats::bSendPacket) {
+						LocalPlayer->SetLocalViewAngles(RealAngle);
+					}
+					else {
+						LocalPlayer->SetLocalViewAngles(FakeAngle);
+					}
+				}
+			}
+		}
+
 		if (stage == FRAME_NET_UPDATE_POSTDATAUPDATE_START)
 		{
 			
@@ -464,6 +563,7 @@ namespace HiveOriginalFunctions {
 	CHook* FrameStageNotifyHook = nullptr;
 	CHook* SetupBonesHook = nullptr;
 	CHook* RunCommandHook = nullptr;
+	//hive_func_CAM_Think CAM_Think = nullptr;
 	hive_func_WriteUsercmdDeltaToBuffer WriteUsercmdDeltaToBuffer = 0;
 	hive_func_RunCommand RunCommand = 0;
 	hive_func_CompileString CompileString = 0;

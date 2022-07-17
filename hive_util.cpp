@@ -37,3 +37,35 @@ bool HiveUTIL::IsFriend(C_BasePlayerNew* Player)
 		return true;
 	return false;
 }
+
+bool HiveUTIL::IsKeyDown(int key, bool default_state = true)
+{
+	if (key == 0)
+		return default_state;
+
+	if (CHiveInterface.ISurface->IsCursorVisible())
+		return false;
+
+	auto Key = (vgui::KeyCode)key;
+
+	if (Key >= MOUSE_FIRST && Key <= MOUSE_LAST)
+		return CHiveInterface.VInput->IsMouseDown(Key);
+
+	return CHiveInterface.VInput->IsKeyDown(Key);
+}
+
+bool HiveUTIL::IsKeyPressed(int key, bool default_state = true)
+{
+	if (key == 0)
+		return default_state;
+
+	if (CHiveInterface.ISurface->IsCursorVisible())
+		return false;
+
+	auto Key = (vgui::KeyCode)key;
+
+	if (Key >= MOUSE_FIRST && Key <= MOUSE_LAST)
+		return CHiveInterface.VInput->IsMouseDown(Key);
+
+	return CHiveInterface.VInput->WasKeyPressed(Key);
+}
