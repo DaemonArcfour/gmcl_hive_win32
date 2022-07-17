@@ -7,8 +7,10 @@ namespace HiveLuaMenuFunctions {
 
 	int SetLuaExecution(lua_State* state);
 	int GetbLuaExecution(lua_State* state);
-	int SetChoke(lua_State* state);
-	int GetChoke(lua_State* state);
+	int SetBSendChoke(lua_State* state);
+	int GetBSendChoke(lua_State* state);	
+	int SetBSendSend(lua_State* state);
+	int GetBSendSend(lua_State* state);
 
 	int SetBacktrackTick(lua_State* state);
 
@@ -77,6 +79,7 @@ namespace HiveLuaMenuFunctions {
 	int GetbShowSpectators(lua_State* state);
 	int LuaRunMenu(lua_State* state);
 	int LuaRunGame(lua_State* state);
+	int SetThirdPersonKey(lua_State* state);
 	int SetAimKey(lua_State* state);
 	int GetAimKey(lua_State* state);
 	int GetObserversList(lua_State* state);
@@ -137,10 +140,12 @@ public:
 	bool Triggerbot = false;
 	bool NoRecoil = false;
 	bool NoSpread = false;
-	int bSendPChoke = 0;
-	int bSendPSend = 0;
+	int bSendPChoke = 1;
+	int bSendPSend = 1;
 	int Backtrack_max_tick = 8;
 	bool PSilent = false;
+	int ThirdpersonKey = 0;
+	int ThirdpersonDist = 450;
 	bool ESPName = true;
 	bool ESPArmor = true;
 	bool ESPHealth = true;

@@ -157,6 +157,7 @@ void HiveLuaMenuFunctions::SetupLuaMenuCallbacks() {
 	InitLUAFunction(MENU, GetbAimbot);
 	InitLUAFunction(MENU, SetAimKey);
 	InitLUAFunction(MENU, GetAimKey);
+	InitLUAFunction(MENU, SetThirdPersonKey);
 	InitLUAFunction(MENU, SetEnginePredict);
 	InitLUAFunction(MENU, GetbEnginePredict);
 	InitLUAFunction(MENU, SetPSilent);
@@ -165,8 +166,10 @@ void HiveLuaMenuFunctions::SetupLuaMenuCallbacks() {
 	InitLUAFunction(MENU, GetbTriggerbot);
 	InitLUAFunction(MENU, SetNoRecoil);
 	InitLUAFunction(MENU, GetbNoRecoil);
-	InitLUAFunction(MENU, SetChoke);
-	InitLUAFunction(MENU, GetChoke);
+	InitLUAFunction(MENU, SetBSendChoke);
+	InitLUAFunction(MENU, GetBSendChoke);	
+	InitLUAFunction(MENU, SetBSendSend);
+	InitLUAFunction(MENU, GetBSendSend);
 	InitLUAFunction(MENU, SetBacktrackMaxTicks);
 	InitLUAFunction(MENU, GetBacktrackMaxTicks);
 	InitLUAFunction(MENU, SetBacktrack);
@@ -335,12 +338,12 @@ namespace HiveLuaMenuFunctions {
 		return 0;
 	}
 
-	int SetChoke(lua_State* state) 
+	int SetBSendChoke(lua_State* state)
 	{
 		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
 		{
 			CLuaMenuCallback.bSendPChoke = MENU->GetNumber(1);
-			HiveTroubleshooter::Print("Choke set to " + std::to_string(CLuaMenuCallback.bSendPChoke) + "!", 1);
+			HiveTroubleshooter::Print("bSendPChoke set to " + std::to_string(CLuaMenuCallback.bSendPChoke) + "!", 1);
 		}
 
 		else
@@ -349,9 +352,42 @@ namespace HiveLuaMenuFunctions {
 		return 0;
 	}
 
-	int GetChoke(lua_State* state) {
+	int GetBSendChoke(lua_State* state) {
 		MENU->PushNumber(CLuaMenuCallback.bSendPChoke);
 		return 1;
+	}
+
+	int SetBSendSend(lua_State* state)
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.bSendPSend = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("bSendPSend set to " + std::to_string(CLuaMenuCallback.bSendPSend) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
+	}
+
+	int GetBSendSend(lua_State* state) {
+		MENU->PushNumber(CLuaMenuCallback.bSendPSend);
+		return 1;
+	}
+
+	int SetThirdPersonKey(lua_State* state)
+	{
+		if (MENU->IsType(1, GarrysMod::Lua::Type::NUMBER))
+		{
+			CLuaMenuCallback.ThirdpersonKey = MENU->GetNumber(1);
+			HiveTroubleshooter::Print("ThirdPersonKey set to " + std::to_string(CLuaMenuCallback.ThirdpersonKey) + "!", 1);
+		}
+
+		else
+			HiveTroubleshooter::Print("This function only accepts int variables.", 0);
+
+		return 0;
 	}
 
 	int SetAimKey(lua_State* state)

@@ -150,7 +150,7 @@ public:
 	virtual		float		Joystick_GetSide(void);
 	virtual		float		Joystick_GetPitch(void);
 	virtual		float		Joystick_GetYaw(void);
-	virtual		void		ClearInputButton(int bits);
+	//virtual		void		ClearInputButton(int bits);
 
 	virtual		void		CAM_Think(void);
 	virtual		int			CAM_IsThirdPerson(void);
@@ -168,5 +168,16 @@ public:
 	virtual		void		CAM_OrthographicSize(float& w, float& h) const;
 
 	virtual		float		CAM_CapYaw(float fVal) { return fVal; }
+
+
+	// IK back channel info
+	virtual		void		AddIKGroundContactInfo(int entindex, float minheight, float maxheight);
+
+	virtual		void		LevelInit(void);
+
+	virtual		void		CAM_SetCameraThirdData(CameraThirdData_t* pCameraData, const QAngle& vecCameraOffset);
+	virtual		void		CAM_CameraThirdThink(void);
+
+	virtual	bool		EnableJoystickMode();
 
 }; //Size: 0x0448

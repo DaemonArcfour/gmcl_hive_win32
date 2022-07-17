@@ -3,7 +3,6 @@
 #include "hive_util.h"
 
 
-
 namespace HiveCheats {
 	CBaseEntityNew* pBaseEntity;
 	CBaseEntityNew* Target;
@@ -83,7 +82,7 @@ namespace HiveCheats {
 				break;
 			
 			case 4: //-180 shit with magic angle
-				if (bSendPacket) {
+				if (*bSendPacket) {
 					cmd->viewangles.x = (AAchoke ? 170 : 190) + (1 + (rand() % 13)) + (0.3 + ((rand() % 8) / 100.0f));
 					cmd->viewangles.y = AAchoke ? -612.3 + (0.2 + ((rand() % 9) / 100.0f)) : -612.2 + (0.2 + ((rand() % 9) / 100.0f));
 				}
@@ -132,7 +131,7 @@ namespace HiveCheats {
 					EntBestTarget(LocalPlayer, pBaseEntity, index);
 					EnemyYaw = GetEnemyPos(LocalPlayer, Target).y;
 
-					if (bSendPacket) {
+					if (*bSendPacket) {
 						cmd->viewangles.x = EnemyYaw - (AAchoke ? 170 : 190) + (1 + (rand() % 13)) + (0.3 + ((rand() % 8) / 100.0f));
 						cmd->viewangles.y = AAchoke ? -612.3 + (0.2 + ((rand() % 9) / 100.0f)) : -612.2 + (0.2 + ((rand() % 9) / 100.0f));
 					}

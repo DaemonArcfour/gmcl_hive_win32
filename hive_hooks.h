@@ -13,6 +13,7 @@
 //Client DLL VMT Offsets
 #define  VMT_CREATEMOVE 21
 #define  VMT_PAINTTRAVERSE 41
+#define	 VMT_CAM_THINK 31
 //-=-=-=-=
 //Material VMT Offsets
 #define  VMT_READPIXELS 11
