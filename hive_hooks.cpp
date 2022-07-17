@@ -123,6 +123,17 @@ namespace HiveHook {
 		HiveOriginalFunctions::WriteUsercmdDeltaToBuffer = (hive_func_WriteUsercmdDeltaToBuffer)DetourFunction((PBYTE)CHiveSourceNative.offset_WriteUsercmdDeltaToBuffer, (PBYTE)HiveHookedFunctions::WriteUsercmdDeltaToBuffer);
 	}
 
+	void GetCheatsConVar()
+	{
+		
+		ConVar* sv_cheats = CHiveInterface.Cvar->FindVar("sv_cheats");
+		static CHook* svc_hook = new CHook((PDWORD*)sv_cheats);
+		HiveOriginalFunctions::CheatsGetBool = (hive_func_CheatsGetBool)svc_hook->dwHookMethod(
+			(DWORD)HiveHookedFunctions::CheatsGetBool,
+			3
+		);
+	}
+
 	void InitHive() {
 		GetCreateLuaInterface(); // index
 		GetCloseLuaInterface();  // index

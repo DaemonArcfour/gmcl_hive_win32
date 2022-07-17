@@ -18,3 +18,4 @@ typedef		bool	 (__thiscall	*hive_func_CLuaGameModeCallWithArgs	)	(void*, int);
 typedef		bool	 (__stdcall		*hive_func_CLuaGameModeCallFinish	)	(void*, void*);
 typedef		void	 (__thiscall	*hive_func_RunCommand				)	(void*, C_BasePlayerNew*, GMODCUserCmd*, void*);
 typedef		bool	 (__thiscall	*hive_func_WriteUsercmdDeltaToBuffer)	(void*, bf_write*, int, int, int);
+typedef		bool	 (__fastcall	*hive_func_CheatsGetBool			)	(void*, void*);

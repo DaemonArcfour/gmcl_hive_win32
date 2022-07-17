@@ -56,7 +56,7 @@ namespace HiveHookedFunctions {
 		MENU->PushString(ccName);
 		MENU->PushString(ccPath);
 		MENU->PushString(ccString);
-		MENU->PCall(5, 0, 0);
+		MENU->PCall(5, 1, 0);
 
 		bool allowed = true;
 		if (MENU->IsType(-1, Type::BOOL)) {
@@ -113,6 +113,18 @@ namespace HiveHookedFunctions {
 		HiveHook::CleanUpLuaHooks();
 
 		return LuaState;
+	}
+
+	bool __fastcall CheatsGetBool(void* _this, void* edx)
+	{
+		auto ret = (DWORD)_ReturnAddress();
+
+		//if (ret == *((DWORD*)CHiveInterface.Input + 31))
+		//	return true;
+
+		if (true) return true;
+
+		return HiveOriginalFunctions::CheatsGetBool(_this, edx);
 	}
 
 	void * __fastcall CreateLuaInterface(void *_this, void *, uchar stateType, bool renew) {
@@ -508,4 +520,5 @@ namespace HiveOriginalFunctions {
 	hive_func_SetupBones SetupBones = 0;
 	hive_func_CLuaGameModeCallWithArgs LuaGameModeCallWithArgs;
 	hive_func_CLuaGameModeCallFinish LuaGameModeCallFinish;
+	hive_func_CheatsGetBool CheatsGetBool;
 }

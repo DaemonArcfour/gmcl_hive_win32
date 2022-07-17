@@ -283,6 +283,12 @@ namespace HiveTroubleshooter {
 		else
 			PrintError("\"SetupBones\" hook loaded!", OK, bError);
 
+		auto b_nigger = false;
+		if (!HiveOriginalFunctions::CheatsGetBool)
+			PrintError("Failed to hook \"CheatsGetBool\" function.", ERROR, b_nigger);
+		else
+			PrintError("\"CheatsGetBool\" hook loaded!", OK, b_nigger);
+
 		return bError;
 	}
 	

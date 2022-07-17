@@ -21,6 +21,7 @@ namespace HiveHookedFunctions
 	bool	__fastcall LuaGameModeCallWithArgs(void*, void*, int);
 	void	__fastcall RunCommand(void*, void*, C_BasePlayerNew*, GMODCUserCmd*, void*);
 	bool	__fastcall WriteUsercmdDeltaToBuffer(void* _this, void* ecx, bf_write* buf, int from, int to, int isnewcommand);
+	bool	__fastcall CheatsGetBool(void* _this, void*);
 }
 
 extern void* clientState;
@@ -60,4 +61,5 @@ namespace HiveOriginalFunctions {
 	extern hive_func_SetupBones SetupBones;
 	extern hive_func_CLuaGameModeCallWithArgs LuaGameModeCallWithArgs;
 	extern hive_func_CLuaGameModeCallFinish LuaGameModeCallFinish;
+	extern hive_func_CheatsGetBool CheatsGetBool;
 }

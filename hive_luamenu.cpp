@@ -16,6 +16,50 @@ MENU->SetTable(-3);\
 HiveTroubleshooter::PrintLUA("Successfully added \""#name"\" function.");\
 }
 
+
+// thanks github gist https://gist.github.com/danzek/d7192d250c951804dec05125f5223a30
+
+void createDirectoryRecursively(const std::string& directory)
+{
+	static const std::string separators("\\/");
+
+	// If the specified directory name doesn't exist, do our thing
+	DWORD fileAttributes = ::GetFileAttributes(directory.c_str());
+	if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
+
+		// Recursively do it all again for the parent directory, if any
+		std::size_t slashIndex = directory.find_last_of(separators);
+		if (slashIndex != std::string::npos) {
+			createDirectoryRecursively(directory.substr(0, slashIndex));
+		}
+
+		// Create the last directory on the path (the recursive calls will have taken
+		// care of the parent directories by now)
+		BOOL result = ::CreateDirectory(directory.c_str(), nullptr);
+		if (result == FALSE) {
+			HiveTroubleshooter::Print(
+				"Could not create directory",
+				ERROR
+			);
+		}
+
+	}
+	else { // Specified directory name already exists as a file or directory
+
+		bool isDirectoryOrJunction =
+			((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
+			((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
+
+		if (!isDirectoryOrJunction) {
+			HiveTroubleshooter::Print(
+				"Could not create directory because a file with the same name exists",
+				ERROR
+			);
+		}
+
+	}
+}
+
 #define LuaToggleBool(name)\
 	int Set##name(lua_State* state) {\
 		if (MENU->IsType(1, GarrysMod::Lua::Type::BOOL))\
@@ -433,6 +477,7 @@ namespace HiveLuaMenuFunctions {
 		std::string toPrint = "Writing file: " + fullPath;
 		std::string toPrintError = "Failed writing file: " + fullPath;
 		std::fstream pFile;
+		createDirectoryRecursively(fullPath.substr(0, fullPath.find_last_of("/\\") + 1));
 		pFile.open(fullPath, std::ios::out | std::ios::in | std::ios::trunc | std::ios::binary);
 		if (pFile.is_open()) {
 			HiveTroubleshooter::Print(toPrint, OK);

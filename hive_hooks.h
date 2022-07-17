@@ -22,7 +22,8 @@
 //-=-=-=-=
 //Prediction
 #define VMT_RUNCOMMAND 17
-
+// niggers?
+#define VMT_CVAR_GET_BOOL 13
 
 namespace HiveHook {
 	void CleanUpLuaHooks();
@@ -39,6 +40,7 @@ namespace HiveHook {
 	void GetRunCommand();
 	void GetWriteUsercmdDeltaToBuffer();
 	void InitHive();
+	void GetCheatsConVar();
 }
 
 extern GarrysMod::Lua::ILuaBase *MENU;
